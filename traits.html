@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Talent Tree Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            position: relative;
+            background: linear-gradient(90deg, #2e0a0a 0%, #1d1717 50%, #1b1b1b 100%);
+            user-select: none; /* Disable text selection */
+        }
+        
+        @font-face {
+                font-family: '9Px3bus-WpXV';
+                src: url('VT323-Regular.ttf') format('truetype');
+            }
+        .talent-node {
+            position: absolute;
+            border: 2px solid #000;
+            padding: 3px;
+            background: #3d3d3d;
+            cursor: pointer;
+            text-align: center;
+            width: 180px;
+            max-height: 120px;
+            z-index: 1;
+            font-family: '9Px3bus-WpXV';
+            font-weight: 100;
+            text-shadow: 2px 2px 2px #000, -2px -2px 2px #000, -2px 2px 2px #000, 2px -2px 2px #000;
+            border-radius: 5px;
+            
+        }
+        .talent-node.active {
+            background: #19793f;
+        }
+        .connector {
+            stroke: #000;
+            stroke-width: 2;
+        }
+        #connectors {
+            z-index: 0;
+        }
+        p.title { 
+            font-weight: bold;
+            color:#d4b503;
+            margin: 0;
+            font-size: 1.1em;
+        }
+        p.description {
+            font-size: 1em;
+            color:#dace8d;
+            margin: 0px 0;
+        }
+        .levels {
+            color: black;
+            font-size: 1.3em;
+            text-shadow: 0px 0px 2px #000;
+        }
+        .current-level {
+            color: rgb(234, 255, 47);
+            text-shadow: 2px 2px 2px #000;
+        }
+        .inline-logos img {
+            height: 60px;
+            width: auto;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        label.stats {
+            color: #dace8d;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 0 20px;
+            font-family: '9Px3bus-WpXV';
+            font-weight: 100;
+            text-shadow: 2px 2px 2px #000, -2px -2px 2px #000, -2px 2px 2px #000, 2px -2px 2px #000;
+            vertical-align: middle;
+        }
+        button.retrobutton{
+            background-color: #dace8d;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 7px 20px 10px 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+            font-family: '9Px3bus-WpXV';
+            font-weight: 100;
+            text-shadow: 2px 2px 2px #000, -2px -2px 2px #000, -2px 2px 2px #000, 2px -2px 2px #000;
+        }
+        span.level{
+            font-size: 3em;
+        }
+    </style>
+</head>
+<body>
+    <div class="general-info">
+        <div class="inline-logos">
+            <img style="padding: 0px 150px 0 0;" src="trait_calc_logo.png">
+            <img style="padding: 0 50px" src="quick_logo.png">
+            <img src="logo_apogea.png">
+        </div>
+    <label class="stats">Character Level: <span class="level" id="charLevel">1</span></label>
+    <button class="retrobutton" onclick="resetTree()">Reset All Traits 🔄</button>
+    <button class="retrobutton" onclick="copyLink()">Copy Link 📋</button>
+    </div>
+    <div>
+        <div id="talentTree" style="position:relative; width:100%; height:100%;"></div>
+        <svg id="connectors" style="position:relative; top:0; left:0; width:100%; height:100%; overflow:visible;"></svg>
+    </div>
+    <script>
+        let skillData = [
+            "0;0;\"Start here\";\"<br>Level 1 starting point.<br> <br>\";();0;0;0;0; 0;0",
+            "1;0;\"Staff Mastery\";\"Staves have a chance of shooting without a cost\";(5%,10%,20%,35%,75%);0;0;0;0;-100;0",
+            "2;1;\"Charge the Staff\";\"Casting an energy Fire spell using a staff will make your next attack deal damage\";(ML/5,ML/4,ML/2);0;0;0;0;-200;50",
+            "3;2;\"Frantic Conjury\";\"Casting a Fire spell has a chance your next attack will cast Conjure Fire on target's location\";(20%,30%,50%);0;0;0;0;-300;50",
+            "4;3;\"Warlock\";\"While holding a staff, gain 1 extra Area of Effect for Energy and Fire spells\";();3;3;1;5;-400;50",
+            "62;2;\"Electric Nature\";\"Reduces the cooldown of Energy spells by:\";(10%,20%,35%);0;0;0;0;-300;150",
+            "63;62;\"Steering Insight\";\"Energy and Arrow projectile spells bounce when colliding with enemies and explode on death\";();62;3;1;5;-400;150",
+            "5;1;\"Magic Touch\";\"Heal spells are stronger by:\";(10%,15%,25%);0;0;0;0;-200;-50",
+            "6;5;\"Healing Stick\";\"While holding a staff, reduces the cooldown of Heal and Holy spells by:\";(10%,20%,35%);0;0;0;0;-300;-50",
+            "7;6;\"Child's Channel\";\"Healing others also heals you by 50% and Heal and Light spells are 50% cheaper\";();6;3;1;5;-400;-50",
+            "8;5;\"Apogea's Ardor\";\"Reduces the cooldown of Earth and Water spells by:\";(10%,20%,35%);0;0;0;0;-300;-150",
+            "9;8;\"Gallop's Fall\";\"While holding a staff, gain 1 extra area of effect for Water and Holy spells\";();8;3;1;5;-400;-150",
+            "10;0;\"Stabbing preference\";\"Daggers provide Lifeleech\";(1%,3%,6%,10%,15%);0;0;0;0;-100;-100",
+            "11;10;\"Thorough Puncture\";\"Physical attacks ignore some of the target's armor\";(8%,13%,20%);0;0;0;0;-200;-200",
+            "12;11;\"Shearing Stroke\";\"Attacks have a chance of dealing 1.5x damage\";(10%,14%,20%);0;0;0;0;-300;-300",
+            "13;12;\"Luck Foreseen\";\"Converts 7 Ability into 1% chance of attacking twice\";();10;5;12;3;-400;-400",
+            "14;11;\"Gaff Hack\";\"Casting a Mystic or Time spell has a chance of boosting your Attackspeed by 10 for 4s\";(20%,30%,50%);0;0;0;0;-200;-300",
+            "15;14;\"Double Danger\";\"Using two daggers double your Item Damage\";();10;5;14;3;-200;-400",
+            "16;0;\"Bow Guidance\";\"Bows have extra Attackspeed\";(1,2,3,4,6);0;0;0;0;0;-100",
+            "17;16;\"Good Technique\";\"Gain extra Range\";(1,2,4);0;0;0;0;-50;-200",,
+            "18;17;\"Artisanal Arsenal\";\"Non-magic arrows deal extra Damage and break less often\";(1,2,4);0;0;0;0;-50;-300",
+            "19;18;\"Explosive Ammo\";\"Arrows have a 25% chance of exploding dealing area damage that briefly slows\";();16;5;18;3;-50;-400",
+            "20;17;\"Shineshooter\";\"Reduces the cooldown of Light and Arrow of spells by:\";(10%,20%,35%);0;0;0;0;50;-300",
+            "21;20;\"Bullseye\";\"Increases the Damage of Arrow and Blade spells against enemies you have currently targeted\";();16;5;20;3;50;-400",
+            "22;16;\"True Grip\";\"While wearing Gloves attacking regenerates Mana\";(1,2,5);0;0;0;0;50;-200",
+            "23;22;\"Elvish Practice\";\"Reduces the cooldown of Time and Mystic spells by:\";(10%,20%,35%);0;0;0;0;150;-300",
+            "24;23;\"Arcane Trickster\";\"While using Gloves, casting Time or Mystic spells has a 50% chance of blocking all physical damage for 3 seconds\";();23;3;16;5;150;-400",
+            "25;0;\"Cozy and Useful\";\"Light Armor is lighter\";(1%,5%,10%,17%,25%);0;0;0;0;100;-100",
+            "26;25;\"Breeze in Your Hair\";\"Not wearing a helmet gives you Movespeed\";(1,2,3);0;0;0;0;200;-200",
+            "27;26;\"Lightfoot\";\"If all your equipment weighs less than 150oz, gain Movespeed\";(1,2,3);0;0;0;0;300;-300",
+            "28;27;\"Battle Boots\";\"Converts all extra Movespeed into 2 Damage\";();27;3;25;5;400;-400",
+            "29;25;\"Dressing Wizardly\";\"Armor gives you Mana for each oz under X oz, capped at 20 Mana\";(25oz,33oz,45oz);0;0;0;0;200;-100",
+            "30;29;\"Powerful Space\";\"Gain 5% Magic for each X Free Capacity you have, capping at 20%\";(50,35,15);0;0;0;0;300;-200",
+            "31;30;\"Clothes of the Damned\";\"Removes negative effects from light armor and gain 5% Magic for each equipped light armor\";();30;3;25;5;400;-300",
+            "32;0;\"Block Efficacy\";\"Shields have more defense\";(1,4,8,14,20);0;0;0;0;100;0",
+            "33;32;\"Bread and Butter\";\"Using a sword and shield gives you extra damage\";(2,4,8);0;0;0;0;200;0",
+            "34;33;\"Deflect\";\"Blocking with a magic shield reflects damage taken\";(50%,70%,100%);0;0;0;0;300;-100",
+            "35;31;\"Darkness Embrace\";\"Death spells are 10 times cheaper. Heal and Light spells are 10 times more expensive\";();0;0;0;0;400;-200",
+            "36;34;\"Bulwark Leap\";\"While holding a shield, casting a Time spell will double your magic shield, capping at 200\";();32;5;34;3;400;-100",
+            "37;33;\"Shieldslam\";\"Blocking an attack has a chance of staggering the attacker\";(7%,10%,15%);0;0;0;0;300;0",
+            "38;37;\"Hex Parry\";\"Successfully blocking an attack will empower your next Arrow or Blade spell\";();37;3;32;5;400;0",
+            "39;0;\"Well Protected\";\"Heavy Armor has more Armor\";(1%,5%,10%,17%,25%);0;0;0;0;100;100",
+            "40;39;\"Bulking Up\";\"Gain Health for each equipped heavy armor\";(5,10,25);0;0;0;0;200;100",
+            "41;40;\"Heavy Metal\";\"If all your equipment weighs more than 150oz, gain Armor\";(5%,10%,20%);0;0;0;0;300;100",
+            "42;41;\"Carry your might\";\"Each 75 max capacity gives you 1 extra Armor and 10 Health, capping at 15 Armor and 150 Health\";();41;3;39;5;400;100",
+            "43;39;\"Royal Banner\";\"Reduces the cooldown of Time and Heal spells by:\";(10%,20%,35%);0;0;0;0;200;200",
+            "44;43;\"Magic Steel\";\"Casting a Time or Heal spell will give you a shield equal to a percentage of your total armor:\";(75%, 100%, 150%);0;0;0;0;300;200",
+            "45;44;\"Blessed Plate\";\"Removes negative stats from heavy armor and gain 15 Mana for each equipped heavy armor\";();44;3;39;5;400;300",
+            "46;45;\"Endowed in Steel\";\"Attacking using both your hands gives you multiple stat boosts\";();0;0;0;0;400;200",
+            "47;0;\"Blade Training\";\"Swords have more Damage\";(1%,4%,8%,14%,20%);0;0;0;0;0;100",
+            "48;47;\"Wrecking It\";\"Gain extra Item Damage\";(3%,6%,10%);0;0;0;0;50;200",
+            "49;48;\"No Defense Needed\";\"Damage to swords of size 7 or bigger\";(3%,6%?,10%);0;0;0;0;150;300",
+            "50;49;\"Magic Blade\";\"Removes negative effects from size 7 or bigger swords and gain 10% Manaleech\";();49;3;47;5;150;400",
+            "51;48;\"Hand Finesse\";\"Gain 1 Attackspeed for each X Ability you have capping at 5\";(15,13,10);0;0;0;0;50;300",
+            "52;51;\"Blade Prowess\";\"While holding one sword of size 6 and no shield, reduces the cooldown of Blade spells by 50%\";();51;3;47;5;50;400",
+            "53;48;\"Dual-wielding\";\"Size 6 swords have an equipsize of 5, but deal reduced Damage by:\";(40%,36%,30%);0;0;0;0;-50;300",
+            "54;53;\"To Be Ninja\";\"Converts all extra Ability into Attackspeed\";();47;5;53;3;-50;400",
+            "55;47;\"Fancing Classes\";\"Blade spells are stronger by:\";(5%,9%,15%);0;0;0;0;-50;200",
+            "56;0;\"Pondering It\";\"Orbs provide Spellvamp\";(1%,3%,6%,10%,15%);0;0;0;0;-100;100",
+            "57;56;\"Unnatural Flow\";\"Your attacks will deal extra magic damage\";(4,7,12);0;0;0;0;-200;200",
+            "58;57;\"Flaming Sword\";\"Casting a Fire or Blade spell will make your next attack deal extra magic damage\";(4,8,15);0;0;0;0;-200;300",
+            "59;58;\"Conflagrated Mind\";\"While holding an orb, reduces the cooldown of Fire spells by 35%\";();56;5;58;3;-200;400",
+            "60;57;\"Diamond Skin\";\"Casting an Energy or Arrow spell will give you shield, stacking 3 times\";(20,35,50);0;0;0;0;-300;300",
+            "61;60;\"Unstable Aegis\";\"Taking shield damage will cast Unstable Berserk around yourself\";();56;5;60;3;-400;400"
+        ];
+        /*
+            "0,0,\"Center\",\"Start\",(),0,0,0,0,500,500",
+            "1,0,\"Skill 1\",\"Description of skill 1\",(1;4;10;15;20),0,0,0,0,400,400",
+            "2,0,\"Skill 2\",\"Description of skill 2\",(5;10;15),0,0,0,0,600,400",
+            "3,1,\"SubSkill 3\",\"Description of skill 3\",(3;13;23),1,1,0,0,300,300",
+            "4,3,\"SubSkill 4\",\"Description of skill 4\",(6;12;20),3,1,0,0,200,200",
+            "5,4,\"Final Skill 1\",\"Final skill 1\",(1),4,1,3,2,120,100",
+            "6,3,\"SubSkill 4B\",\"Description of skill 4B\",(3;10;15),3,1,0,0,350,200"
+            */
+        let skills = [];
+        let assignedPoints = {};
+
+        function parseSkills() {
+            skillData.forEach(line => {
+                let parts = line.split(';');
+                let id = parseInt(parts[0]);
+                let posX = (parseInt(parts[9])) * 2 + 800;
+                //console.log(parts[9]+"=>"+posX);
+                let posY = (parseInt(parts[10])) * 2 + 800;
+                let levels = parts[4].replace(/[()]/g, "").split(",");//.map(Number).filter(n => !isNaN(n));
+                let requirements = [
+                    { id: parseInt(parts[5]), level: parseInt(parts[6]) },
+                    { id: parseInt(parts[7]), level: parseInt(parts[8]) }
+                ];
+                let parentId = parseInt(parts[1]);
+                skills.push({ id, text: parts[2].replace(/"/g, ""), description: parts[3].replace(/"/g, ""), levels, posX, posY, requirements, parentId });
+                assignedPoints[id] = 0;
+            });
+        }
+
+        function renderTree() {
+            let treeContainer = document.getElementById('talentTree');
+            let connectors = document.getElementById('connectors');
+            treeContainer.innerHTML = '';
+            connectors.innerHTML = '';
+            skills.forEach(skill => {
+                let node = document.createElement('div');
+                node.className = 'talent-node';
+                node.style.left = skill.posX + 'px';
+                node.style.top = skill.posY + 'px';
+                node.innerHTML = `<p class="title">${skill.text}</p><p class="description">${skill.description}</p><span id='skill-level-${skill.id}' class="levels">${skill.levels.join(' ')}</span> <span style="display: none;" id='skill-${skill.id}'>0</span>`;
+                node.onclick = () => allocatePoint(skill.id);
+                node.oncontextmenu = (e) => {
+                    e.preventDefault();
+                    removePoint(skill.id);
+                };
+                treeContainer.appendChild(node);
+
+                if (skill.parentId > -1) {
+                    let parentSkill = skills.find(s => s.id === skill.parentId);
+                    if (parentSkill) {
+                        let line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        line.setAttribute("x1", skill.posX + 100);
+                        line.setAttribute("y1", skill.posY + 60);
+                        line.setAttribute("x2", parentSkill.posX + 100);
+                        line.setAttribute("y2", parentSkill.posY + 60);
+                        line.classList.add('connector');
+                        connectors.appendChild(line);
+                    }
+                }
+            });
+        }
+
+        function allocatePoint(skillId) {
+            console.log("Allocating point to skill " + skillId);
+            let skill = skills.find(s => s.id === skillId);
+            let canAllocate = skill.requirements.every(req => req.id === 0 || assignedPoints[req.id] >= req.level);
+            let parentSkill = skills.find(s => s.id === skill.parentId);
+            let parentLevel = parentSkill ? assignedPoints[parentSkill.id] : Infinity;
+
+            if (skill.requirements[0].id === 0 && skill.requirements[1].id === 0) {
+                canAllocate = true;
+            }
+
+            if (skill.id === 0 && assignedPoints[skillId] >= 1) {
+                //alert('Maximum level reached: 1');
+                return;
+            }
+
+            if (!canAllocate) {
+                //alert('Requirements not met');
+                highlightRequirements(skill.requirements);
+                return;
+            }
+
+            if (skill.id !== 0 && assignedPoints[skillId] >= skill.levels.length) {
+                //alert('Maximum level reached: ' + skill.levels.length);
+                return;
+            }
+
+            if (skill.parentId !== 0 && assignedPoints[skillId] >= parentLevel) {
+                highlightParentSkill(parentSkill);
+                //alert('Parent skill level too low');
+                return;
+            }
+
+            assignedPoints[skillId]++;
+            let skillElement = document.getElementById(`skill-${skillId}`);
+            if (skillElement) {
+                skillElement.innerText = assignedPoints[skillId];
+            }
+            //put current value in skill-level-skillId according to currently added points
+            let levels = skill.levels.map((level, index) => {
+                return index === assignedPoints[skillId] - 1 ? `<span class="current-level">${level}</span>` : level;
+            }).join(' ');
+            let skillLevelElement = document.getElementById(`skill-level-${skillId}`);
+            if (skillLevelElement) {
+                skillLevelElement.innerHTML = levels;
+            }
+
+            // Update the background color of the skill node
+            let node = document.querySelector(`.talent-node[style*="left: ${skill.posX}px"][style*="top: ${skill.posY}px"]`);
+            if (node) {
+                if (assignedPoints[skillId] > 0) {
+                    node.classList.add('active');
+                } else {
+                    node.classList.remove('active');
+                }
+            }
+
+            // Update character level
+            updateCharacterLevel();
+            updateUrl();
+        }
+
+        function removePoint(skillId) {
+            let skill = skills.find(s => s.id === skillId);
+            let canRemove = true;
+
+            // Check if any active nodes have this skill level in requirements
+            skills.forEach(s => {
+                if (s.requirements.some(req => req.id === skillId && assignedPoints[skillId] <= req.level && assignedPoints[s.id] > 0)) {
+                    canRemove = false;
+                    highlightRequirements([{ id: s.id, level: assignedPoints[s.id] }]);
+                }
+            });
+
+            // Check if any active nodes have this skill as a parent node with equal skill
+            skills.forEach(s => {
+                if (s.parentId === skillId && assignedPoints[skillId] <= assignedPoints[s.id] && assignedPoints[s.id] > 0) {
+                    canRemove = false;
+                    highlightRequirements([{ id: s.id, level: assignedPoints[s.id] }]);
+                }
+            });
+
+            if (!canRemove) {
+                return;
+            }
+
+            if (assignedPoints[skillId] > 0) {
+                assignedPoints[skillId]--;
+                document.getElementById(`skill-${skillId}`).innerText = assignedPoints[skillId];
+                let levels = skill.levels.map((level, index) => {
+                    return index === assignedPoints[skillId] - 1 ? `<span class="current-level">${level}</span>` : level;
+                }).join(' ');
+                document.getElementById(`skill-level-${skillId}`).innerHTML = levels;
+
+                // Update the background color of the skill node
+                let node = document.querySelector(`.talent-node[style*="left: ${skill.posX}px"][style*="top: ${skill.posY}px"]`);
+                if (assignedPoints[skillId] > 0) {
+                    node.classList.add('active');
+                } else {
+                    node.classList.remove('active');
+                }
+
+                // Update character level
+                updateCharacterLevel();
+                updateUrl();
+            }
+        }
+
+        function highlightRequirements(requirements) {
+            requirements.forEach(req => {
+                if (req.id !== 0) {
+                    let node = document.querySelector(`.talent-node[style*="left: ${skills.find(s => s.id === req.id).posX}px"][style*="top: ${skills.find(s => s.id === req.id).posY}px"]`);
+                    node.style.borderColor = 'yellow';
+                    node.style.borderWidth = '2px';
+                    setTimeout(() => {
+                        node.style.borderColor = '#000';
+                        node.style.borderWidth = '2px';
+                    }, 500);
+                }
+            });
+        }
+
+        function highlightParentSkill(parentSkill) {
+            let node = document.querySelector(`.talent-node[style*="left: ${parentSkill.posX}px"][style*="top: ${parentSkill.posY}px"]`);
+            node.style.borderColor = 'red';
+            setTimeout(() => {
+                node.style.borderColor = '#000';
+            }, 500);
+        }
+
+        function resetTree() {
+            Object.keys(assignedPoints).forEach(id => assignedPoints[id] = 0);
+            renderTree();
+            updateCharacterLevel();
+            updateUrl();
+        }
+
+        function updateCharacterLevel() {
+            let totalPoints = Object.values(assignedPoints).reduce((a, b) => a + b, 0);
+            let charLevel = Math.max(1,(totalPoints - assignedPoints[0]) * 2); // Exclude the start node points
+            document.getElementById('charLevel').innerText = charLevel;
+        }
+
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            let regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            let results = regex.exec(location.search);
+            let value = results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            console.log(`Parameter: ${name}, Value: ${value}`);
+            return value;
+        }
+
+        function applyUrlParameters() {
+            console.log("Full query string:", location.search);
+            let params = new URLSearchParams(location.search);
+            params.forEach((value, key) => {
+                console.log(`Parameter: ${key}, Value: ${value}`);
+                if (key.startsWith('skill')) {
+                    let id = parseInt(key.replace('skill', ''));
+                    let level = parseInt(value);
+                    if (!isNaN(level)) {
+                        for (let i = 0; i < level; i++) {
+                            console.log("About to allocate point to skill " + id);
+                            allocatePoint(id);
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateUrl() {
+            let params = new URLSearchParams();
+            Object.keys(assignedPoints).forEach(id => {
+                if (assignedPoints[id] > 0) {
+                    params.set('skill' + id, assignedPoints[id]);
+                }
+            });
+            history.replaceState(null, '', '?' + params.toString());
+        }
+
+        function copyLink() {
+            let url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Link copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy link: ', err);
+            });
+        }
+
+        parseSkills();
+        renderTree(); // Render the tree first
+        applyUrlParameters(); // Apply URL parameters after rendering the tree
+        if(location.search == ""){
+            allocatePoint(0);
+        }
+    </script>
+</body>
+</html>

@@ -30,6 +30,7 @@ body.small{
 
 #top-menu div {
     flex: 0.23 1 0;
+    text-align: left;
 }
 
 #top-menu div img {
@@ -101,6 +102,8 @@ a {
     width: 16px;
     height: 16px;
     margin-right: 10px;
+    filter: drop-shadow(0px 0px 3px #ffffff);
+    -webkit-filter: drop-shadow(0px 0px 1px rgb(255, 255, 255), 0px 0px 1px rgb(255, 255, 255));
 }
 
 p{

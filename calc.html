@@ -1,0 +1,2396 @@
+<!DOCTYPE html>
+<html lang="en" style="overflow: hidden;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Stat Calculator</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        body {
+            user-select: none;
+            font-family: '9Px3bus-WpXV', Arial, sans-serif;
+            /*background: linear-gradient(90deg, #2e0a0a 0%, #1d1717 50%, #1b1b1b 100%);*/
+            color: rgb(239, 255, 148);
+            font-size: 1.44em;
+            text-shadow: 2px 2px 2px rgba(0, 0, 0, 1), -2px -2px 2px rgba(0, 0, 0, 1), -2px 2px 2px rgba(0, 0, 0, 1), 2px -2px 2px rgba(0, 0, 0, 1);
+        }
+        
+        @font-face {
+                font-family: '9Px3bus-WpXV';
+                src: url('VT323-Regular.ttf') format('truetype');
+            }
+        .stat-container {
+            display: grid;
+            grid-template-columns: 150px 50px 40px 40px 40px 80px 100px 120px 120px 220px 140px;
+            gap: 0px;
+            width: 1015px;
+            margin-bottom: 0px;
+        }
+        .stat-container > div {
+            padding: 1px;
+            border: 0px solid black;
+            text-align: center;
+        }
+        .stat-container:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.07);
+        }
+        button {
+            cursor: pointer;
+        }
+        .multiplier {
+            color: red;
+        }
+        .multiplier.green {
+            color: green;
+        }
+        .multiplier.white {
+            color: rgb(248, 241, 207);
+        }
+        .bonus.transparent {
+            color: rgba(201, 201, 201, 0.363);
+        }
+        .bonus.lesstransparent {
+            color: rgba(66, 172, 80, 0.658);
+        }
+        .bonus.redtransparent {
+            color: rgba(192, 45, 45, 0.575);
+        }
+        button{
+            background-color: rgb(239, 255, 148);
+            color: black;
+            border: 2px solid rgb(54, 54, 54);
+            border-radius: 8px;
+            padding: 0px 0px 13px 0px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: bold;
+            width: 24px;
+            height: 24px;
+            margin: 0px 0px;
+            cursor: pointer;
+            transition: 0.6s;
+        }
+        button:hover{
+            background-color: rgb(61, 204, 69);
+            color: black;
+            /* fade in */
+            transition: 0.6s;
+        }
+        button:active{
+            background-color: rgb(255, 255, 255);
+            color: black;
+        }
+        .leveldiv {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 0px solid rgb(54, 54, 54);
+            border-radius: 8px;
+            padding: 10px;
+            width: 120px;
+            height: 120px;
+            text-align: center;
+        }
+        .leveltitle {
+            margin-bottom: 5px;
+        }
+        .levelnumber {
+            width: 80px;
+            height: 40px;
+            font-size: 1.8em;
+            font-weight: bold;
+            text-align: center;
+            border: 0px solid rgb(54, 54, 54);
+            border-radius: 8px;
+            background-color: rgb(26, 0, 0);
+            color: rgb(243, 248, 215);
+            margin: 0px 0px;
+            /* don't show up and down arrows */
+            -moz-appearance: textfield;
+            appearance: textfield;
+            text-shadow: 2px 2px 2px rgba(252, 252, 252, 0.219), -2px -2px 2px rgba(255, 255, 255, 0.384), -2px 2px 2px rgba(255, 255, 255, 0.281), 2px -2px 2px rgba(255, 255, 255, 0.267);
+        }
+        .class-selection img {
+            cursor: pointer;
+            width: 67px;
+            height: 100px;
+            margin: 5px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+        }
+        .class-selection img.selected {
+            border-color: rgb(239, 255, 148);
+        }
+        .character{
+            display: flex;
+            align-items: center;
+            margin: 0px 0px 0px 0px;
+        }
+        .smaller{
+            font-size: 0.7em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .green{
+            color: rgb(54, 170, 54);
+        }
+        .supergreen{
+            color: rgb(10, 207, 10);
+            text-shadow: 2px 2px 2px rgba(252, 252, 252, 0.11), -2px -2px 2px rgba(255, 255, 255, 0.219), -2px 2px 2px rgba(255, 255, 255, 0.164), 2px -2px 2px rgba(255, 255, 255, 0.158);
+        }
+        .item-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 48px);
+            grid-template-rows: repeat(4, 48px);
+            gap: 5px;
+            margin-left: 20px;
+        }
+        .item-slot {
+            width: 48px;
+            height: 48px;
+            border: 2px solid rgb(54, 54, 54);
+            border-radius: 4px;
+            background-color: rgb(36, 0, 0);
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .item-slot img, .selection-item img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            margin: auto;
+            -webkit-filter: drop-shadow(0px 0px 5px #ffffff63);
+            filter: drop-shadow(0px 0px 5px #ffffff63);
+        }
+        img.uncommon, .selection-item img.uncommon{
+            -webkit-filter: drop-shadow(0px 0px 5px #23ff2e);
+            filter: drop-shadow(0px 0px 5px #23ff2e);
+        }
+        img.rare, .selection-item img.rare{
+            -webkit-filter: drop-shadow(0px 0px 5px #00ccff);
+            filter: drop-shadow(0px 0px 5px #00ccff);
+        }
+        img.epic, .selection-item img.epic{
+            -webkit-filter: drop-shadow(0px 0px 5px #f712eb);
+            filter: drop-shadow(0px 0px 5px #f712eb);
+        }
+        img.legendary, .selection-item img.legendary{
+            -webkit-filter: drop-shadow(0px 0px 5px #ffee01);
+            filter: drop-shadow(0px 0px 5px #ffee01);
+        }
+        span.uncommon{
+            color: #23ff2e;
+            text-shadow: 2px 2px 2px #23ff2e5e, -2px -2px 2px #23ff2e5e, -2px 2px 2px #23ff2e5e, 2px -2px 2px #23ff2e5e;
+        }
+        span.rare{
+            color: #00ccff;
+            text-shadow: 2px 2px 2px #00ccff69, -2px -2px 2px #00ccff69, -2px 2px 2px #00ccff69, 2px -2px 2px #00ccff69;
+        }
+        span.epic{
+            color: #f712eb;
+            text-shadow: 2px 2px 2px #f712ec48, -2px -2px 2px #f712ec48, -2px 2px 2px #f712ec48, 2px -2px 2px #f712ec48;
+        }
+        span.legendary{
+            color: #ffee01;
+            text-shadow: 2px 2px 2px #ffee0150, -2px -2px 2px #ffee0150, -2px 2px 2px #ffee0150, 2px -2px 2px #ffee0150;
+        }
+        .item-slot img.size-32, .selection-item img.size-32 {
+            width: 48px;
+            height: 48px;
+        }
+        .item-slot img.size-16, .selection-item img.size-16 {
+            width: 24px;
+            height: 24px;
+        }
+        .item-slot img:empty {
+            border: none;
+            display: none;
+        }
+        .selection-grid {
+            display: none;
+            grid-template-columns: repeat(6, 48px);
+            grid-template-rows: repeat(5, 48px);
+            gap: 5px;
+            margin-left: 20px;
+            width: 340px;
+            height: 300px;
+            overflow-y: auto;
+        }
+        .selection-grid.active {
+            display: grid;
+        }
+        .selection-item {
+            width: 48px;
+            height: 48px;
+            border: 2px solid rgb(54, 54, 54);
+            border-radius: 4px;
+            background-color: rgb(36, 0, 0);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .selection-item img{
+            -webkit-filter: drop-shadow(0px 0px 5px #ffffff62);
+            filter: drop-shadow(0px 0px 5px #ffffff62);
+        }
+        .item-stats {
+            width: 130px;
+            height: 300px;
+            border: 2px solid rgb(54, 54, 54);
+            border-radius: 4px;
+            font-size: 0.7em;
+            background-color: rgb(36, 0, 0);
+            color: rgb(243, 248, 215);
+            margin-left: 20px;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        span.red{
+            color: rgb(170, 54, 54);
+        }
+        span.yellow{
+            color: rgb(255, 255, 0);
+        }
+        span.purple{
+            color: rgb(173, 34, 166);
+        }
+        span.grey{
+            color: rgb(80, 88, 81);
+        }
+        .item-slot.invalid {
+            border-color: red;
+        }
+        .class-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .class-selection {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 5px;
+        }
+        span.description{
+            font-size: 0.9em;
+            color:#79d196;
+        }
+        .main-content {
+            display: flex;
+        }
+        .traits-panel {
+            position: relative; /* Ensure proper positioning context for the SVG */
+            width: 100%;
+            height: calc(100vh - 100px); /* Adjust height to fit within viewport */
+            margin-left: 20px;
+            background-color: rgba(36, 0, 0, 0);
+            padding: 0px;
+            border: 0px solid rgb(54, 54, 54);
+            border-radius: 4px;            
+            color: rgb(239, 255, 148);
+            display: flex;
+            flex-wrap: wrap;
+            overflow: auto; /* Allow scrolling */
+        }
+        .connector {
+            position: absolute;
+            z-index: 0;
+            pointer-events: none; /* Ensures clicks pass through to the traits */
+            stroke: black;
+            stroke-width: 2;
+        }
+        .trait {
+            z-index: 1; /* Ensure traits are above the connector lines */
+            position: absolute;
+            /* ...existing trait styles... */
+        }
+        #traits-list{
+            width: 85%;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+        .trait {
+            margin: 2px;
+            border: 2px solid #000000;
+            background: #3d3d3d;
+            display: flex;
+            flex-direction: column;
+            width: 140px;
+            height: fit-content;
+            border-radius: 5px;
+            user-select: none;
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+        }
+        div.trait.active {
+            background-color: rgb(29, 245, 0);
+        }
+        .trait-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .trait-title {
+            font-weight: bold;
+            margin-bottom: 0px;
+            font-size: 0.8em;
+            line-height: 1em;
+            text-align: center;
+            padding-right: 8px;
+            padding-left: 8px;
+            color: #d4b503;
+        }
+        .trait-description {
+            margin-bottom: 2px;
+            font-size: 0.65em;
+            text-align: center;
+            line-height: 0.8em;
+            display: flex;
+            justify-content: center;
+            align-items: top;
+            padding: 0;
+            padding-top: 5px;
+            opacity: 0.9;
+            color: #dace8d;
+        }
+        .trait-stages {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            vertical-align: bottom;
+            padding-top: 3px;
+            font-size: 0.9em;
+        }
+        .trait-stages button {
+            margin-right: 5px;
+            border-radius: 0;
+            width: 65px;
+            height: 15px;
+            background-color: transparent;
+            border: 0px solid transparent;
+            /*
+            border: 2px solid rgb(0, 0, 0);
+            background-color: rgb(36, 0, 0);
+            */
+            font-family: '9Px3bus-WpXV', Arial, sans-serif;
+            font-size: 1em;
+            margin-bottom: 5px;
+            line-height: 0.55em;
+            color:rgb(0, 0, 0);
+            font-weight: 100;
+            text-shadow: 2px 2px 2px #0000008f;
+        }
+        .trait-stages button.active {
+            /*background-color: rgb(0, 168, 8);*/
+            color: rgb(234, 255, 47);
+        }
+        .trait-stages button.active.first-stage {
+            /*background-color: rgb(100, 100, 100);*/
+            color: rgb(90, 92, 67);
+            display: none;
+        }
+        .trait-stages button.first-stage{
+            display: none;
+        }
+        p{
+            margin: 20px;
+        }
+        span.points{
+            font-size: 1.5em;
+        }
+        h3{
+            margin: 0px;
+            font-size: 1.2em;
+            padding: 0px;
+        }
+        div.maintitle{
+            font-size: 1.6em;
+            text-align: center;
+            margin: 20px;
+            display: flex;
+            height: 80px;
+        }
+        div.maintitle div.logo{
+            margin: 0px 10px;
+            width: 200px;
+        }
+        div.maintitle div.copylink{
+            margin: 0px 30px;
+            width: 150px;
+            font-size: 1em;
+        }
+        div.maintitle div img{
+            height: 120%;
+        }
+        div.maintitle div.mainname{
+            width: 280px;
+        }
+        button.copylink {
+        background-color: #dace8d;
+        color: white;
+        border: 2px solid #000;
+        border-radius: 8px;
+        padding: 5px 10px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        width: auto;
+        height: auto;
+        margin: 10px 0;
+        font-family: '9Px3bus-WpXV', Arial, sans-serif;
+        transition: background-color 0.3s;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 1), -2px -2px 2px rgba(0, 0, 0, 1), -2px 2px 2px rgba(0, 0, 0, 1), 2px -2px 2px rgba(0, 0, 0, 1);
+        }
+        .copylink button:hover {
+            background-color: rgb(0, 202, 10);
+            color: rgb(243, 240, 34);
+        }
+        span.dps{
+            font-size: 0.5em;
+        }
+html, div.selection-grid {
+  /* For Firefox */
+  overflow-y: scroll;
+  scrollbar-color: rgb(239, 255, 148) rgb(36, 0, 0);;
+  scrollbar-width: thin;
+}
+
+/* For Chrome and other browsers except Firefox */
+body::-webkit-scrollbar {
+    width: 0.5em;
+    background-color: #0d3b97;
+}
+body::-webkit-scrollbar-thumb {
+    background-color: #008de4;
+}
+    .tabs {
+        display: flex;
+        justify-content: left;
+        margin-bottom: 10px;
+        width: 1100px;
+    }
+    div.tab div{
+        width: 250px;
+    }
+    .tab-button {
+        background-color: #dace8d;
+        color: white;
+        border: 2px solid #000;
+        border-radius: 8px;
+        padding: 5px 10px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        width: auto;
+        height: auto;
+        margin: 10px 0;
+        font-family: '9Px3bus-WpXV', Arial, sans-serif;
+        transition: background-color 0.3s;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 1), -2px -2px 2px rgba(0, 0, 0, 1), -2px 2px 2px rgba(0, 0, 0, 1), 2px -2px 2px rgba(0, 0, 0, 1);
+    }
+    .tab-button:hover{
+        color: #d4b503;
+    }
+    .tab-button.active {
+        border: 4px solid #d4b503;
+    }
+    .tab-content {
+        display: none;
+    }
+    .tab-content.active {
+        display: block;
+    }
+    #reset-traits {
+        background-color: #d42626;
+        color: white;
+        border: 2px solid #000;
+        border-radius: 8px;
+        padding: 5px 10px;
+        font-size: 1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        width: auto;
+        height: auto;
+        margin: 10px 0;
+        font-family: '9Px3bus-WpXV', Arial, sans-serif;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 1), -2px -2px 2px rgba(0, 0, 0, 1), -2px 2px 2px rgba(0, 0, 0, 1), 2px -2px 2px rgba(0, 0, 0, 1);
+    }
+    
+    #reset-traits:hover {
+        background-color: #ff3a3a;
+    }
+    
+    .requirement-error {
+        border-color: #ff0000 !important;
+        animation: pulse 0.5s;
+    }
+    
+    @keyframes pulse {
+        0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+    }
+
+    
+    .wizardMan{
+        pointer-events: none;
+    }
+    @keyframes blink {
+        0% { color: green; }
+        50% { color: #d4b503; }
+        100% { color: green; }
+    }
+    .blinking {
+        animation: blink 1s infinite;
+    }
+    .calctitle{
+        background-color: #dace8d1f;
+        color: #d4b503;
+        border: 2px solid #000;
+        border-radius: 8px;
+        padding: 5px 10px;
+        font-size: 1em;
+        font-weight: bold;
+        pointer-events: none;
+        user-select: none;
+        transition: 0.3s;
+        width: 300px;
+        height: auto;
+        margin: 10px 0;
+        font-family: '9Px3bus-WpXV', Arial, sans-serif;
+        transition: background-color 0.3s;
+        text-shadow: 2px 2px 2px rgba(0, 0, 0, 1), -2px -2px 2px rgba(0, 0, 0, 1), -2px 2px 2px rgba(0, 0, 0, 1), 2px -2px 2px rgba(0, 0, 0, 1);
+        vertical-align: middle;
+        text-align: center;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+    }
+    </style>
+</head>
+<body>
+    <div class="tabs">
+        
+        <div class="calctitle">
+            Character Stat Calculator v0.5
+        </div>
+        <button class="copylink" onclick="copyLink()">Copy Link 📋</button>
+        <button class="tab-button active" onclick="openTab('equipment-stats')">Equipment & Stats</button>
+        <button class="tab-button" onclick="openTab('choose-traits')">Choose Traits<br><span class="points" id="available-trait-points">0</span></button>
+        
+        <button id="reset-traits" onclick="resetTraits()">Reset All Traits</button>
+    </div>
+    <div id="equipment-stats" class="tab-content active">
+        <div class="main-content">
+            <div>
+                <div class="character">
+                    <div class="leveldiv">
+                        <label class="leveltitle" for="level">Character Level:</label>
+                        <input class="levelnumber" type="number" id="level" min="1" value="1" onchange="updatePoints()">
+                        <p><label>Available Points:</label> <label><span class="points" id="available-points">0</span></label></p>
+                    </div>
+                    <br>
+                    <div class="class-container">
+                        <label>Character Class:</label>
+                        <div class="class-selection">
+                            <img src="squire.png" alt="Squire" onclick="selectClass('Squire')">
+                            <img src="knight.png" alt="Knight" onclick="selectClass('Knight')">
+                            <img src="rogue.png" alt="Rogue" onclick="selectClass('Rogue')">
+                            <img src="mage.png" alt="Mage" onclick="selectClass('Mage')">
+                        </div>
+                    </div>
+                    <input type="hidden" id="class" value="Squire">
+                    <div class="item-grid">
+                        <div class="item-slot" data-slot="neck"></div>
+                        <div class="item-slot" data-slot="head"></div>
+                        <div class="item-slot" data-slot="bagslot"></div>
+                        <div class="item-slot" data-slot="hand"></div>
+                        <div class="item-slot" data-slot="chest"></div>
+                        <div class="item-slot" data-slot="hand"></div>
+                        <div class="item-slot" data-slot="ring"></div>
+                        <div class="item-slot" data-slot="legs"></div>
+                        <div class="item-slot" data-slot="bagslot"></div>
+                        <div class="item-slot-x" data-slot="NONE"></div>
+                        <div class="item-slot" data-slot="boots"></div>
+                    </div>
+                    <div class="item-stats" id="item-stats"></div>
+                    <div class="selection-grid" id="selection-grid"></div>
+                </div>
+                
+                
+                <div class="stat-container">
+                    <div>Stat</div>
+                    <div>Base</div>
+                    <div>-</div>
+                    <div>+</div>
+                    <div>Pts</div>
+                    <div class="bonus transparent">Bonus</div>
+                    <div class="bonus transparent">Item Bonus</div>
+                    <div class="bonus transparent">Trait Bonus</div>
+                    <div>Multiplier</div>
+                    <div>Final</div>
+                </div>
+                <div id="stat-table"></div>
+            </div>
+        </div>
+    </div>
+    <div id="choose-traits" class="tab-content">
+        <div class="traits-panel" id="traits-panel">
+            <div id="traits-list"></div>
+        </div>
+    </div>
+    
+    <script>
+        const baseStats = {
+            Health: [150, 5], Mana: [15, 5], Magic: [0, 1], Damage: [5, 1], Movespeed: [36, 1],
+            Ability: [0, 1], "Attack Speed": [10, 1], "HP Regen": [2, 1], "MP Regen": [1, 1],
+            Range: [15, 1], Armor: [0, 1], Defense: [0, 1], Capacity: [225, 25]
+        };
+        
+        const classMultipliers = {
+            Squire: { Health: 1, Mana: 1, Magic: 1, Ability: 1, "HP Regen": 1, "MP Regen": 1, Capacity: 1, "Attack Speed": 1, Armor: 1, Defense: 1 },
+            Knight: { Health: 2, Mana: 0.5, Magic: 0.5, Ability: 1.25, "HP Regen": 1.25, "MP Regen": 0.5, Capacity: 1.5, "Attack Speed": 1, Armor: 1.5, Defense: 1.5 },
+            Rogue: { Health: 1, Mana: 1.25, Magic: 1.5, Ability: 1.5, "HP Regen": 1, "MP Regen": 1, Capacity: 1, "Attack Speed": 1.25, Armor: 1, Defense: 1 },
+            Mage: { Health: 0.75, Mana: 2, Magic: 2, Ability: 0.75, "HP Regen": 0.75, "MP Regen": 2, Capacity: 0.75, "Attack Speed": 1, Armor: 0.75, Defense: 0.75 }
+        };
+        
+        const items = [
+            //comment the variable names
+            //name, slot, type, weight, range, damage, HP, Mp, skill, magic, armor, defense, moveSpeed, attackSpeed, emptyholder, equipSize, description, image
+            ["Black Bag","bagslot","container",80,,,,,,,,,,,,,,,"","BlackBag.png",""],
+["Black Bag","bagslot","container",64,,,,,,,,,,,,,,,"","BlackBag.png","uncommon"],
+["Blue Backpack","bagslot","container",160,,,,,,,,,,,,,,,"<empty>","BlueBackpack.png",""],
+["Bone Bow","hand","bow",200,37,10,,,,,,,,4,,8,,,"A magic bow.","BoneBow.png",""],
+["Bone Knife","hand","dagger",160,,9,,,,,,,,1,,3,,,"","BoneKnife.png",""],
+["Bone Knife","hand","dagger",160,1,12,,,,,,,,4,,3,,,"","BoneKnife.png","legendary"],
+["Brass Legs","legs","heavylegs",470,,,,,,,5,,,,,,,,"","BrassLegs.png",""],
+["Brass Legs","legs","heavylegs",376,,,,,,,5,,,,,,,,"","BrassLegs.png","uncommon"],
+["Brass Plate","chest","heavychest",790,,,,,,,10,,,,,,,,"","BrassPlate.png",""],
+["Brass Shield","hand","lightshield",200,,,,,,,,15,,,,3,,,"Surprisingly light.","BrassShield.png",""],
+["Brass Shield","hand","lightshield",140,,,,,,,,19,,,,3,,,"Surprisingly light.","BrassShield.png","rare"],
+["Brass Shield","hand","lightshield",120,,,,,,,,21,,,,3,,,"Surprisingly light.","BrassShield.png","legendary"],
+["Brigandine Vest","chest","lightchest",580,,,20,,2,,8,,,,,,,,"","BrigandineVest.png",""],
+["Broadsword","hand","sword",750,2,28,,,,,,7,,-2,,8,,,"","Broadsword.png",""],
+["Broadsword","hand","sword",750,2,33,,,,,,7,,-2,,8,,,"","Broadsword.png","uncommon"],
+["Broadsword","hand","sword",750,2,36,,,,,,8,,-1,,8,,,"","Broadsword.png","rare"],
+["Broadsword","hand","sword",750,2,39,,,,,,9,,,,8,,,"","Broadsword.png","epic"],
+["Brown Backpack","bagslot","container",160,,,,,,,,,,,,,,,"","BrownBackpack.png",""],
+["Buckler","hand","lightshield",160,,,,,,,,10,,,,3,,,"","Buckler.png",""],
+["Buckler","hand","lightshield",128,,,,,,,,12,,,,3,,,"","Buckler.png","uncommon"],
+["Burlap Hat","head","lighthelmet",100,,,,50,-2,-2,1,,,,,,,,"","BurlapHat.png",""],
+["Chain Mail","chest","heavychest",810,,,,,,,8,,,,,,,,"","ChainMail.png",""],
+["Chain Mail","chest","heavychest",648,,,,,,,8,,,,,,,,"","ChainMail.png","uncommon"],
+["Chain Mail","chest","heavychest",567,,,,,,,9,,,,,,,,"","ChainMail.png","rare"],
+["Chain Mail","chest","heavychest",405,,,,,,,11,,,,,,,,"","ChainMail.png","legendary"],
+["Cloth Pants","legs","lightlegs",80,,,,,,,1,,,,,,,,"","ClothPants.png",""],
+["Cloth Pants","legs","lightlegs",64,,,,,,,1,,,,,,,,"","ClothPants.png","uncommon"],
+["Cloth Pants","legs","lightlegs",56,,,,,,,1,,,,,,,,"","ClothPants.png","rare"],
+["Cloth Pants","legs","lightlegs",48,,,,,,,1,,,,,,,,"","ClothPants.png","epic"],
+["Cloth Vest","chest","lightchest",200,,,,,,,2,,,,,,,,"","ClothVest.png",""],
+["Cloth Vest","chest","lightchest",160,,,,,,,2,,,,,,,,"","ClothVest.png","uncommon"],
+["Cloth Vest","chest","lightchest",140,,,,,,,3,,,,,,,,"","ClothVest.png","rare"],
+["Cloth Vest","chest","lightchest",120,,,,,,,3,,,,,,,,"","ClothVest.png","epic"],
+["Cloth Vest","chest","lightchest",100,,,,,,,3,,,,,,,,"","ClothVest.png","legendary"],
+["Crowbar","hand","tools",130,,3,,,,,,,,,,4,,,"","Crowbar.png",""],
+["Crowbar","hand","tools",104,,3,,,,,,,,,,4,,,"","Crowbar.png","uncommon"],
+["Crowbar","hand","tools",91,,4,,,,,,,,,,4,,,"","Crowbar.png","rare"],
+["Crystal Ring","ring","ring",8,,,,,,2,,,,,,,,,"","CrystalRing.png",""],
+["Crystal Ring","ring","ring",8,,,,,,4,,,,,,,,,"","CrystalRing.png","epic"],
+["Crystal Staff","hand","staff",200,37,10,,,,,,,,1,,8,,,"A light staff.","CrystalStaff.png",""],
+["Crystal Staff","hand","staff",160,42,12,,,,,,,,1,,8,,,"A light staff.","CrystalStaff.png","uncommon"],
+["Crystal Staff","hand","staff",140,44,13,,,,,,,,2,,8,,,"A light staff.","CrystalStaff.png","rare"],
+["Cutlass","hand","sword",450,2,25,,,,,,3,,3,,6,,,"A sailor’s sword.","Cutlass.png",""],
+["Dark Hood","head","lighthelmet",60,,,-10,,3,,2,,,,,,,,"A hood longs for life.","DarkHood.png",""],
+["Dark Hood","head","lighthelmet",42,,,-7,,4,,2,,,,,,,,"A hood longs for life.","DarkHood.png","rare"],
+["Dark Hood","head","lighthelmet",36,,,-7,,5,,2,,,,,,,,"A hood longs for life.","DarkHood.png","epic"],
+["Dark Robe","chest","lightchest",160,,,-35,,,4,4,,,,,,,,"The robe longs for life.","DarkRobe.png",""],
+["Druid Hat","head","lighthelmet",95,,,40,,,1,3,,,,,,,,"","DruidHat.png",""],
+["Epee","hand","sword",180,2,19,,,,,,2,,3,,6,,,"A fencing sword.","Epee.png",""],
+["Euler Pants","legs","lightlegs",100,,,,,,2,4,,,,,,,,"","EulerPants.png",""],
+["Gambeson","chest","lightchest",300,,,10,,,,5,,,,,,,,"","Gambeson.png",""],
+["Gambeson","chest","lightchest",180,,,14,,,,7,,,,,,,,"","Gambeson.png","epic"],
+["Garnet Ring","ring","ring",120,,,,,,,,,1,,,,,,"","GarnetRing.png",""],
+["Golden Ring","ring","ring",7,,,35,,,,,,,,,,,,"","GoldenRing.png",""],
+["Golden Ring","ring","ring",6,,,45,,,,,,,,,,,,"","GoldenRing.png","rare"],
+["Green Bag","bagslot","container",80,,,,,1,,,,,,,,,,"It has a blue gem in it.","GreenBag.png",""],
+["Ironsword","hand","sword",360,2,14,,,,,,2,,2,,6,,,"","Ironsword.png",""],
+["Ironsword","hand","sword",288,2,16,,,,,,2,,2,,6,,,"","Ironsword.png","uncommon"],
+["Ironsword","hand","sword",252,2,18,,,,,,3,,3,,6,,,"","Ironsword.png","rare"],
+["Ironsword","hand","sword",216,2,19,,,,,,4,,4,,6,,,"","Ironsword.png","epic"],
+["Kettle Helmet","head","heavyhelmet",350,,,,,,,3,,,,,,,,"","KettleHelmet.png",""],
+["Knife","hand","dagger",80,,3,,,,,,,,3,,2,,,"","Knife.png",""],
+["Knife","hand","dagger",64,,3,,,,,,,,3,,2,,,"","Knife.png","uncommon"],
+["Knife","hand","dagger",56,,4,,,,,,,,4,,2,,,"","Knife.png","rare"],
+["Knife","hand","dagger",48,,5,,,,,,,,5,,2,,,"","Knife.png","epic"],
+["Knife","hand","dagger",40,1,6,,,,,,,,6,,2,,,"","Knife.png","legendary"],
+["Leather Bascinet","head","lighthead",100,,,,,,,1,,,,,,,,"","LeatherBascinet.png",""],
+["Leather Bascinet","head","lighthead",80,,,,,,,1,,,,,,,,"","LeatherBascinet.png","uncommon"],
+["Leather Bascinet","head","lighthead",50,,,,,,,1,,,,,,,,"","LeatherBascinet.png","legendary"],
+["Leather Boots","boots","lightboots",100,,,,,,,1,,,,,,,,"","LeatherBoots.png",""],
+["Leather Boots","boots","lightboots",80,,,,,,,1,,,,,,,,"","LeatherBoots.png","uncommon"],
+["Leather Boots","boots","lightboots",60,,,,,,,1,,,,,,,,"","LeatherBoots.png","epic"],
+["Leather Cloak","chest","lightchest",100,,,,,,,3,,,,,,,,"","LeatherCloak.png",""],
+["Leather Coif","head","lighthead",140,,3,,,,,4,,,,,,,,"","LeatherCoif.png",""],
+["Leather Collar","neck","lightneck",200,,,,,,,2,,,,,,,,"","LeatherCollar.png",""],
+["Leather Collar","neck","lightneck",140,,,,,,,3,,,,,,,,"","LeatherCollar.png","rare"],
+["Leather Collar","neck","lightneck",120,,,,,,,3,,,,,,,,"","LeatherCollar.png","epic"],
+["Leather Cuisse","legs","lightlegs",290,,,,,,,2,,,,,,,,"","LeatherCuisse.png",""],
+["Leather Cuisse","legs","lightlegs",322,,,,,,,2,,,,,,,,"","LeatherCuisse.png","uncommon"],
+["Leather Cuisse","legs","lightlegs",203,,,,,,,3,,,,,,,,"","LeatherCuisse.png","rare"],
+["Leather Cuisse","legs","lightlegs",174,,,,,,,3,,,,,,,,"","LeatherCuisse.png","epic"],
+["Leather Gloves","hand","gloves",150,,3,,,4,,1,,,,,1,,,"","LeatherGloves.png",""],
+["Longbow","hand","bow",370,57,20,,,,,,,,-1,,9,,,"","Longbow.png",""],
+["Longbow","hand","bow",296,64,24,,,,,,,,-1,,9,,,"","Longbow.png","uncommon"],
+["Longsword","hand","sword",980,7,38,,,,,,10,,-2,,8,,,"","Longsword.png",""],
+["Magician Hat","head","lighthelmet",100,,,,,,3,2,,,,,,,,"","MagicianHat.png",""],
+["Merchant’s Bag","bagslot","container",550,,,10,,,,,,,,,,,,"A bag for trading.","MerchantsBag.png",""],
+["Merchant’s Bag","bagslot","container",460,,,12,,,,,,,,,,,,"A bag for trading.","MerchantsBag.png","uncommon"],
+["Merchant’s Bag","bagslot","container",330,,,14,,,,,,,,,,,,"A bag for trading.","MerchantsBag.png","epic"],
+["Nightshade Robe","chest","lightchest",175,,,,,-5,1,7,,,,,,,,"The robe makes you feel lighter.","NightshadeRobe.png",""],
+["Old Gloves","hand","gloves",100,,2,,,2,,,,,,,1,,,"","OldGloves.png",""],
+["Orb","hand","orb",190,,,,,,2,,2,,,,2,,,"A magical orb.","Orb.png",""],
+["Orb","hand","orb",152,,,,,,2,,2,,,,2,,,"A magical orb.","Orb.png",""],
+["Pestilence Sword","hand","sword",850,6,50,,50,-6,4,,7,,-1,,8,,,"A magic sword.","PestilenceSword.png",""],
+["Plated Cuirass","chest","heavychest",1050,,,,,,,12,,,,,,,,"","PlatedCuirass.png",""],
+["Plated Helmet","head","heavyhelmet",350,,,,,,,6,,,,,,,,"","PlatedHelmet.png",""],
+["Plated Helmet","head","heavyhelmet",280,,,,,,,6,,,,,,,,"","PlatedHelmet.png","uncommon"],
+["Plated Legs","legs","heavylegs",700,,,,,,,7,,,,,,,,"","PlatedLegs.png",""],
+["Plated Shield","hand","heavyshield",800,,,,,,,,20,,,,4,,,"","PlatedShield.png",""],
+["Quoki Headgear","head","lightmask",45,,,-22,,,,,,,1,,,,,"Customary headpiece.","QuokiHeadgear.png",""],
+["Quoki Headgear","head","lightmask",40,,,-20,,,,,,,1,,,,,"Customary headpiece.","QuokiHeadgear.png","uncommon"],
+["Quoki Headgear","head","lightmask",35,,,-18,,,,,,,2,,,,,"Customary headpiece.","QuokiHeadgear.png","rare"],
+["Quoki Headgear","head","lightmask",30,,,-16,,,,,,,3,,,,,"Customary headpiece.","QuokiHeadgear.png","epic"],
+["Quoki Shoes","boots","lightboots",50,,,-25,,,,,,1,,,,,,"Customary footwear.","QuokiShoes.png",""],
+["Quoki Shoes","boots","lightboots",30,,,-16,,,,1,,3,,,,,,"Customary footwear.","QuokiShoes.png","epic"],
+["Red Orb","hand","orb",210,,10,-75,,5,,,3,,,,2,,,"Evil looks through it.","RedOrb.png",""],
+["Red Orb","hand","orb",168,,12,-60,,5,,,3,,,,2,,,"Evil looks through it.","RedOrb.png","uncommon"],
+["Royal Armor","chest","heavychest",920,,,,,,,14,,,,,,,,"The royal cross is carved in its chest.","RoyalArmor.png",""],
+["Royal Dagger","hand","dagger",150,1,7,,,,2,,,,4,,2,,,"A bright gem shines in its hilt.","RoyalDagger.png",""],
+["Ruby Amulet","neck","necklace",15,,2,,,2,,,,,,,,,,"","RubyAmulet.png",""],
+["Ruby Amulet","neck","necklace",11,,3,,,3,,,,,,,,,,"","RubyAmulet.png","rare"],
+["Rusty Sword","hand","sword",300,2,9,,,,,,2,,2,,6,,,"","RustySword.png",""],
+["Scarf","neck","lightneck",75,,,,,,,1,,,,,,,,"A very thick scarf.","Scarf.png",""],
+["Scarf","neck","lightneck",53,,,,,,,1,,,,,,,,"A very thick scarf.","Scarf.png",""],
+["Shovel","hand","sword?",260,,8,,,,,,2,,,,6,,,"Used to open holes.","Shovel.png",""],
+["Silver Amulet","neck","necklace",20,,,,35,,,,,,,,,,,"","SilverAmulet.png",""],
+["Silver Amulet","neck","necklace",16,,,,42,,,,,,,,,,,"","SilverAmulet.png","rare"],
+["Silver Dagger","hand","dagger",70,,4,,,,,,,,4,,2,,,"For rituals.","SilverDagger.png",""],
+["Silver Dagger","hand","dagger",49,,5,,,,,,,,5,,2,,,"For rituals.","SilverDagger.png","rare"],
+["Silver Dagger","hand","dagger",42,,6,,,,,,,,6,,2,,,"For rituals.","SilverDagger.png","epic"],
+["Silver Dagger","hand","dagger",35,1,7,,,,,,,,7,,2,,,"For rituals.","SilverDagger.png","legendary"],
+["Silver Mask","head","lightmask",90,,,-5,10,,,1,,,,,,,,"","SilverMask.png",""],
+["Silver Mask","head","lightmask",72,,,-5,12,,,1,,,,,,,,"","SilverMask.png","uncommon"],
+["Silver Ring","ring","ring",10,,,,15,,,,,,,,,,,"","SilverRing.png",""],
+["Silver Ring","ring","ring",8,,,,18,,,,,,,,,,,"","SilverRing.png","uncommon"],
+["Simple Bag","bagslot","container",80,,,,,,,,,,,,,,,"","SimpleBag.png",""],
+["Simple Bag","bagslot","container",64,,,,,,,,,,,,,,,"","SimpleBag.png","uncommon"],
+["Simple Bag","bagslot","container",48,,,,,,,,,,,,,,,"","SimpleBag.png","epic"],
+["Spangenhelm","head","heavyhelmet",400,,,,,,,5,,,,,,,,"","Spangenhelm.png",""],
+["Spangenhelm","head","heavyhelmet",320,,,,,,,5,,,,,,,,"","Spangenhelm.png","uncommon"],
+["Spangenhelm","head","heavyhelmet",280,,,,,,,6,,,,,,,,"","Spangenhelm.png","rare"],
+["Square Bag","bagslot","container",100,,,,,,1,,,,,,,,,"","SquareBag.png",""],
+["Square Bag","bagslot","container",96,,,,,,1,,,,,,,,,"","SquareBag.png","uncommon"],
+["Stone Shortbow","hand","bow",330,37,25,,,,,,,,,,8,,,"A sturdy small bow.","StoneShortbow.png",""],
+["Stone Wand","hand","staff",900,37,13,,,,,,,,2,,8,,,"Tight on grip.","StoneWand.png",""],
+["Studded Shield","hand","heavyshield",420,,,,,,,,15,,,,4,,,"","StuddedShield.png",""],
+["Studded Shield","hand","heavyshield",294,,,,,,,,19,,,,4,,,"","StuddedShield.png","rare"],
+["Studded Shield","hand","heavyshield",252,,,,,,,,21,,,,4,,,"","StuddedShield.png","epic"],
+["Torch","hand","sword?",50,,2,,,,,,,,,,,,,"","Torch.png",""],
+["Torch","hand","sword?",40,,2,,,,,,,,,,,,,"","Torch.png","uncommon"],
+["Torch","hand","sword?",35,,3,,,,,,,,,,,,,"","Torch.png","rare"],
+["Torch","hand","sword?",30,,4,,,,,,,,,,,,,"","Torch.png","epic"],
+["Torch","hand","sword?",25,,5,,,,,,,,,,,,,"","Torch.png","legendary"],
+["Tower Shield","hand","heavyshield",690,,,,,,,,25,,,,4,,,"A royal shield.","TowerShield.png",""],
+["Winged Boots","boots","lightboots",100,,,,,,,,-10,5,,,,,,"These loose boots seem to make you lighter.","WingedBoots.png",""],
+["Wizard Hat","head","lighthelmet",60,,,,75,,1,1,,,,,,,,"A pointy hat.","WizardHat.png",""],
+["Wooden Bow","hand","bow",290,47,15,,,,,,,,,,8,,,"","WoodenBow.png",""],
+["Wooden Bow","hand","bow",232,53,18,,,,,,,,,,8,,,"","WoodenBow.png","uncommon"],
+["Wooden Bow","hand","bow",203,56,19,,,,,,,,,,8,,,"","WoodenBow.png","rare"],
+["Wooden Bow","hand","bow",174,59,21,,,,,,,,,,8,,,"","WoodenBow.png","epic"],
+["Wooden Shield","hand","heavyshield",250,,,,,,,,5,,,,4,,,"","WoodenShield.png",""],
+["Wooden Staff","hand","staff",300,32,5,,,,,,,,2,,8,,,"A simple piece of wood, however, curled weirdly.","WoodenStaff.png",""],
+["Wooden Staff","hand","staff",240,36,5,,,,,,,,2,,8,,,"A simple piece of wood, however, curled weirdly.","WoodenStaff.png","uncommon"],
+["Zircon Ring","ring","ring",12,,,,,,,,,,1,,,,,"","ZirconRing.png",""],
+
+
+        ];
+        const traits = [
+        [0,0,"Start here","Level 1 starting point.",[],0,0,0,0, 0,0],
+[1,0,"Staff Mastery","Staves have a chance of shooting without a cost",["0%","5%","10%","20%","35%","75%"],0,0,0,0,-100,0],
+[2,1,"Charge the Staff","Casting an energy Fire spell using a staff will make your next attack deal damage",["Off","ML/5","ML/4","ML/2"],0,0,0,0,-200,50],
+[3,2,"Frantic Conjury","Casting a Fire spell has a chance your next attack will cast Conjure Fire on target's location",["0%","20%","30%","50%"],0,0,0,0,-300,50],
+[4,3,"Warlock","While holding a staff, gain 1 extra Area of Effect for Energy and Fire spells",["Off","On"],3,3,1,5,-400,50],
+[62,2,"Electric Nature","Reduces the cooldown of Energy spells by:",["0%","10%","20%","35%"],0,0,0,0,-300,150],
+[63,62,"Steering Insight","Energy and Arrow projectile spells bounce when colliding with enemies and explode on death",["Off","On"],62,3,1,5,-400,150],
+[5,1,"Magic Touch","Heal spells are stronger by:",["0%","10%","15%","25%"],0,0,0,0,-200,-50],
+[6,5,"Healing Stick","While holding a staff, reduces the cooldown of Heal and Holy spells by:",["0%","10%","20%","35%"],0,0,0,0,-300,-50],
+[7,6,"Child's Channel","Healing others also heals you by 50% and Heal and Light spells are 50% cheaper",["Off","On"],6,3,1,5,-400,-50],
+[8,5,"Apogea's Ardor","Reduces the cooldown of Earth and Water spells by:",["0%","10%","20%","35%"],0,0,0,0,-300,-150],
+[9,8,"Gallop's Fall","While holding a staff, gain 1 extra area of effect for Water and Holy spells",["Off","On"],8,3,1,5,-400,-150],
+[10,0,"Stabbing preference","Daggers provide Lifeleech",["0%","1%","3%","6%","10%","15%"],0,0,0,0,-100,-100],
+[11,10,"Thorough Puncture","Physical attacks ignore some of the target's armor",["0%","8%","13%","20%"],0,0,0,0,-200,-200],
+[12,11,"Shearing Stroke","Attacks have a chance of dealing 1.5x damage",["0%","10%","14%","20%"],0,0,0,0,-300,-300],
+[13,12,"Luck Foreseen","Converts 7 Ability into 1% chance of attacking twice",["Off","On"],10,5,12,3,-400,-400],
+[14,11,"Gaff Hack","Casting a Mystic or Time spell has a chance of boosting your Attackspeed by 10 for 4s",["0%","20%","30%","50%"],0,0,0,0,-200,-300],
+[15,14,"Double Danger","Using two daggers double your Item Damage",["Off","On"],10,5,14,3,-200,-400],
+[16,0,"Bow Guidance","Bows have extra Attackspeed",[0,1,2,3,4,6],0,0,0,0,0,-100],
+[17,16,"Good Technique","Gain extra Range",[0,1,2,4],0,0,0,0,-50,-200],
+[18,17,"Artisanal Arsenal","Non-magic arrows deal extra Damage and break less often",["0%","1","2","4"],0,0,0,0,-50,-300],
+[19,18,"Explosive Ammo","Arrows have a 25% chance of exploding dealing area damage that briefly slows",["Off","On"],16,5,18,3,-50,-400],
+[20,17,"Shineshooter","Reduces the cooldown of Light and Arrow of spells by:",["0%","10%","20%","35%"],0,0,0,0,50,-300],
+[21,20,"Bullseye","Increases the Damage of Arrow and Blade spells against enemies you have currently targeted",["Off","On"],16,5,20,3,50,-400],
+[22,16,"True Grip","While wearing Gloves attacking regenerates Mana",[1,2,5],0,0,0,0,50,-200],
+[23,22,"Elvish Practice","Reduces the cooldown of Time and Mystic spells by:",["0%","10%","20%","35%"],0,0,0,0,150,-300],
+[24,23,"Arcane Trickster","While using Gloves, casting Time or Mystic spells has a 50% chance of blocking all physical damage for 3 seconds",["Off","On"],23,3,16,5,150,-400],
+[25,0,"Cozy and Useful","Light Armor is lighter",["0%","1%","5%","10%","17%","25%"],0,0,0,0,100,-100],
+[26,25,"Breeze in Your Hair","Not wearing a helmet gives you Movespeed",[0,1,2,3],0,0,0,0,200,-200],
+[27,26,"Lightfoot","If all your equipment weighs less than 150oz, gain Movespeed",[0,1,2,3],0,0,0,0,300,-300],
+[28,27,"Battle Boots","Converts all extra Movespeed into 2 Damage",["Off","On"],27,3,25,5,400,-400],
+[29,25,"Dressing Wizardly","Armor gives you Mana for each oz under X oz, capped at 20 Mana",[0,25,33,45],0,0,0,0,200,-100],
+[30,29,"Powerful Space","Gain 5% Magic for each X Free Capacity you have, capping at 20%",[0,50,35,15],0,0,0,0,300,-200],
+[31,30,"Clothes of the Damned","Removes negative effects from light armor and gain 5% Magic for each equipped light armor",["Off","On"],30,3,25,5,400,-300],
+[32,0,"Block Efficacy","Shields have more defense",[0,1,4,8,14,20],0,0,0,0,100,0],
+[33,32,"Bread and Butter","Using a sword and shield gives you extra damage",[0,2,4,8],0,0,0,0,200,0],
+[34,33,"Deflect","Blocking with a magic shield reflects damage taken",["0%","50%","70%","100%"],0,0,0,0,300,-100],
+[35,31,"Darkness Embrace","Death spells are 10 times cheaper. Heal and Light spells are 10 times more expensive",["Off","On"],0,0,0,0,400,-200],
+[36,34,"Bulwark Leap","While holding a shield, casting a Time spell will double your magic shield, capping at 200",["Off","On"],32,5,34,3,400,-100],
+[37,33,"Shieldslam","Blocking an attack has a chance of staggering the attacker",["0%","7%","10%","15%"],0,0,0,0,300,0],
+[38,37,"Hex Parry","Successfully blocking an attack will empower your next Arrow or Blade spell",["Off","On"],37,3,32,5,400,0],
+[39,0,"Well Protected","Heavy Armor has more Armor",["0%","1%","5%","10%","17%","25%"],0,0,0,0,100,100],
+[40,39,"Bulking Up","Gain Health for each equipped heavy armor",[0,5,10,25],0,0,0,0,200,100],
+[41,40,"Heavy Metal","If all your equipment weighs more than 150oz, gain Armor",["0%","5%","10%","20%"],0,0,0,0,300,100],
+[42,41,"Carry your might","Each 75 max capacity gives you 1 extra Armor and 10 Health, capping at 15 Armor and 150 Health",["Off","On"],41,3,39,5,400,100],
+[43,39,"Royal Banner","Reduces the cooldown of Time and Heal spells by:",["0%","10%","20%","35%"],0,0,0,0,200,200],
+[44,43,"Magic Steel","Casting a Time or Heal spell will give you a shield equal to a percentage of your total armor:",["0%","75%","100%","150%"],0,0,0,0,300,200],
+[45,44,"Blessed Plate","Removes negative stats from heavy armor and gain 15 Mana for each equipped heavy armor",["Off","On"],44,3,39,5,400,300],
+[46,45,"Endowed in Steel","Attacking using both your hands gives you multiple stat boosts",["Off","On"],0,0,0,0,400,200],
+[47,0,"Blade Training","Swords have more Damage",["0%","1%","4%","8%","14%","20%"],0,0,0,0,0,100],
+[48,47,"Wrecking It","Gain extra Item Damage",["0%","3%","6%","10%"],0,0,0,0,50,200],
+[49,48,"No Defense Needed","Damage to swords of size 7 or bigger",["0%","3%","6%","10%"],0,0,0,0,150,300],
+[50,49,"Magic Blade","Removes negative effects from size 7 or bigger swords and gain 10% Manaleech",["Off","On"],49,3,47,5,150,400],
+[51,48,"Hand Finesse","Gain 1 Attackspeed for each X Ability you have capping at 5",[0,15,13,10],0,0,0,0,50,300],
+[52,51,"Blade Prowess","While holding one sword of size 6 and no shield, reduces the cooldown of Blade spells by 50%",["Off","On"],51,3,47,5,50,400],
+[53,48,"Dual-wielding","Size 6 swords have an equipsize of 5, but deal reduced Damage by:",["0%","40%","36%","30%"],0,0,0,0,-50,300],
+[54,53,"To Be Ninja","Converts all extra Ability into Attackspeed",["Off","On"],47,5,53,3,-50,400],
+[55,47,"Fancing Classes","Blade spells are stronger by:",["0%","5%","9%","15%"],0,0,0,0,-50,200],
+[56,0,"Pondering It","Orbs provide Spellvamp",["0%","1%","3%","6%","10%","15%"],0,0,0,0,-100,100],
+[57,56,"Unnatural Flow","Your attacks will deal extra magic damage",[0,4,7,12],0,0,0,0,-200,200],
+[58,57,"Flaming Sword","Casting a Fire or Blade spell will make your next attack deal extra magic damage",[0,4,8,15],0,0,0,0,-200,300],
+[59,58,"Conflagrated Mind","While holding an orb, reduces the cooldown of Fire spells by 35%",["Off","On"],56,5,58,3,-200,400],
+[60,57,"Diamond Skin","Casting an Energy or Arrow spell will give you shield, stacking 3 times",[0,20,35,50],0,0,0,0,-300,300],
+[61,60,"Unstable Aegis","Taking shield damage will cast Unstable Berserk around yourself",["Off","On"],56,5,60,3,-400,400],
+
+        ];
+
+        let selectedTraits = {};
+        
+        let addedPoints = {};
+        let availablePoints = 0;
+        let availableTraitPoints = 0;
+        
+        function updatePoints() {
+            let level = parseInt(document.getElementById("level").value) || 1;
+            let previousLevel = parseInt(document.getElementById("level").getAttribute("data-previous-level") || "1");
+            
+            if (level < 1) {
+                level = 1;
+                document.getElementById("level").value = 1;
+            }
+            
+            availablePoints = (level - 1) * 3;
+            
+            // Check if level decreased
+            if (level < previousLevel) {
+                resetTraits(); // Reset traits when level decreases
+            } else if (level > previousLevel) {
+                // Add trait points if level increased
+                resetTraits(); // Reset traits when level decreases
+                /*
+                let additionalPoints = Math.floor(level / 2) - Math.floor(previousLevel / 2);
+                if (additionalPoints > 0) {
+                    availableTraitPoints += additionalPoints;
+                }*/
+            }
+            
+            // Set the total trait points based on level (regardless of level change direction)
+            availableTraitPoints = Math.floor(level / 2);
+            document.getElementById("available-trait-points").textContent = availableTraitPoints;
+            document.getElementById("level").setAttribute("data-previous-level", level);
+            
+            document.getElementById("available-points").textContent = availablePoints;
+            resetPoints();
+            toggleBlinking();
+        }
+        
+        function toggleBlinking(){
+            console.log("Toggling blink.");
+            if (availableTraitPoints > 0) {
+                document.getElementById("available-trait-points").classList.add("blinking");
+            } else {
+                document.getElementById("available-trait-points").classList.remove("blinking");
+            }
+        }
+
+
+        function resetPoints() {
+            for (let stat in baseStats) {
+                addedPoints[stat] = 0;
+            }
+            updateStats();
+        }
+        
+        
+        function addPoint(stat) {
+            if (availablePoints > 0) {
+                addedPoints[stat]++;
+                availablePoints--;
+                document.getElementById("available-points").textContent = availablePoints;
+                toggleBlinking();
+                updateStats();
+            }
+        }
+        
+        function subtractPoint(stat) {
+            if (addedPoints[stat] > 0) {
+                addedPoints[stat]--;
+                availablePoints++;
+                document.getElementById("available-points").textContent = availablePoints;
+                toggleBlinking();
+                updateStats();
+            }
+        }
+        
+        function calculateItemBonuses() {
+            const itemBonuses = {
+                Health: 0, Mana: 0, Magic: 0, Damage: 0, Movespeed: 0,
+                Ability: 0, "Attack Speed": 0, "HP Regen": 0, "MP Regen": 0,
+                Range: 0, Armor: 0, Defense: 0, Capacity: 0, TotalWeight: 0,
+            };
+            const itemSlots = document.querySelectorAll('.item-slot img');
+            itemSlots.forEach(img => {
+                const itemName = img.getAttribute('alt');
+                const rarity = img.classList.contains('uncommon') ? 'uncommon' :
+                               img.classList.contains('rare') ? 'rare' :
+                               img.classList.contains('epic') ? 'epic' :
+                               img.classList.contains('legendary') ? 'legendary' : 'common';
+                const item = items.find(i => i[0] === itemName && (i[20] === rarity || (!i[20] && rarity === 'common')));
+                if (item) {
+                    itemBonuses.Health += item[6] || 0;
+                    itemBonuses.Mana += item[7] || 0;
+                    itemBonuses.Magic += item[9] || 0;
+                    itemBonuses.Damage += item[5] || 0;
+                    itemBonuses.Movespeed += item[12] || 0;
+                    itemBonuses.Ability += item[8] || 0;
+                    itemBonuses["Attack Speed"] += item[13] || 0;
+                    itemBonuses["HP Regen"] += item[16] || 0;
+                    itemBonuses["MP Regen"] += item[17] || 0;
+                    itemBonuses.Range += item[4] || 0;
+                    itemBonuses.Armor += item[10] || 0;
+                    itemBonuses.Defense += item[11] || 0;
+                    itemBonuses.Capacity += item[15] || 0;
+                    itemBonuses.TotalWeight += item[3]/10 || 0;
+                    //if item is light armor and cozy and useful is active, reduce weight
+                    if (selectedTraits["25"] && item[2].includes("light")) {
+                        itemBonuses.TotalWeight -= (item[3] * (parseInt(selectedTraits["25"]) / 1000));
+                    }
+                }
+            });
+            return itemBonuses;
+        }
+
+        function calculateTraitBonuses() {
+            const traitBonuses = {
+                Health: 0, Mana: 0, Magic: 0, Damage: 0, Movespeed: 0,
+                Ability: 0, "Attack Speed": 0, "HP Regen": 0, "MP Regen": 0,
+                Range: 0, Armor: 0, Defense: 0, Capacity: 0
+            };
+            for (let traitId in selectedTraits) {
+                const trait = traits.find(t => t[0] == traitId);
+                const stage = selectedTraits[traitId];
+                if (trait && stage) {
+                    switch (traitId) {
+                        case "15": // Double Danger
+                            if (stage === "On") {
+                                const leftHandSlot = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
+                                const rightHandSlot = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
+                                const leftHandItem = items.find(i => i[0] === leftHandSlot.querySelector('img').getAttribute('alt'));
+                                const rightHandItem = items.find(i => i[0] === rightHandSlot.querySelector('img').getAttribute('alt'));
+                                if (leftHandItem && rightHandItem && leftHandItem[2] === "dagger" && rightHandItem[2] === "dagger") {
+                                    //Get sum of all items Damage bonuses
+                                    let itemDamage = calculateItemBonuses().Damage;
+                                    
+                                    traitBonuses.Damage += itemDamage;//(leftHandItem[5] + rightHandItem[5]);
+                                }
+                            }
+                            break;
+                        case "16": // Bow Guidance
+                            //check if bow is equipped in left hand
+                            const leftHandSlot = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
+                            const leftHandItem = items.find(i => i[0] === leftHandSlot.querySelector('img').getAttribute('alt'));
+                            if (leftHandItem && leftHandItem[2] === "bow"){
+                                traitBonuses["Attack Speed"] += parseInt(stage);
+                            }
+                            //check if bow is equipped in right hand
+                            const rightHandSlot = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
+                            const rightHandItem = items.find(i => i[0] === rightHandSlot.querySelector('img').getAttribute('alt'));
+                            if (rightHandItem && rightHandItem[2] === "bow"){
+                                traitBonuses["Attack Speed"] += stage;
+                            }
+                            break;
+                        case "17": //Goo dtechnique
+                            traitBonuses.Range += parseInt(stage);
+                            break;
+                        case "25": // Cozy and Useful
+                            const lightArmorSlots = document.querySelectorAll('.item-slot img');
+                            lightArmorSlots.forEach(img => {
+                                const itemName = img.getAttribute('alt');
+                                const item = items.find(i => i[0] === itemName);
+                                if (item && item[2].includes("light")) {
+                                    traitBonuses.TotalWeight -= (item[3] * (parseInt(stage) / 100));
+                                }
+                            });
+                            break;
+                        case "26": //breeze in your hair
+                            const headSlot = document.querySelector('.item-slot[data-slot="head"] img');
+                            //check if head slot's item stats, and check if item type (item[2]) contains "helmet", if not, add stage to movespeed
+                            if (headSlot) {
+                                const itemName = headSlot.getAttribute('alt');
+                                const item = items.find(i => i[0] === itemName);
+                                if (!item || !item[2].includes("helmet")) {
+                                    console.log("Breeze in your hair: "+stage); //WHY IS THIS ADDING 10,20,30
+                                    console.log("Before"+traitBonuses.Movespeed);
+                                    traitBonuses.Movespeed += parseInt(stage);
+                                    console.log("After"+traitBonuses.Movespeed);
+                                }
+                            }
+                            break;
+                        case "27": //lightfoot
+                            const totalWeight = calculateItemBonuses().TotalWeight;
+                            //check if weight is below 150 and lightfoot trait is set to > 0
+                            if (totalWeight < 150 & parseInt(stage) > 0) {
+                                traitBonuses.Movespeed += parseInt(stage);
+                            }
+                            break;
+                        case "28": //battle boots
+                            //count extra movementspeed from item bonuses + extra movement speed form traitbonuses * 2
+                            //console.log("ZZZZ Item+trait bonus movespeed: "+calculateItemBonuses().Movespeed+traitBonuses.Movespeed);
+                            if (stage == "On") {
+                                //console.log("Item+trait bonus movespeed: "+calculateItemBonuses().Movespeed+traitBonuses.Movespeed);
+                                //stringfloat conversion stupidityy
+                                traitBonuses.Damage += (parseFloat(calculateItemBonuses().Movespeed) + parseFloat(traitBonuses.Movespeed)) * 2;
+                                //traitBonuses.Movespeed -= calculateItemBonuses().Movespeed; //it's conversion, so it's negative // IT IS NOT CONVERSION ACCORDING TO AEIKZ
+                            }
+                            break;
+                        case "29": //dressing wizardly
+                            const armorSlots = document.querySelectorAll('.item-slot img');
+                            armorSlots.forEach(img => {
+                                const itemName = img.getAttribute('alt');
+                                const item = items.find(i => i[0] === itemName);
+                                if (item && (item[2].includes("light") || item[2].includes("heavy"))) {
+                                    //if this piece of armor's weight is under parseInt(stage), it should add mana based on:
+                                    // the difference between stage and this equipment's weight
+                                    //So if stage = 25 and this equipment's weight is 20, it should add 5 mana
+                                    // but capped at20
+                                    const weightDifference = parseInt(stage) - item[3]/10;
+                                    traitBonuses.Mana += Math.max(0,Math.min(weightDifference, 20));
+
+                                }
+                            });
+                            break;
+                        case "30": //powerful space
+                            //only if this trait is higher stage than 0
+                            if (parseInt(stage) > 0) {
+                                //get final capacity
+                                const maxCapacity = baseStats["Capacity"][0] + baseStats["Capacity"][1] * addedPoints["Capacity"] + calculateItemBonuses().Capacity
+                                console.log("Free cap: "+maxCapacity);
+                                //get total weight of all equipped items (not just item bonus total w)
+                                const totalWeight = calculateItemBonuses().TotalWeight;
+                                console.log("Total weight: "+totalWeight);
+                                //get how many times the stage fits into the free capacity
+                                const freeCapacity = maxCapacity - totalWeight;
+                                const capacityFits = Math.min(4,parseInt(freeCapacity / stage));
+                                console.log("Capacity fits: "+capacityFits);
+                                const bonusPercentage = Math.min(0.2, ((capacityFits * 5) / 100));
+                                console.log("Bonus percentage: "+bonusPercentage);
+                                //get base magic + bonus + item bonus
+                                let magic = baseStats["Magic"][0] + baseStats["Magic"][1] * addedPoints["Magic"] + calculateItemBonuses().Magic;
+                                console.log("Magic total before traits: "+magic);
+                                //add the bonus percentage to the magic
+                                traitBonuses.Magic += magic * (bonusPercentage);
+                            }
+                            break;
+                        case "31": //clothes of the damned
+                            if (stage === "On") {
+                                const armorSlots = document.querySelectorAll('.item-slot img');
+                                //scan list for every item with "light" in its type, and check if any of its bonuses are negative
+                                //if yes, then add the same amount to remove the negative effect
+                                //also, for every such item (with "light" in its type), add 5% magic
+                                let magicBonus = 0;
+                                armorSlots.forEach(img => {
+                                    const itemName = img.getAttribute('alt');
+                                    const item = items.find(i => i[0] === itemName);
+                                    if (item && item[2].includes("light")) {
+                                        //scan all attrributes
+                                        //THIS IS HELL
+                                        //NO RETURN
+                                        
+            //0 name, 1 slot, 2 type, 3 weight, 4 range, 5damage, 6 HP, 7 MANA, 8 Ability, 9 magic, 10 armor, 11 defense, 12 moveSpeed, 13 attackSpeed, 14 empty, 15 equip size, 16-hpreg, 17 mp reg, 18description, image
+
+                                        if (item[4] < 0) {
+                                            traitBonuses.Range += Math.abs(item[4]);
+                                        }
+                                        if (item[5] < 0) {
+                                            traitBonuses.Damage += Math.abs(item[5]);
+                                        }
+                                        if (item[6] < 0) {
+                                            traitBonuses.Health += Math.abs(item[6]);
+                                        }
+                                        if (item[7] < 0) {
+                                            traitBonuses.Mana += Math.abs(item[7]);
+                                        }
+                                        if (item[8] < 0) {
+                                            traitBonuses.Ability += Math.abs(item[8]);
+                                        }
+                                        if (item[9] < 0) {
+                                            traitBonuses.Magic += Math.abs(item[9]);
+                                        }
+                                        if (item[10] < 0) {
+                                            traitBonuses.Armor += Math.abs(item[10]);
+                                        }
+                                        if (item[11] < 0) {
+                                            traitBonuses.Defense += Math.abs(item[11]);
+                                        }
+                                        if (item[12] < 0) {
+                                            traitBonuses.Movespeed += Math.abs(item[12]);
+                                        }
+                                        if (item[13] < 0) {
+                                            traitBonuses["Attack Speed"] += Math.abs(item[13]);
+                                        }
+                                        if (item[16] < 0) {
+                                            traitBonuses["HP Regen"] += Math.abs(item[16]);
+                                        }
+                                        if (item[17] < 0) {
+                                            traitBonuses["MP Regen"] += Math.abs(item[17]);
+                                        }
+                                        magicBonus += 0.05;
+                                    }
+                                });
+                                let magic = baseStats["Magic"][0] + baseStats["Magic"][1] * addedPoints["Magic"] + calculateItemBonuses().Magic;
+                                console.log("Magic total before traits: "+magic);
+                                //add the bonus percentage to the magic
+                                if(magic > 0){
+                                    traitBonuses.Magic += magic * (magicBonus);
+                                }
+                                //traitBonuses.Magic += magic * (1 + magicBonus);
+
+                            }
+                            break;
+                        case "32": // Block Efficiacy
+                            const leftHandSlotTrait = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
+                            const rightHandSlotTrait = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
+                            const leftHandItemTrait = items.find(i => i[0] === leftHandSlotTrait.querySelector('img').getAttribute('alt'));
+                            const rightHandItemTrait = items.find(i => i[0] === rightHandSlotTrait.querySelector('img').getAttribute('alt'));
+                            if (leftHandItemTrait && leftHandItemTrait[2].includes("shield")) {
+                                traitBonuses.Defense += parseInt(stage);
+                            }
+                            if (rightHandItemTrait && rightHandItemTrait[2].includes("shield")) {
+                                traitBonuses.Defense += parseInt(stage);
+                            }
+                            break;
+                        case "33": // Bread and Butter
+                            const leftHandSlotTrait2 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
+                            const rightHandSlotTrait2 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
+                            const leftHandItemTrait2 = items.find(i => i[0] === leftHandSlotTrait2.querySelector('img').getAttribute('alt'));
+                            const rightHandItemTrait2 = items.find(i => i[0] === rightHandSlotTrait2.querySelector('img').getAttribute('alt'));
+                            if (leftHandItemTrait2 && leftHandItemTrait2[2].includes("sword") && rightHandItemTrait2 && rightHandItemTrait2[2].includes("shield")) {
+                                traitBonuses.Damage += parseInt(stage);
+                            }
+                            if (rightHandItemTrait2 && rightHandItemTrait2[2].includes("sword") && leftHandItemTrait2 && leftHandItemTrait2[2].includes("shield")) {
+                                traitBonuses.Damage += parseInt(stage);
+                            }
+                            break;
+                        case "39": // Well Protected
+                            const armorSlotsTrait = document.querySelectorAll('.item-slot img');
+                            let heavyArmorTotalArmor = 0;
+                            //sum up all +armor values from heavy armor
+                            armorSlotsTrait.forEach(img => {
+                                const itemName = img.getAttribute('alt');
+                                const item = items.find(i => i[0] === itemName);
+                                if (item && item[2].includes("heavy")) {
+                                    console.log("HEAVY ARMOR CALC: "+item+" adds "+item[10]+" to total armor");
+                                    if(item[10] > 0 && item[10] != "" && item[10] != null){
+                                        console.log(item+" adds "+item[10]);
+                                        heavyArmorTotalArmor += item[10] || 0;
+                                        console.log("HEAVY ARMOR is now: "+heavyArmorTotalArmor);
+                                    }
+                                }
+                            });
+                            //add the bonus to the total armor
+                            traitBonuses.Armor += heavyArmorTotalArmor * (parseInt(stage) / 100);
+                            break;
+                        case "40": // Bulking Up
+                            const armorSlotsTrait2 = document.querySelectorAll('.item-slot img');
+                            let heavyArmorPieces = 0;
+                            //sum up all +health values from heavy armor
+                            armorSlotsTrait2.forEach(img => {
+                                const itemName = img.getAttribute('alt');
+                                const item = items.find(i => i[0] === itemName);
+                                if (item && item[2].includes("heavy")) {
+                                    heavyArmorPieces += 1;
+                                }
+                            });
+                            //add the bonus to the total health
+                            traitBonuses.Health += heavyArmorPieces * parseInt(stage);
+                            break;
+                        case "41": // Heavy Metal
+                            const totalWeightTrait = calculateItemBonuses().TotalWeight;
+                            if (totalWeightTrait > 150) {
+                                //calculate total armor
+                                const armorSlotsTrait3 = document.querySelectorAll('.item-slot img');
+                                let heavyArmorTotalArmor2 = 0;
+                                //sum up all +armor values from all slots
+                                armorSlotsTrait3.forEach(img => {
+                                    const itemName = img.getAttribute('alt');
+                                    const item = items.find(i => i[0] === itemName);
+                                    if (item) {
+                                        if(item[10] > 0 && item[10] != "" && item[10] != null){
+                                            console.log(item+" adds "+item[10]);
+                                            heavyArmorTotalArmor2 += item[10];
+                                        }
+                                    }
+                                });
+                                //add percent bonus to total armor
+                                traitBonuses.Armor += heavyArmorTotalArmor2 * (parseInt(stage) / 100);
+
+                            }
+                            break;
+                        case "42": // Carry your might
+                            if(stage === "On"){
+                                const maxCapacityTrait = baseStats["Capacity"][0] + baseStats["Capacity"][1] * addedPoints["Capacity"] + calculateItemBonuses().Capacity;
+                                const totalWeightTrait2 = calculateItemBonuses().TotalWeight;
+                                const freeCapacityTrait = maxCapacityTrait - totalWeightTrait2;
+                                const capacityFitsTrait = Math.min(15,parseInt(freeCapacityTrait / 75));
+                                traitBonuses.Armor += Math.min(15,capacityFitsTrait);
+                                traitBonuses.Health += Math.min(150,capacityFitsTrait * 10);
+                            }
+                            break;
+                        case "45": // Blessed Plate
+                            if (stage === "On") {
+                                const armorSlotsTrait3 = document.querySelectorAll('.item-slot img');
+                                //scan list for every item with "heavy" in its type, and check if any of its bonuses are negative
+                                //if yes, then add the same amount to remove the negative effect
+                                //also, for every such item (with "heavy" in its type), add 15 mana
+                                let manaBonus = 0;
+                                armorSlotsTrait3.forEach(img => {
+                                    const itemName = img.getAttribute('alt');
+                                    const item = items.find(i => i[0] === itemName);
+                                    if (item && item[2].includes("heavy")) {
+                                        //scan all attrributes
+                                        //THIS IS HELL
+                                        //NO RETURN
+                                        if (item[4] < 0) {
+                                            traitBonuses.Range += Math.abs(item[4]);
+                                        }
+                                        if (item[5] < 0) {
+                                            traitBonuses.Damage += Math.abs(item[5]);
+                                        }
+                                        if (item[6] < 0) {
+                                            traitBonuses.Health += Math.abs(item[6]);
+                                        }
+                                        if (item[7] < 0) {
+                                            traitBonuses.Mana += Math.abs(item[7]);
+                                        }
+                                        if (item[8] < 0) {
+                                            traitBonuses.Ability += Math.abs(item[8]);
+                                        }
+                                        if (item[9] < 0) {
+                                            traitBonuses.Magic += Math.abs(item[9]);
+                                        }
+                                        if (item[10] < 0) {
+                                            traitBonuses.Armor += Math.abs(item[10]);
+                                        }
+                                        if (item[11] < 0) {
+                                            traitBonuses.Defense += Math.abs(item[11]);
+                                        }
+                                        if (item[12] < 0) {
+                                            traitBonuses.Movespeed += Math.abs(item[12]);
+                                        }
+                                        if (item[13] < 0) {
+                                            traitBonuses["Attack Speed"] += Math.abs(item[13]);
+                                        }
+                                        if (item[16] < 0) {
+                                            traitBonuses["HP Regen"] += Math.abs(item[16]);
+                                        }
+                                        if (item[17] < 0) {
+                                            traitBonuses["MP Regen"] += Math.abs(item[17]);
+                                        }
+                                        
+                                        manaBonus += 15;
+                                    }
+                                });
+                                traitBonuses.Mana += manaBonus;
+                            }
+                            break;
+                        case "47": // Blade Training
+                            const leftHandSlotTrait4 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
+                            const rightHandSlotTrait4 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
+                            const leftHandItemTrait4 = items.find(i => i[0] === leftHandSlotTrait4.querySelector('img').getAttribute('alt'));
+                            const rightHandItemTrait4 = items.find(i => i[0] === rightHandSlotTrait4.querySelector('img').getAttribute('alt'));
+                            if (leftHandItemTrait4 && leftHandItemTrait4[2].includes("sword")) {
+                                traitBonuses.Damage += leftHandItemTrait4[5] * (parseInt(stage) / 100);
+                            }
+                            if (rightHandItemTrait4 && rightHandItemTrait4[2].includes("sword")) {
+                                traitBonuses.Damage += rightHandItemTrait4[5] * (parseInt(stage) / 100);
+                            }
+                            break;
+                        case "48": // Wreckingi t
+                            traitBonuses.Damage += calculateItemBonuses().Damage * (parseInt(stage) / 100);
+                            break;
+                        case "49": // No Defense Needed
+                            const leftHandSlotTrait5 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
+                            const rightHandSlotTrait5 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
+                            const leftHandItemTrait5 = items.find(i => i[0] === leftHandSlotTrait5.querySelector('img').getAttribute('alt'));
+                            const rightHandItemTrait5 = items.find(i => i[0] === rightHandSlotTrait5.querySelector('img').getAttribute('alt'));
+                            if (leftHandItemTrait5 && leftHandItemTrait5[2].includes("sword") && leftHandItemTrait5[5] >= 7) {
+                                traitBonuses.Damage += leftHandItemTrait5[5] * (parseInt(stage) / 100);
+                            }
+                            if (rightHandItemTrait5 && rightHandItemTrait5[2].includes("sword") && rightHandItemTrait5[5] >= 7) {
+                                traitBonuses.Damage += rightHandItemTrait5[5] * (parseInt(stage) / 100);
+                            }
+                            break;
+                        case "50": // Magic Blade
+                            if (stage === "On") {
+                                const leftHandSlotTrait6 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
+                                const rightHandSlotTrait6 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
+                                const leftHandItemTrait6 = items.find(i => i[0] === leftHandSlotTrait6.querySelector('img').getAttribute('alt'));
+                                const rightHandItemTrait6 = items.find(i => i[0] === rightHandSlotTrait6.querySelector('img').getAttribute('alt'));
+                                if (leftHandItemTrait6 && leftHandItemTrait6[2].includes("sword") && leftHandItemTrait6[5] >= 7) {
+                                    //remove negative effects
+                                    //This is stupid, I am stupid, hsdjlgksdjglsdjgsdglsdjg
+                                    if (leftHandItemTrait6[4] < 0) {
+                                        traitBonuses.Range += Math.abs(leftHandItemTrait6[5]);
+                                    }
+                                    if (leftHandItemTrait6[5] < 0) {
+                                        traitBonuses.Damage += Math.abs(leftHandItemTrait6[5]);
+                                    }
+                                    if (leftHandItemTrait6[6] < 0) {
+                                        traitBonuses.Health += Math.abs(leftHandItemTrait6[6]);
+                                    }
+                                    if (leftHandItemTrait6[7] < 0) {
+                                        traitBonuses.Mana += Math.abs(leftHandItemTrait6[7]);
+                                    }
+                                    if (leftHandItemTrait6[8] < 0) {
+                                        traitBonuses.Ability += Math.abs(leftHandItemTrait6[8]);
+                                    }
+                                    if (leftHandItemTrait6[9] < 0) {
+                                        traitBonuses.Magic += Math.abs(leftHandItemTrait6[9]);
+                                    }
+                                    if (leftHandItemTrait6[10] < 0) {
+                                        traitBonuses.Armor += Math.abs(leftHandItemTrait6[10]);
+                                    }
+                                    if (leftHandItemTrait6[11] < 0) {
+                                        traitBonuses.Defense += Math.abs(leftHandItemTrait6[11]);
+                                    }
+                                    if (leftHandItemTrait6[12] < 0) {
+                                        traitBonuses.Movespeed += Math.abs(leftHandItemTrait6[12]);
+                                    }
+                                    if (leftHandItemTrait6[13] < 0) {
+                                        traitBonuses["Attack Speed"] += Math.abs(leftHandItemTrait6[13]);
+                                    }
+                                }
+                                if (rightHandItemTrait6 && rightHandItemTrait6[2].includes("sword") && rightHandItemTrait6[5] >= 7) {
+                                    //I can't believe i am doing this
+                                    if (rightHandItemTrait6[4] < 0) {
+                                        traitBonuses.Range += Math.abs(rightHandItemTrait6[5]);
+                                    }
+                                    if (rightHandItemTrait6[5] < 0) {
+                                        traitBonuses.Damage += Math.abs(rightHandItemTrait6[5]);
+                                    }
+                                    if (rightHandItemTrait6[6] < 0) {
+                                        traitBonuses.Health += Math.abs(rightHandItemTrait6[6]);
+                                    }
+                                    if (rightHandItemTrait6[7] < 0) {
+                                        traitBonuses.Mana += Math.abs(rightHandItemTrait6[7]);
+                                    }
+                                    if (rightHandItemTrait6[8] < 0) {
+                                        traitBonuses.Ability += Math.abs(rightHandItemTrait6[8]);
+                                    }
+                                    //the worst code ever
+                                    //don't look at this
+                                    if (rightHandItemTrait6[9] < 0) {
+                                        traitBonuses.Magic += Math.abs(rightHandItemTrait6[9]);
+                                    }
+                                    if (rightHandItemTrait6[10] < 0) {
+                                        traitBonuses.Armor += Math.abs(rightHandItemTrait6[10]);
+                                    }
+                                    if (rightHandItemTrait6[11] < 0) {
+                                        traitBonuses.Defense += Math.abs(rightHandItemTrait6[11]);
+                                    }
+                                    if (rightHandItemTrait6[12] < 0) {
+                                        traitBonuses.Movespeed += Math.abs(rightHandItemTrait6[12]);
+                                    }
+                                    if (rightHandItemTrait6[13] < 0) {
+                                        traitBonuses["Attack Speed"] += Math.abs(rightHandItemTrait6[13]);
+                                    }
+                                    //i don't careeeee
+                                }
+                            }
+                            break;
+                        case "51": // Hand Finesse
+                            if(stage > 0){
+                                //Get total ability
+                                let ability = baseStats["Ability"][0] + baseStats["Ability"][1] * addedPoints["Ability"] + calculateItemBonuses().Ability + traitBonuses.Ability;
+                                //check how many times the stage fits into the ability
+                                const abilityFits = Math.min(5,parseInt(ability / stage));
+                                //add the bonus to attackspeed
+                                traitBonuses["Attack Speed"] += Math.min(5,abilityFits);
+                            }
+                            break;
+                        case "53": // Dual-wielding
+                            const leftHandSlotTrait7 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
+                            const rightHandSlotTrait7 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
+                            const leftHandItemTrait7 = items.find(i => i[0] === leftHandSlotTrait7.querySelector('img').getAttribute('alt'));
+                            const rightHandItemTrait7 = items.find(i => i[0] === rightHandSlotTrait7.querySelector('img').getAttribute('alt'));
+                            let newDamage = 0;
+                            let oldDamage = 0;
+                            if (leftHandItemTrait7 && leftHandItemTrait7[2].includes("sword") && leftHandItemTrait7[15] === 6) {
+                                newDamage += leftHandItemTrait7[5] * ((100 - parseInt(stage)) / 100);
+                                oldDamage += leftHandItemTrait7[5];
+                            }
+                            if (rightHandItemTrait7 && rightHandItemTrait7[2].includes("sword") && rightHandItemTrait7[15] === 6) {
+                                newDamage += rightHandItemTrait7[5] * ((100 - parseInt(stage)) / 100);
+                                oldDamage += rightHandItemTrait7[5];
+                                //traitBonuses.Damage -= rightHandItemTrait7[5] * (parseInt(stage) / 100);   
+                            }
+                            traitBonuses.Damage += newDamage - oldDamage;
+                            break;
+                        case "54": // To Be Ninja
+                            if (stage === "On") {
+                                //get total ability
+                                let extraAbility = calculateItemBonuses().Ability;//according to TUTZ, baseStats and addedPoints are not used for EXTRA
+                                //add the bonus to attackspeed
+                                traitBonuses["Attack Speed"] += extraAbility; 
+                                //traitBonuses.Ability -= extraAbility;
+                            }
+                            break;
+                        case "57": // Unnatural Flow
+                            if(stage > 0){
+                                traitBonuses.MagicDamage += parseInt(stage);
+                            }
+                            break;
+
+
+                    }
+                }
+            }
+            
+            return traitBonuses;
+        }
+        
+        function updateStats() {
+            const selectedClass = document.getElementById("class").value;
+            const level = parseInt(document.getElementById("level").value) || 1;
+            const statTable = document.getElementById("stat-table");
+            const itemBonuses = calculateItemBonuses();
+            const traitBonuses = calculateTraitBonuses();
+            statTable.innerHTML = "";
+            
+            for (let stat in baseStats) {
+                const [baseValue, growth] = baseStats[stat];
+                const added = addedPoints[stat] || 0;
+                let addedClass = "";
+                if(added == level){
+                    addedClass = "supergreen";
+                }
+                else if(added > 0){
+                    addedClass = "green";
+                }
+                const multiplier = classMultipliers[selectedClass][stat] || 1;
+                const bonus = added * growth;// * multiplier;
+                const itemBonus = itemBonuses[stat] || 0;
+                //console.log("stat"+stat);
+                const traitBonus = traitBonuses[stat] || 0;
+                //console.log("TRAIT BONUS:"+traitBonus);
+                let bonuscolor;
+                let itembonuscolor;
+                let traitbonuscolor;
+
+                //stupid checks for color
+                if(bonus > 0){
+                    bonuscolor = "lesstransparent";
+                }
+                else if(bonus < 0){
+                    bonuscolor = "redtransparent";
+                }
+                else{
+                    bonuscolor = "transparent";
+                }
+                if(itemBonus > 0){
+                    itembonuscolor = "lesstransparent";
+                }
+                else if(itemBonus < 0){
+                    itembonuscolor = "redtransparent";
+                }
+                else{
+                    itembonuscolor = "transparent";
+                }
+                if(traitBonus > 0){
+                    traitbonuscolor = "lesstransparent";
+                }
+                else if(traitBonus < 0){
+                    traitbonuscolor = "redtransparent";
+                }
+                else{
+                    traitbonuscolor = "transparent";
+                }
+                let finalValue;
+                let preFinalValue; //Value of summed up everything BEFORE class multiplier and rounding
+                let bonusesSummedUp = bonus + itemBonus + traitBonus;
+                preFinalValue = baseValue + bonusesSummedUp * multiplier; //HERE IS THE CLASSMULTIPLIER / CLASS MULTIPLIER
+                //BANKERS ROUNDING  - up or down
+                if((preFinalValue) % 1 == 0.5){
+                    if(stat == "Magic"){
+                        finalValue = preFinalValue + 0.5;
+                    }
+                    else if(stat == "MP Regen"){
+                        if((preFinalValue - 0.5) % 2 == 1){
+                            finalValue = preFinalValue - 0.5;
+                        }
+                        else{
+                            finalValue = preFinalValue + 0.5;
+                        }
+                    }
+                    else if((preFinalValue - 0.5) % 2 == 0){
+                        finalValue = preFinalValue - 0.5;
+                    }
+                    else{
+                        finalValue = preFinalValue + 0.5;
+                    }
+                }
+                else{
+                    finalValue = preFinalValue;
+                }
+                //APPLY CLASS MULTIPLIER / CLASSMULTIPLIER AT THE END
+                //finalValue *= multiplier; //It's done earlier, get lost
+                if(finalValue < 0 && stat != "TotalWeight"){ //exceptiom for weight?
+                    finalValue = 0;
+                }
+                let multiplierClass;
+                if(multiplier > 1){
+                    multiplierClass = "green";
+                }
+                else if(multiplier < 1){
+                    multiplierClass = "red";
+                }
+                else{
+                    multiplierClass = "white";
+                }
+                let extraStringForCapacity = "";
+                let capacityColor = "white";
+                //super stupid capacity color Checks
+                if(stat == "Capacity"){
+                    if(itemBonuses["TotalWeight"] > finalValue){
+                        capacityColor = "red";
+                    }
+                    else if(itemBonuses["TotalWeight"] > (finalValue - 50)){
+                        capacityColor = "yellow";
+                    }
+                    extraStringForCapacity = "<span class='"+capacityColor+"'>"+itemBonuses["TotalWeight"].toFixed(1)+"</span>/";
+                }
+
+                //Damage range in brakcets:
+                let minDamage = 0;
+                let maxDamage = 0;
+                let damageRangeString = "";
+                let dpsString = ""
+                let dphValue = 0;
+                //Get current Ability skill * class multiplier + itembonuses to ability + trait bonuses to ability
+                /* //DEBUG MAGIC:
+                console.log("ZZZZZZZ1: "+baseStats["Ability"][0]);
+                console.log("ZZZZZZZ2: "+baseStats["Ability"][1]);
+                console.log("ZZZZZZZ3: "+addedPoints["Ability"]);
+                console.log("ZZZZZZZ4: "+calculateItemBonuses().Ability);
+                console.log("ZZZZZZZ5: "+traitBonuses.Ability);
+                */
+                let abilitySkill = (baseStats["Ability"][0] + baseStats["Ability"][1] * (addedPoints["Ability"] || 0) + calculateItemBonuses().Ability + traitBonuses.Ability);
+                //console.log("Ability skill: "+abilitySkill)
+                if(stat == "Damage"){
+                    minDamage = (finalValue)/(5/(1+((abilitySkill*1.25)/100)));
+                    //console.log("minDamage:"+minDamage);
+                    maxDamage = (finalValue)*(1+(abilitySkill*1.25)/100);
+                    //console.log("maxDamage:"+maxDamage);
+                    damageRangeString = '<span class="grey"> ('+minDamage.toFixed(0)+"-"+maxDamage.toFixed(0)+')</span>';
+                    dphValue = (minDamage + maxDamage) / 2;
+                }
+                    //console.log(stat+ "--->1 DPH: "+dphValue);
+                //Unnatural flow is unnatural
+                let extraMagicDamageString;
+                //if current stat = Damage and trait Unnatural Flow is active, add its stage to the Damage as an extra string in format "36 + 7", where 7 is Unnatural Flow's stage 2
+                if(stat == "Damage" && traitBonuses.MagicDamage > 0){
+                    extraMagicDamageString = " + "+traitBonuses.MagicDamage;
+                }
+                // Add check for trait 24
+                let unnaturalFlowBonusString = "";
+                if (stat == "Damage" && selectedTraits["57"] && selectedTraits["57"] !== "0" && selectedTraits["57"] !== 0) {
+                    unnaturalFlowBonusString = '<span class="purple">+' + selectedTraits["57"]+"</span>";
+                    dphValue += parseFloat(selectedTraits["57"]);
+                }
+                if(dphValue > 0){
+                    //get aTtackspeed value and class multiplier
+                    // UNKNOWN TYPES fix - JAVASCRIPT STInks bdfloibjdflbkdjfb
+                    let attackSpeed = (parseFloat(baseStats["Attack Speed"][0]) + parseFloat(baseStats["Attack Speed"][1]) * parseFloat(addedPoints["Attack Speed"] || 0) + parseFloat(itemBonuses["Attack Speed"]) + parseFloat(traitBonuses["Attack Speed"])) * parseFloat(classMultipliers[selectedClass]["Attack Speed"]);
+                    //cool debug log
+                    console.log("3 base attack speed: "+baseStats["Attack Speed"][0]);
+                    console.log("3 base attack speed growth: "+baseStats["Attack Speed"][1]);
+                    console.log("3 added points in attack speed: "+addedPoints["Attack Speed"]);
+                    console.log("3 item bonus in attack speed: "+parseFloat(itemBonuses["Attack Speed"]));
+                    console.log("3 trait bonus in attack speed: "+parseFloat(traitBonuses["Attack Speed"]));
+                    console.log("3 class multiplier in attack speed: "+classMultipliers[selectedClass]["Attack Speed"]);
+                    console.log("3 Attack speed: "+attackSpeed);
+                    
+                    if(attackSpeed < 1){
+                        attackSpeed = 1;
+                    }
+                    let attackInterval=2/(attackSpeed/10);
+                    let dpsValue = dphValue/attackInterval;
+                    // more cool debug
+                    
+                    console.log("4 Attack speed: "+attackSpeed);
+                    console.log("4 Attack interval: "+attackInterval);
+                    console.log("4 DPS: "+dpsValue);
+                    console.log("4 DPH: "+dphValue);
+                    
+                    dpsString = '<span class="green"><span class="dps"> DPS: </span>'+dpsValue.toFixed(1)+'</span>';
+                }
+                //console.log("stat: "+stat);
+                //console.log("itemBonus "+itemBonus);
+                //console.log("traitBonus "+traitBonus);
+                const row = `<div class="stat-container">
+                    <div>${stat}</div>
+                    <div>${baseValue}</div>
+                    <div>${added > 0 ? `<button onclick='subtractPoint("${stat}")'>-</button>` : ''}</div>
+                    <div>${(availablePoints > 0 && added < level && !["Attack Speed", "Armor", "Defense", "Damage", "Movespeed","Range"].includes(stat)) ? `<button onclick='addPoint("${stat}")'>+</button>` : ''}</div>
+                    <div class="${addedClass}">${added}</div>
+                    <div class="bonus ${bonuscolor}">${bonus.toFixed(2)}</div>
+                    <div class="bonus ${itembonuscolor}">${itemBonus.toFixed(2)}</div>
+                    <div class="bonus ${traitbonuscolor}">${traitBonus.toFixed(2)}</div>
+                    <div class="smaller multiplier ${multiplierClass}">${multiplier.toFixed(2) * 100}%</div>
+                    <div>${extraStringForCapacity}${finalValue.toFixed(0)}${damageRangeString}${extraMagicDamageString || ""}${unnaturalFlowBonusString}${dpsString}</div>
+                </div>`;
+                
+                statTable.innerHTML += row;
+            }
+        }
+        
+        function selectClass(characterClass) {
+            document.getElementById("class").value = characterClass;
+            document.querySelectorAll('.class-selection img').forEach(img => {
+                img.classList.remove('selected');
+            });
+            document.querySelector(`.class-selection img[alt="${characterClass}"]`).classList.add('selected');
+            updateStats();
+        }
+        
+        function populateItemSlots() {
+            const itemSlots = document.querySelectorAll('.item-slot');
+            const selectionGrid = document.getElementById('selection-grid');
+            const itemStats = document.getElementById('item-stats');
+            
+            function showItemStats(item) {
+                let statsHtml = `<strong>${item[0]}</strong><br>`;
+                if (item[18]) statsHtml += `<span class="description">${item[18]}</span><br>`;
+                if (item[2]) statsHtml += `Type: ${item[2]}<br>`;
+                if (item[4]) statsHtml += `<span class="${item[4] < 0 ? 'red' : 'green'}">Range: ${item[4]}</span><br>`;
+                if (item[5]) statsHtml += `<span class="${item[5] < 0 ? 'red' : 'green'}">Damage: ${item[5]}</span><br>`;
+                if (item[6]) statsHtml += `<span class="${item[6] < 0 ? 'red' : 'green'}">Health: ${item[6]}</span><br>`;
+                if (item[7]) statsHtml += `<span class="${item[7] < 0 ? 'red' : 'green'}">Mana: ${item[7]}</span><br>`;
+                if (item[8]) statsHtml += `<span class="${item[8] < 0 ? 'red' : 'green'}">Ability: ${item[8]}</span><br>`;
+                if (item[9]) statsHtml += `<span class="${item[9] < 0 ? 'red' : 'green'}">Magic: ${item[9]}</span><br>`;
+                if (item[10]) statsHtml += `<span class="${item[10] < 0 ? 'red' : 'green'}">Armor: ${item[10]}</span><br>`;
+                if (item[11]) statsHtml += `<span class="${item[11] < 0 ? 'red' : 'green'}">Defense: ${item[11]}</span><br>`;
+                if (item[12]) statsHtml += `<span class="${item[12] < 0 ? 'red' : 'green'}">Move Speed: ${item[12]}</span><br>`;
+                if (item[13]) statsHtml += `<span class="${item[13] < 0 ? 'red' : 'green'}">Attack Speed: ${item[13]}</span><br>`;
+                if (item[16]) statsHtml += `<span class="${item[16] < 0 ? 'red' : 'green'}">HP Regen: ${item[16]}</span><br>`;
+                if (item[17]) statsHtml += `<span class="${item[17] < 0 ? 'red' : 'green'}">MP Regen: ${item[17]}</span><br>`;
+                if (item[14]) statsHtml += `[temp]: ${item[14]}<br>`;
+                if (item[15]) statsHtml += `Equip Size: ${item[15]}/10<br>`;
+                if (item[3]) statsHtml += `It weighs ${(item[3]/10).toFixed(1)} oz.<br>`;
+                if (item[20]) statsHtml += `<span class="${item[20]}">Rarity: ${item[20]}</span><br>`;
+                itemStats.innerHTML = statsHtml;
+            }
+            
+            function clearItemStats() {
+                itemStats.innerHTML = '';
+            }
+            
+            function updateHandSlotColors() {
+                const leftHandSlot = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
+                const rightHandSlot = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
+                //butf
+                const leftHandItem = items.find(i => i[0] === leftHandSlot.querySelector('img').getAttribute('alt'));
+                const rightHandItem = items.find(i => i[0] === rightHandSlot.querySelector('img').getAttribute('alt'));
+                let leftHandSize = leftHandItem ? leftHandItem[15] || 0 : 0;
+                let rightHandSize = rightHandItem ? rightHandItem[15] || 0 : 0;
+                //check if trait 22 is active
+                const dualWieldingTrait = selectedTraits["53"];
+                //check if stage of dualWieldingTrait is > 0
+                //show all keys and values of selected traits:
+                for(let i = 0; i < Object.keys(selectedTraits).length; i++){
+                    console.log("Selected trait "+i+" == "+selectedTraits[i]);
+                }
+                console.log("SELECTED TRAIaaaTS COUNT:"+Object.keys(selectedTraits).length);
+                console.log("SELECTED TRAITS ==> "+selectedTraits["53"]);
+                console.log(dualWieldingTrait);
+                if(parseInt(dualWieldingTrait.replace("%","")) > 0){
+                    if(leftHandSize == 6){
+                        leftHandSize = 5;
+                    }
+                    if(rightHandSize == 6){
+                        rightHandSize = 5;
+                    }
+                }
+                const totalSize = leftHandSize + rightHandSize;
+                if (totalSize > 10) {
+                    leftHandSlot.classList.add('invalid');
+                    rightHandSlot.classList.add('invalid');
+                } else {
+                    leftHandSlot.classList.remove('invalid');
+                    rightHandSlot.classList.remove('invalid');
+                }
+            }
+            
+            function setImageSize(img) {
+                const image = new Image();
+                image.src = img.src;
+                image.onload = function() {
+                    if (image.width === 32 && image.height === 32) {
+                        img.classList.add('size-32');
+                        img.classList.remove('size-16');
+                    } else if (image.width === 16 && image.height === 16) {
+                        img.classList.add('size-16');
+                        img.classList.remove('size-32');
+                    } else {
+                        img.classList.remove('size-32', 'size-16');
+                    }
+                };
+            }
+            
+            itemSlots.forEach(slot => {
+                const slotType = slot.getAttribute('data-slot');
+                slot.addEventListener('click', function() {
+                    selectionGrid.innerHTML = '';
+                    items.forEach(item => {
+                        if (item[1] === slotType) {
+                            const selectionItem = document.createElement('div');
+                            selectionItem.classList.add('selection-item');
+                            const img = document.createElement('img');
+                            if(item[19]) img.src = `Items/${item[19].replace("'","").replace("%E2%80%99","")}`;
+                            img.alt = `${item[0]}`;
+                            img.classList.remove('uncommon','rare','epic','legendary');
+                            if (item[20]) img.classList.add(item[20]);
+                            setImageSize(img);
+                            selectionItem.appendChild(img);
+                            selectionItem.addEventListener('click', function() {
+                                const slotImg = slot.querySelector('img');
+                                if(item[19]) slotImg.src = `Items/${item[19]}`;
+                                slotImg.alt = item[0];
+                                slotImg.classList.remove('uncommon','rare','epic','legendary');
+                                if (item[20]) slotImg.classList.add(item[20]);
+                                slotImg.style.display = 'block';
+                                setImageSize(slotImg);
+                                selectionGrid.classList.remove('active');
+                                updateStats();
+                                updateHandSlotColors();
+                            });
+                            selectionItem.addEventListener('mouseover', function() {
+                                showItemStats(item);
+                            });
+                            selectionItem.addEventListener('mouseout', function() {
+                                clearItemStats();
+                            });
+                            selectionGrid.appendChild(selectionItem);
+                        }
+                    });
+                    selectionGrid.classList.add('active');
+                });
+                slot.addEventListener('contextmenu', function(event) {
+                    event.preventDefault();
+                    const img = slot.querySelector('img');
+                    img.src = '';
+                    img.alt = '';
+                    img.style.display = 'none';
+                    updateStats();
+                    updateHandSlotColors();
+                });
+                const img = document.createElement('img');
+                slot.appendChild(img);
+                slot.addEventListener('mouseover', function() {
+                    const itemName = img.getAttribute('alt');
+                    const rarity = img.classList.contains('uncommon') ? 'uncommon' :
+                                   img.classList.contains('rare') ? 'rare' :
+                                   img.classList.contains('epic') ? 'epic' :
+                                   img.classList.contains('legendary') ? 'legendary' : 'common';
+                    const item = items.find(i => i[0] === itemName && (i[20] === rarity || (!i[20] && rarity === 'common')));
+                    if (item) {
+                        showItemStats(item);
+                    }
+                });
+                slot.addEventListener('mouseout', function() {
+                    clearItemStats();
+                });
+            });
+        }
+
+        function updateHandSlotColors() {
+            const leftHandSlot = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
+            const rightHandSlot = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
+            const leftHandItem = items.find(i => i[0] === leftHandSlot.querySelector('img').getAttribute('alt'));
+            const rightHandItem = items.find(i => i[0] === rightHandSlot.querySelector('img').getAttribute('alt'));
+            let leftHandSize = leftHandItem ? leftHandItem[15] || 0 : 0;
+            let rightHandSize = rightHandItem ? rightHandItem[15] || 0 : 0;
+            const dualWieldingTrait = selectedTraits["53"];
+            if (parseInt(dualWieldingTrait.replace("%", "")) > 0) {
+                if (leftHandSize == 6) {
+                    leftHandSize = 5;
+                }
+                if (rightHandSize == 6) {
+                    rightHandSize = 5;
+                }
+            }
+            const totalSize = leftHandSize + rightHandSize;
+            if (totalSize > 10) {
+                leftHandSlot.classList.add('invalid');
+                rightHandSlot.classList.add('invalid');
+            } else {
+                leftHandSlot.classList.remove('invalid');
+                rightHandSlot.classList.remove('invalid');
+            }
+        }
+
+        function populateTraits() {
+            const traitsList = document.getElementById('traits-list');
+            const traitsPanel = document.getElementById('traits-panel');
+            traitsPanel.innerHTML = ''; // Clear previous content
+            traitsPanel.appendChild(traitsList);
+            // First pass to create all trait divs
+            traits.forEach(trait => {
+                const traitDiv = document.createElement('div');
+                traitDiv.addEventListener('contextmenu', e => e.preventDefault())
+                traitDiv.addEventListener("contextmenu", (event) => {});
+                oncontextmenu = (event) => {};
+                const locationMultiplier = 1.8;
+                const centerSpot = [400, 450];
+                traitDiv.classList.add('trait');
+                if (trait[0] === 0) {
+                    //traitDiv.style.display = 'none';
+                    //console.log("Hello");
+                    traitDiv.setAttribute('data-trait-id', trait[0]);
+                    traitDiv.style.position = 'absolute';
+                    traitDiv.style.left = `${(centerSpot[0] + trait[9])*locationMultiplier}px`;
+                    traitDiv.style.top = `${(centerSpot[1] + trait[10])*locationMultiplier}px`;
+                    traitDiv.style.width = "130px";
+                    traitDiv.style.height = "130px";
+                    traitDiv.classList.add('centerImage');
+                    traitDiv.addEventListener('click', function() {
+                        spinImage();
+                    });
+                    traitDiv.innerHTML = `<img class="wizardMan" src="CommunityIcon.png">`;
+                    traitDiv.style.background = "transparent";
+                    traitDiv.style.textAlign = "center";
+                    traitDiv.style.verticalAlign = "middle";
+                    //align in middle vertically
+                    traitDiv.style.alignContent = "center";
+                    traitDiv.style.marginTop="-5px";
+                    traitDiv.style.border = "0px solid black";
+                    traitsList.appendChild(traitDiv);
+                }
+                else{
+                    traitDiv.setAttribute('data-trait-id', trait[0]);
+                    
+                    const traitTitle = document.createElement('div');
+                    traitTitle.classList.add('trait-title');
+                    traitTitle.textContent = trait[2]; 
+                    
+                    const traitDescription = document.createElement('div');
+                    traitDescription.classList.add('trait-description');
+                    traitDescription.textContent = trait[3];
+                    
+                    traitDiv.appendChild(traitTitle);
+                    selectedTraits[trait[0]] = 0;
+                    traitDiv.appendChild(traitDescription);
+                    
+                    const traitStages = document.createElement('div');
+                    traitStages.classList.add('trait-stages');
+                    
+                    // Create the stage buttons
+                    trait[4].forEach(stage => {
+                        const button = document.createElement('button');
+                        button.textContent = stage;
+                        button.style.pointerEvents = 'none';
+                        if (stage == 0 || stage == "0%" || stage === "0" || stage === "Off") {
+                            button.classList.add('active', 'first-stage');
+                            selectedTraits[trait[0]] = stage;
+                        }
+                        traitStages.appendChild(button);
+                    });
+                    
+                    traitDiv.appendChild(traitStages);
+                    
+                    // Add click events
+                    traitDiv.addEventListener('click', function() {
+                        increaseTraitStage(trait[0], traitStages);
+                    });
+                    
+                    traitDiv.addEventListener('contextmenu', function(e) {
+                        e.preventDefault();
+                        decreaseTraitStage(trait[0], traitStages);
+                    });
+                    
+                    traitDiv.style.position = 'absolute';
+                    traitDiv.style.left = `${(centerSpot[0] + trait[9])*locationMultiplier}px`;
+                    traitDiv.style.top = `${(centerSpot[1] + trait[10])*locationMultiplier}px`;
+                    traitsList.appendChild(traitDiv);
+                }
+            });
+            
+            // Second pass to draw connectors
+            traits.forEach(trait => {
+                if (trait[1] > -1) { // If this trait has a parent
+                    const parentTrait = traits.find(t => t[0] === trait[1]);
+                    if (parentTrait) {
+                        // Calculate positions
+                        const locationMultiplier = 1.8;
+                        const centerSpot = [400, 450];
+                        const traitX = (centerSpot[0] + trait[9]) * locationMultiplier + 70; // Add half of trait width
+                        const traitY = (centerSpot[1] + trait[10]) * locationMultiplier + 60; // Add half of trait height
+                        const parentX = (centerSpot[0] + parentTrait[9]) * locationMultiplier + 70;
+                        const parentY = (centerSpot[1] + parentTrait[10]) * locationMultiplier + 60;
+                        
+                        // Create the connector line
+                        let differenceBetweenX = traitX - parentX;
+                        let differenceBetweenY = traitY - parentY;
+
+                        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                        let startX = 0;
+                        let startY = 0;
+                        if(differenceBetweenX < 0){
+                            startX = Math.abs(differenceBetweenX) * 2;
+                        }
+                        if(differenceBetweenY < 0){
+                            startY = Math.abs(differenceBetweenY) * 2;
+                        }
+                        line.setAttribute("x1", startX);
+                        line.setAttribute("y1", startY);
+                        line.setAttribute("x2", Math.abs(differenceBetweenX) + 3);
+                        line.setAttribute("y2", Math.abs(differenceBetweenY) + 3);
+                        line.classList.add('connector');
+                        
+                        // Create an SVG element to contain the line
+                        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                        svg.classList.add('connector');
+                        svg.style.position = 'absolute';
+                        svg.style.left = traitX-Math.abs(differenceBetweenX)+'px';
+                        svg.style.top = traitY-Math.abs(differenceBetweenY)+'px';
+                        svg.style.width = 2*Math.abs(differenceBetweenX)+3+'px';
+                        svg.style.height = 2*Math.abs(differenceBetweenY)+3+'px';
+                        svg.appendChild(line);
+                        
+                        traitsPanel.appendChild(svg);
+                    }
+                }
+            });
+        }
+        
+        function increaseTraitStage(traitId, stagesElement) {
+            // Check if we have trait points available
+            if (availableTraitPoints <= 0) {
+                return;
+            }
+            
+            const trait = traits.find(t => t[0] == traitId);
+            if (!trait) return;
+            
+            const currentStage = getStageIndex(traitId);
+            
+            // Already at max stage
+            if (currentStage >= trait[4].length - 1) {
+                return;
+            }
+            
+            // Check requirements for the next stage
+            const requirementCheck = checkTraitRequirements(traitId, currentStage + 1);
+            if (!requirementCheck.success) {
+                highlightFailedRequirement(requirementCheck.failedTraitId);
+                return;
+            }
+            
+            // Increase stage
+            const newStage = trait[4][currentStage + 1];
+            selectedTraits[traitId] = newStage;
+            
+            // Update visual indication
+            updateStageButtons(stagesElement, currentStage + 1);
+            
+            // Add active class to trait div if stage is not minimum
+            const traitDiv = document.querySelector(`.trait[data-trait-id="${traitId}"]`);
+            console.log("HERE");
+            if (currentStage + 1 > 0) {
+                console.log("HERE ADDING");
+                console.log("HERE::: "+traitDiv.outerHTML);
+                traitDiv.classList.add('active');
+                console.log("HERE::: "+traitDiv.outerHTML);
+            } else {
+                traitDiv.classList.remove('active');
+            }
+            
+            // Spend a trait point
+            availableTraitPoints--;
+            if(availableTraitPoints <= 0){
+                availableTraitPoints = 0;
+                toggleBlinking();
+            }
+            document.getElementById('available-trait-points').textContent = availableTraitPoints;
+            
+            toggleBlinking();
+            // Update stats
+            updateStats();
+            updateHandSlotColors();
+            console.log("HERE::: "+traitDiv.outerHTML);
+        }
+        
+        function decreaseTraitStage(traitId, stagesElement) {
+            const trait = traits.find(t => t[0] == traitId);
+            if (!trait) return;
+            
+            const currentStage = getStageIndex(traitId);
+            
+            // Already at min stage
+            if (currentStage <= 0) {
+                return;
+            }
+            
+            // Check if any other traits depend on this trait's current stage
+            const blockingTraits = findDependentTraits(traitId, currentStage);
+            if (blockingTraits.length > 0) {
+                // Highlight the blocking traits
+                blockingTraits.forEach(highlightFailedRequirement);
+                return;
+            }
+            
+            // Decrease stage
+            const newStage = trait[4][currentStage - 1];
+            selectedTraits[traitId] = newStage;
+            
+            // Update visual indication
+            updateStageButtons(stagesElement, currentStage - 1);
+            
+            // Update active class on trait div based on new stage
+            const traitDiv = document.querySelector(`.trait[data-trait-id="${traitId}"]`);
+            if (currentStage - 1 > 0) {
+                traitDiv.classList.add('active');
+            } else {
+                traitDiv.classList.remove('active');
+            }
+            
+            // Return a trait point
+            availableTraitPoints++;
+            document.getElementById('available-trait-points').textContent = availableTraitPoints;
+            toggleBlinking();
+            // Update stats
+            updateStats();
+            updateHandSlotColors();
+        }
+        
+        function getStageIndex(traitId) {
+            const trait = traits.find(t => t[0] == traitId);
+            if (!trait) return 0;
+            
+            const currentValue = selectedTraits[traitId];
+            return trait[4].findIndex(stage => stage == currentValue);
+        }
+        
+        function updateStageButtons(stagesElement, activeIndex) {
+            const buttons = stagesElement.querySelectorAll('button');
+            buttons.forEach((button, index) => {
+                button.classList.remove('active');
+                if (index === activeIndex) {
+                    button.classList.add('active');
+                    if (index === 0) {
+                        button.classList.add('first-stage');
+                    }
+                }
+            });
+        }
+        
+        function copyLink() {
+            const level = document.getElementById("level").value;
+            const characterClass = document.getElementById("class").value;
+            const availablePoints = document.getElementById("available-points").textContent;
+            const itemSlots = Array.from(document.querySelectorAll('.item-slot img')).map(img => {
+                const rarity = img.classList.contains('uncommon') ? 'uncommon' :
+                               img.classList.contains('rare') ? 'rare' :
+                               img.classList.contains('epic') ? 'epic' :
+                               img.classList.contains('legendary') ? 'legendary' : 'common';
+                return `${img.alt}:${rarity}`;
+            }).join(',');
+            const addedPointsStr = Object.entries(addedPoints).map(([key, value]) => `${key}:${value}`).join(',');
+            const selectedTraitsStr = Object.entries(selectedTraits).map(([key, value]) => `${key}:${value}`).join(',');
+
+            const protocol = window.location.protocol === "file:" ? "file://" : window.location.origin;
+            const url = `${protocol}${window.location.pathname}?level=${level}&available=${availablePoints}&class=${characterClass}&items=${itemSlots.replace(/\s+/g, '%20')}&points=${addedPointsStr.replace(/\s+/g, '')}&traits=${selectedTraitsStr.replace(/\s+/g, '')}`;
+            navigator.clipboard.writeText(url).then(() => {
+                alert('Link copied to clipboard!');
+            });
+        }
+
+        function setImageSize(img) {
+            const image = new Image();
+            image.src = img.src;
+            image.onload = function() {
+                if (image.width === 32 && image.height === 32) {
+                    img.classList.add('size-32');
+                    img.classList.remove('size-16');
+                } else if (image.width === 16 && image.height === 16) {
+                    img.classList.add('size-16');
+                    img.classList.remove('size-32');
+                } else {
+                    img.classList.remove('size-32', 'size-16');
+                }
+            };
+        }
+
+        function updateFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('level')) {
+                document.getElementById("level").value = params.get('level');
+                updatePoints(); // Make sure trait points are calculated based on level
+            }
+            
+            // ...existing code for available points, class, items, points...
+            
+            if (params.has('traits')) {
+                const traitParams = params.get('traits').split(',');
+                let spentPoints = 0;
+                
+                traitParams.forEach(traitParam => {
+                    const [id, stage] = traitParam.split(':');
+                    selectedTraits[id] = stage;
+                    
+                    const trait = traits.find(t => t[0] == id);
+                    if (trait && id !== "0") { // Skip the starting node
+                        const stageIndex = trait[4].findIndex(s => s == stage);
+                        if (stageIndex > 0) { // If not at minimum stage
+                            spentPoints += stageIndex;
+                            
+                            // Add active class to trait div if not at minimum stage
+                            const traitDiv = document.querySelector(`.trait[data-trait-id="${id}"]`);
+                            if (traitDiv) {
+                                traitDiv.classList.add('active');
+                            }
+                        }
+                        
+                        const stagesElement = document.querySelector(`.trait[data-trait-id="${id}"] .trait-stages`);
+                        if (stagesElement) {
+                            updateStageButtons(stagesElement, stageIndex);
+                        }
+                    }
+                });
+                
+                // Adjust available trait points based on spent points
+                availableTraitPoints = Math.max(0, availableTraitPoints - spentPoints);
+                document.getElementById('available-trait-points').textContent = availableTraitPoints;
+            }
+            
+            updateStats();
+        }
+
+        function openTab(tabId) {
+            const tabContents = document.querySelectorAll('.tab-content');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            document.querySelector(`.tab-button[onclick="openTab('${tabId}')"]`).classList.add('active');
+            console.log("HERE2==>"+document.querySelector(`.trait[data-trait-id="16"]`).outerHTML);
+        }
+        updatePoints();
+        selectClass('Squire');
+        populateItemSlots();
+        populateTraits();
+        window.onload = updateFromUrl;
+        let tabId = "equipment-stats";
+        //if(!tabId) tabId = "equipment-stats";
+        document.getElementById(tabId).classList.add('active');
+        document.querySelector(`.tab-button[onclick="openTab('${tabId}')"]`).classList.add('active');
+        updatePoints();
+        selectClass('Squire');
+        populateItemSlots();
+        populateTraits();
+        window.onload = updateFromUrl;
+
+        function resetTraits() {
+            // Reset all trait selections
+            let level = parseInt(document.getElementById("level").value) || 1;
+            
+            for (let traitId in selectedTraits) {
+                const trait = traits.find(t => t[0] == traitId);
+                if (trait) {
+                    // Reset to first stage
+                    selectedTraits[traitId] = trait[4][0];
+                    
+                    // Update visual appearance
+                    const traitDiv = document.querySelector(`.trait[data-trait-id="${traitId}"]`);
+                    if (traitDiv) {
+                        traitDiv.classList.remove('active');
+                        const stagesElement = traitDiv.querySelector('.trait-stages');
+                        if (stagesElement) {
+                            updateStageButtons(stagesElement, 0);
+                        }
+                    }
+                }
+            }
+            
+            // Reset available trait points
+            availableTraitPoints = Math.floor(level / 2);
+            document.getElementById('available-trait-points').textContent = availableTraitPoints;
+            
+            // Update stats
+            updateStats();
+            updateHandSlotColors();
+        }
+        
+        function checkTraitRequirements(traitId, targetStage) {
+            const trait = traits.find(t => t[0] == traitId);
+            if (!trait) return false;
+            
+            let requirementsMet = true;
+            let failedTrait = null;
+            
+            // Check first requirement
+            if (trait[5] !== 0) {
+                const req1 = traits.find(t => t[0] == trait[5]);
+                if (req1) {
+                    const req1Stage = getStageIndex(req1[0]);
+                    if (req1Stage < trait[6]) {
+                        requirementsMet = false;
+                        failedTrait = req1[0];
+                    }
+                }
+            }
+            
+            // Check second requirement
+            if (requirementsMet && trait[7] !== 0) {
+                const req2 = traits.find(t => t[0] == trait[7]);
+                if (req2) {
+                    const req2Stage = getStageIndex(req2[0]);
+                    if (req2Stage < trait[8]) {
+                        requirementsMet = false;
+                        failedTrait = req2[0];
+                    }
+                }
+            }
+            
+            // Check parent trait stage
+            if (requirementsMet && trait[1] !== 0) {
+                const parentTrait = traits.find(t => t[0] == trait[1]);
+                if (parentTrait) {
+                    const parentStage = getStageIndex(parentTrait[0]);
+                    // Parent stage should be at least equal to target stage
+                    if (parentStage < targetStage) {
+                        requirementsMet = false;
+                        failedTrait = parentTrait[0];
+                    }
+                }
+            }
+            
+            return {
+                success: requirementsMet,
+                failedTraitId: failedTrait
+            };
+        }
+        
+        function highlightFailedRequirement(traitId) {
+            const traitDiv = document.querySelector(`.trait[data-trait-id="${traitId}"]`);
+            if (traitDiv) {
+                traitDiv.classList.add('requirement-error');
+                setTimeout(() => {
+                    traitDiv.classList.remove('requirement-error');
+                }, 1000);
+            }
+        }
+        
+        function findDependentTraits(traitId, currentStage) {
+            let dependentTraits = [];
+            
+            traits.forEach(trait => {
+                // Check if this trait has the given traitId as a requirement
+                if ((trait[5] == traitId && getStageIndex(trait[0]) > 0 && trait[6] >= currentStage) || 
+                    (trait[7] == traitId && getStageIndex(trait[0]) > 0 && trait[8] >= currentStage)) {
+                    dependentTraits.push(trait[0]);
+                }
+                
+                // Check if this trait has the given traitId as a parent
+                if (trait[1] == traitId && getStageIndex(trait[0]) >= currentStage) {
+                    dependentTraits.push(trait[0]);
+                }
+            });
+            
+            return dependentTraits;
+        }
+
+        let rotation = 0;   
+        let totalFrames = 0;
+        let deceleration = 20;
+        let speed = 0;
+        function spinImage() {
+            const image = document.getElementsByClassName("wizardMan")[0];
+            let wizardIcons = document.getElementsByClassName("wizardMan");
+            if(wizardIcons.length > 1){
+                console.log("Wizard disappears. Magic.")
+                //console.log(wizardIcons[0].outerHTML);
+                wizardIcons[1].setAttribute("style","display:none;");
+            }
+            speed += 15 + Math.floor(Math.random() * 30); // Initial speed in degrees per frame
+            let duration = 2000; // Duration of the spin in milliseconds
+            const frameRate = 60; // Frames per second
+            totalFrames = (duration / 1000) * frameRate;
+            deceleration = 1 / (speed/3);// / totalFrames;
+
+            function animate() {
+                //wizardIcon.style.display = "block";
+                rotation += speed;
+                speed -= deceleration;
+
+                image.style.transform = `rotate(${rotation}deg)`;
+                if (speed > 0) {
+                    requestAnimationFrame(animate);
+                }
+            }
+
+            // Ensure the image is clickable and remove any static copies
+            image.onclick = animate;
+            animate();
+        }
+        
+    </script>
+</body>
+</html>
