@@ -2162,11 +2162,18 @@ body::-webkit-scrollbar-thumb {
             const selectedTraitsStr = Object.entries(selectedTraits).map(([key, value]) => `${key}:${value}`).join(',');
 
             const url = `/index.html?page=calc.html&level=${level}&available=${availablePoints}&class=${characterClass}&items=${itemSlots.replace(/\s+/g, '%20')}&points=${addedPointsStr.replace(/\s+/g, '')}&traits=${selectedTraitsStr.replace(/\s+/g, '')}`;
-            navigator.clipboard.writeText(url).then(() => {
+            //get currentb ase website address but only until the last slash
+            const baseUrl = getBaseUrl();
+            navigator.clipboard.writeText(baseUrl+url).then(() => {
                 alert('Link copied to clipboard!');
             });
         }
 
+        function getBaseUrl() {
+            const url = window.location.href;
+            const baseUrl = url.substring(0, url.lastIndexOf('/'));
+            return baseUrl;
+        }
         function setImageSize(img) {
             const image = new Image();
             image.src = img.src;
