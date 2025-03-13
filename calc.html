@@ -855,7 +855,7 @@ body::-webkit-scrollbar-thumb {
 [19,18,"Explosive Ammo","Arrows have a 25% chance of exploding dealing area damage that briefly slows",["Off","On"],16,5,18,3,-50,-400],
 [20,17,"Shineshooter","Reduces the cooldown of Light and Arrow of spells by:",["0%","10%","20%","35%"],0,0,0,0,50,-300],
 [21,20,"Bullseye","Increases the Damage of Arrow and Blade spells against enemies you have currently targeted",["Off","On"],16,5,20,3,50,-400],
-[22,16,"True Grip","While wearing Gloves attacking regenerates Mana",[1,2,5],0,0,0,0,50,-200],
+[22,16,"True Grip","While wearing Gloves attacking regenerates Mana",[0,1,2,5],0,0,0,0,50,-200],
 [23,22,"Elvish Practice","Reduces the cooldown of Time and Mystic spells by:",["0%","10%","20%","35%"],0,0,0,0,150,-300],
 [24,23,"Arcane Trickster","While using Gloves, casting Time or Mystic spells has a 50% chance of blocking all physical damage for 3 seconds",["Off","On"],23,3,16,5,150,-400],
 [25,0,"Cozy and Useful","Light Armor is lighter",["0%","1%","5%","10%","17%","25%"],0,0,0,0,100,-100],
@@ -865,7 +865,7 @@ body::-webkit-scrollbar-thumb {
 [29,25,"Dressing Wizardly","Armor gives you Mana for each oz under X oz, capped at 20 Mana",[0,25,33,45],0,0,0,0,200,-100],
 [30,29,"Powerful Space","Gain 5% Magic for each X Free Capacity you have, capping at 20%",[0,50,35,15],0,0,0,0,300,-200],
 [31,30,"Clothes of the Damned","Removes negative effects from light armor and gain 5% Magic for each equipped light armor",["Off","On"],30,3,25,5,400,-300],
-[32,0,"Block Efficacy","Shields have more defense",[0,1,4,8,14,20],0,0,0,0,100,0],
+[32,0,"Block Efficacy","Shields have more defense",["0%","1%","4%","8%","14%","20%"],0,0,0,0,100,0],
 [33,32,"Bread and Butter","Using a sword and shield gives you extra damage",[0,2,4,8],0,0,0,0,200,0],
 [34,33,"Deflect","Blocking with a magic shield reflects damage taken",["0%","50%","70%","100%"],0,0,0,0,300,-100],
 [35,31,"Darkness Embrace","Death spells are 10 times cheaper. Heal and Light spells are 10 times more expensive",["Off","On"],0,0,0,0,400,-200],
@@ -1207,10 +1207,10 @@ body::-webkit-scrollbar-thumb {
                             const leftHandItemTrait = items.find(i => i[0] === leftHandSlotTrait.querySelector('img').getAttribute('alt'));
                             const rightHandItemTrait = items.find(i => i[0] === rightHandSlotTrait.querySelector('img').getAttribute('alt'));
                             if (leftHandItemTrait && leftHandItemTrait[2].includes("shield")) {
-                                traitBonuses.Defense += parseInt(stage);
+                                traitBonuses.Defense += leftHandItemTrait[11] * (parseInt(stage)/100)
                             }
                             if (rightHandItemTrait && rightHandItemTrait[2].includes("shield")) {
-                                traitBonuses.Defense += parseInt(stage);
+                                traitBonuses.Defense += rightHandItemTrait[11] * (parseInt(stage)/100)
                             }
                             break;
                         case "33": // Bread and Butter
