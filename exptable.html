@@ -8,7 +8,7 @@
 </head>
 
 <body class="small">
-    <p style="padding: 0px; margin: 10px; text-align: justify; width: 900px;">There is no maximum level in Apogea. It all scales infinitely, but there's supposedly a soft cap around level 100. You get less experience for monsters the higher level you are.</p>
+    <p style="padding: 0px; margin: 10px; text-align: justify; width: 900px; user-select: none; pointer-events: none;">There is no maximum level in Apogea. It all scales infinitely, but there's supposedly a soft cap around level 100. You get less experience for monsters the higher level you are.</p>
 </body>
 <script>
     const csvData = `
@@ -116,10 +116,11 @@
 
     const rows = csvData.split('\n').map(row => row.split(';'));
     const table = document.createElement('table');
+    table.style.pointerEvents = 'none';
     table.cellSpacing = '2';
     table.cellPadding = '5';
     table.style.textAlign = 'center';
-    table.style.backgroundColor = '#555546';
+    table.style.backgroundColor = 'transparent';
     table.style.color = 'white';
     table.style.fontSize = '1.3em';
     table.style.lineHeight = '1.1em';
@@ -153,14 +154,16 @@
             const index = i + j * (rows.length / 5);
             if (rows[index]) {
                 if(rows[index][0] % 10 == 0){
-                    row.style.backgroundColor = 'rgba(225, 215, 0, 0.45)';
+                    //row.style.backgroundColor = 'rgba(225, 215, 0, 0.45)';
+                    row.style.color = "#ffbb00";
                 }
                 levelCell.textContent = rows[index][0];
-                expCell.textContent = rows[index][1];
+                //magic regexp to put "," every 3 digits
+                expCell.textContent = rows[index][1].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
             }
             const gap = row.insertCell();
             gap.style.width = '15px';
-            gap.style.backgroundColor = '#555546';
+            gap.style.backgroundColor = 'transparent';
         }
     }
 

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        </head>
+<body class="small">
+<h2>Formulae</h2>
+<p class="formulatitle">Next level XP</p>
+<p class="formulacomment">Total XP that makes you advance to the next level.</p>
+<div class="formula">XP = 50 x CurrentLevel x Current Level x (1 + (CurrentLevel/2))</div>
+
+<p class="formulatitle">Staff formula</p>
+<div class="formula">Weapon Damage + Magic/5</div>
+
+<p class="formulatitle">Spell formula</p>
+<div class="formula">((SpellBaseDamage + Magic) x (1 + SpellMultiplier/100))</div>
+
+<p class="formulatitle">Auto attack raw damage formula</p>
+<div class="formula">((WeaponDamage x (1 + Ability/100)) - TargetDefense)/(1 + TargetArmor/100)</div>
+
+<p class="formulatitle">Ability formula</p>
+<p class="formulacomment">Increases the damage of weapon damage, weapon spells, and increases your minimum damage.</p>
+<div class="formula">WeaponDamage x (1 + Ability/100)</div>
+
+<p class="formulatitle">Attack Interval formula</p>
+<p class="formulacomment">Calculate the time between auto attacks.</p>
+<div class="formula">2 seconds / (AttackSpeed / 10)</div>
+
+<p class="formulatitle">Bow formula</p>
+<div class="formula">WeaponDamage + MoveSpeed/5 + AttackSpeed/5</div>
+
+<p class="formulatitle">Regeneration</p>
+<p class="formulacomment">Regeneration ticks every 10 seconds.</p>
+<div class="formula">Regenerated amount is equal to HP Regen and MP Regen stats.</div>
+
+<p class="formulatitle">Attack range in cubes formula</p>
+<p class="formulacomment">Every 10 points increase your Range by 1 cube.</p>
+<div class="formula">Range/10</div>
+
+<p class="formulatitle">Armor formula</p>
+<p class="formulacomment">Every 2 Armor points reduce physical damage taken by 1 point flat plus about 2%, but diminishing returns apply.</p>
+<div class="formula">(Attacker Damage - Armor/2) / (1 + Armor/100)</div>
+
+<p class="formulatitle">Defense formula</p>
+<p class="formulacomment">Every 1 point in Defense points reduces physical damage taken by 1 point flat in 1 vs 1 encounter.</p>
+<div class="formula">(Attacker Damage - Defense) / (NumberOfAttackers)</div>
+
+<div class="emptyholder">
+
+</div>
+<script>
+    //every 3 seconds spawn random click-through images for 4 seconds
+    setInterval(() => {
+        const img = document.createElement('img');
+        let number = Math.floor(Math.random() * 6) + 1;
+        img.src = `Images/formulas${number}.png`;
+        img.style.position = 'fixed';
+        img.style.top = Math.floor(Math.random() * window.innerHeight) + 'px';
+        img.style.left = Math.floor(Math.random() * window.innerWidth) + 'px';
+        img.style.pointerEvents = 'none';
+        img.style.zIndex = 1000;
+        img.style.opacity = 0; // Initially transparent
+        img.style.transform = 'scale(0.7)'; // Initial zoom
+        img.style.transition = 'opacity 6s ease-in-out, transform 6s ease-in-out'; // Transition for opacity and zoom
+        document.body.appendChild(img);
+
+        // Force reflow to trigger the transition
+        img.offsetHeight;
+
+        img.style.opacity = 0.05; // Fade in
+        img.style.transform = 'scale(1.4)'; // Zoom in
+
+        setTimeout(() => {
+            img.style.opacity = 0; // Fade out
+        }, 7000);
+
+        setTimeout(() => {
+            img.remove();
+        }, 11000);
+    }, 1000);
+</script>
+</body>
+</html>
