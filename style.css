@@ -110,6 +110,7 @@ p{
     width: 700px;
     margin: 40px;
     font-size: 1.5em;
+    text-align: justify;
 }
 
 p a{
@@ -124,4 +125,10 @@ p a:hover{
 
 p span.red{
     color: red;
+}
+
+h3{
+    height: auto;
+    padding: 10px;
+    margin: 0;
 }

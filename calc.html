@@ -333,7 +333,8 @@
             -moz-user-select: none; /* Firefox */
         }
         div.trait.active {
-            background-color: rgb(29, 245, 0);
+            background-color: rgb(57, 117, 0);
+            transition: 0.5s;
         }
         .trait-info {
             display: flex;
@@ -938,7 +939,7 @@ body::-webkit-scrollbar-thumb {
         }
         
         function toggleBlinking(){
-            console.log("Toggling blink.");
+            //console.log("Toggling blink.");
             if (availableTraitPoints > 0) {
                 document.getElementById("available-trait-points").classList.add("blinking");
             } else {
@@ -1454,7 +1455,7 @@ body::-webkit-scrollbar-thumb {
                         case "51": // Hand Finesse
                             if(stage > 0){
                                 //Get total ability
-                                let ability = baseStats["Ability"][0] + baseStats["Ability"][1] * addedPoints["Ability"] + calculateItemBonuses().Ability + traitBonuses.Ability;
+                                let ability = baseStats["Ability"][0] + baseStats["Ability"][1] * (addedPoints["Ability"] || 0) + calculateItemBonuses().Ability + traitBonuses.Ability;
                                 //check how many times the stage fits into the ability
                                 const abilityFits = Math.min(5,parseInt(ability / stage));
                                 //add the bonus to attackspeed
@@ -1655,6 +1656,7 @@ body::-webkit-scrollbar-thumb {
                     // UNKNOWN TYPES fix - JAVASCRIPT STInks bdfloibjdflbkdjfb
                     let attackSpeed = (parseFloat(baseStats["Attack Speed"][0]) + parseFloat(baseStats["Attack Speed"][1]) * parseFloat(addedPoints["Attack Speed"] || 0) + parseFloat(itemBonuses["Attack Speed"]) + parseFloat(traitBonuses["Attack Speed"])) * parseFloat(classMultipliers[selectedClass]["Attack Speed"]);
                     //cool debug log
+                    /*
                     console.log("3 base attack speed: "+baseStats["Attack Speed"][0]);
                     console.log("3 base attack speed growth: "+baseStats["Attack Speed"][1]);
                     console.log("3 added points in attack speed: "+addedPoints["Attack Speed"]);
@@ -1662,19 +1664,19 @@ body::-webkit-scrollbar-thumb {
                     console.log("3 trait bonus in attack speed: "+parseFloat(traitBonuses["Attack Speed"]));
                     console.log("3 class multiplier in attack speed: "+classMultipliers[selectedClass]["Attack Speed"]);
                     console.log("3 Attack speed: "+attackSpeed);
-                    
+                    */
                     if(attackSpeed < 1){
                         attackSpeed = 1;
                     }
                     let attackInterval=2/(attackSpeed/10);
                     let dpsValue = dphValue/attackInterval;
                     // more cool debug
-                    
+                    /*
                     console.log("4 Attack speed: "+attackSpeed);
                     console.log("4 Attack interval: "+attackInterval);
                     console.log("4 DPS: "+dpsValue);
                     console.log("4 DPH: "+dphValue);
-                    
+                    */
                     dpsString = '<span class="green"><span class="dps"> DPS: </span>'+dpsValue.toFixed(1)+'</span>';
                 }
                 //console.log("stat: "+stat);
@@ -1751,11 +1753,13 @@ body::-webkit-scrollbar-thumb {
                 //check if stage of dualWieldingTrait is > 0
                 //show all keys and values of selected traits:
                 for(let i = 0; i < Object.keys(selectedTraits).length; i++){
-                    console.log("Selected trait "+i+" == "+selectedTraits[i]);
+                    //console.log("Selected trait "+i+" == "+selectedTraits[i]);
                 }
+                /*
                 console.log("SELECTED TRAIaaaTS COUNT:"+Object.keys(selectedTraits).length);
                 console.log("SELECTED TRAITS ==> "+selectedTraits["53"]);
                 console.log(dualWieldingTrait);
+                */
                 if(parseInt(dualWieldingTrait.replace("%","")) > 0){
                     if(leftHandSize == 6){
                         leftHandSize = 5;
@@ -1793,6 +1797,7 @@ body::-webkit-scrollbar-thumb {
             itemSlots.forEach(slot => {
                 const slotType = slot.getAttribute('data-slot');
                 slot.addEventListener('click', function() {
+                    console.log("Slot clicked");
                     selectionGrid.innerHTML = '';
                     items.forEach(item => {
                         if (item[1] === slotType) {
@@ -1806,6 +1811,7 @@ body::-webkit-scrollbar-thumb {
                             setImageSize(img);
                             selectionItem.appendChild(img);
                             selectionItem.addEventListener('click', function() {
+                                console.log("Item clicked");
                                 const slotImg = slot.querySelector('img');
                                 if(item[19]) slotImg.src = `Items/${item[19]}`;
                                 slotImg.alt = item[0];
@@ -2053,8 +2059,10 @@ body::-webkit-scrollbar-thumb {
                 console.log("HERE ADDING");
                 console.log("HERE::: "+traitDiv.outerHTML);
                 traitDiv.classList.add('active');
+                traitDiv.offsetHeight;
                 console.log("HERE::: "+traitDiv.outerHTML);
             } else {
+                console.log("HERE REMOIVING active from trait Div");
                 traitDiv.classList.remove('active');
             }
             
@@ -2102,8 +2110,10 @@ body::-webkit-scrollbar-thumb {
             // Update active class on trait div based on new stage
             const traitDiv = document.querySelector(`.trait[data-trait-id="${traitId}"]`);
             if (currentStage - 1 > 0) {
+                console.log("HERE Adding active class to traitdiv");
                 traitDiv.classList.add('active');
             } else {
+                console.log("HERE Removing active class from traitdiv");
                 traitDiv.classList.remove('active');
             }
             
@@ -2151,8 +2161,7 @@ body::-webkit-scrollbar-thumb {
             const addedPointsStr = Object.entries(addedPoints).map(([key, value]) => `${key}:${value}`).join(',');
             const selectedTraitsStr = Object.entries(selectedTraits).map(([key, value]) => `${key}:${value}`).join(',');
 
-            const protocol = window.location.protocol === "file:" ? "file://" : window.location.origin;
-            const url = `${protocol}${window.location.pathname}?level=${level}&available=${availablePoints}&class=${characterClass}&items=${itemSlots.replace(/\s+/g, '%20')}&points=${addedPointsStr.replace(/\s+/g, '')}&traits=${selectedTraitsStr.replace(/\s+/g, '')}`;
+            const url = `/index.html?page=calc.html&level=${level}&available=${availablePoints}&class=${characterClass}&items=${itemSlots.replace(/\s+/g, '%20')}&points=${addedPointsStr.replace(/\s+/g, '')}&traits=${selectedTraitsStr.replace(/\s+/g, '')}`;
             navigator.clipboard.writeText(url).then(() => {
                 alert('Link copied to clipboard!');
             });
@@ -2180,9 +2189,50 @@ body::-webkit-scrollbar-thumb {
                 document.getElementById("level").value = params.get('level');
                 updatePoints(); // Make sure trait points are calculated based on level
             }
-            
+            if (params.has('class')) {
+                selectClass(params.get('class'));
+            }
+            if (params.has('available')){
+                document.getElementById('available-points').textContent = params.get('available');
+            }
+            if (params.has('points')){
+                const pointParams = params.get('points').split(',');
+                pointParams.forEach(pointParam => {
+                    let [stat, points] = pointParam.split(':');
+                    if (stat === "HPRegen") stat = "HP Regen";
+                    if (stat === "MPRegen") stat = "MP Regen";
+                    addedPoints[stat] = parseInt(points);
+                });
+                updateStats();
+            }
+            if (params.has('items')) {
+                const itemParams = params.get('items').split(',');
+                let currentItemSlot = 0;
+                let allItemSlots = document.querySelectorAll('.item-slot img');
+                itemParams.forEach(itemParam => {
+                    console.log("ITEM PARAMS: "+itemParam);
+                    const [name, rarity] = itemParam.split(':');
+                    if (name === ""){
+                        currentItemSlot++;
+                        return;
+                    }
+                    currentItemSlot++;
+                    console.log("YAA"+currentItemSlot);
+                    //const slot = document.querySelector(`.item-slot img[alt="${name}"]`);
+                    //find all item-slot class, and select currentItemSlot
+                    const slot = allItemSlots[currentItemSlot - 1];
+                    if (slot) {
+                        slot.src = `Items/${name.replace(" ","")}.png`;
+                        slot.alt = name;
+                        slot.classList.remove('uncommon', 'rare', 'epic', 'legendary');
+                        slot.setAttribute('style','display: block;');  
+                        slot.classList.add(rarity);
+                        setImageSize(slot);
+                    }
+                });
+                updateStats();
+            }
             // ...existing code for available points, class, items, points...
-            
             if (params.has('traits')) {
                 const traitParams = params.get('traits').split(',');
                 let spentPoints = 0;
@@ -2235,7 +2285,6 @@ body::-webkit-scrollbar-thumb {
         updatePoints();
         selectClass('Squire');
         populateItemSlots();
-        populateTraits();
         window.onload = updateFromUrl;
         let tabId = "equipment-stats";
         //if(!tabId) tabId = "equipment-stats";
@@ -2243,7 +2292,6 @@ body::-webkit-scrollbar-thumb {
         document.querySelector(`.tab-button[onclick="openTab('${tabId}')"]`).classList.add('active');
         updatePoints();
         selectClass('Squire');
-        populateItemSlots();
         populateTraits();
         window.onload = updateFromUrl;
 
