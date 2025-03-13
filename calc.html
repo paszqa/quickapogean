@@ -2164,6 +2164,7 @@ body::-webkit-scrollbar-thumb {
             const url = `/index.html?page=calc.html&level=${level}&available=${availablePoints}&class=${characterClass}&items=${itemSlots.replace(/\s+/g, '%20')}&points=${addedPointsStr.replace(/\s+/g, '')}&traits=${selectedTraitsStr.replace(/\s+/g, '')}`;
             //get currentb ase website address but only until the last slash
             const baseUrl = getBaseUrl();
+            console.log("baseURL"+baseUrl);
             navigator.clipboard.writeText(baseUrl+url).then(() => {
                 alert('Link copied to clipboard!');
             });
