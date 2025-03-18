@@ -24,7 +24,7 @@
             margin-left: 5px;
             margin-right: 5px;
         }
-        th:nth-child(10), td:nth-child(10), th:nth-child(11), td:nth-child(11) {
+        th:nth-child(9), td:nth-child(9), th:nth-child(10), td:nth-child(10) {
             width: 260px;
             margin-left: 5px;
             margin-right: 5px;
@@ -65,6 +65,9 @@
         .lightred{
             color: #be3333;
         }
+        span.red{
+            color: #ff0000;
+        }
 
     </style>
 </head>
@@ -77,15 +80,15 @@
             <tr>
                 <th onclick="sortTable(0)">Image</th>
                 <th onclick="sortTable(1)">Name</th>
-                <th onclick="sortTable(2)">Spellbook</th>
-                <th onclick="sortTable(3)">Type</th>
-                <th onclick="sortTable(4)">Magic</th>
-                <th onclick="sortTable(5)">Ability</th>
-                <th onclick="sortTable(6)">Cost</th>
-                <th onclick="sortTable(7)">HP Cast</th>
-                <th onclick="sortTable(8)">Cooldown</th>
-                <th onclick="sortTable(9)">Description</th>
-                <th onclick="sortTable(10)">Formula</th>
+                <!--<th onclick="sortTable(2)">Spellbook</th>-->
+                <th onclick="sortTable(2)">Type</th>
+                <th onclick="sortTable(3)">Magic</th>
+                <th onclick="sortTable(4)">Ability</th>
+                <th onclick="sortTable(5)">Cost</th>
+                <th onclick="sortTable(6)">HP Cast</th>
+                <th onclick="sortTable(7)">Cooldown</th>
+                <th onclick="sortTable(8)">Description</th>
+                <th onclick="sortTable(9)">Formula</th>
             </tr>
         </thead>
         <tbody>
@@ -95,18 +98,40 @@
 
     <script>
         const items = [
-        ["Thrash","Red","Physical",0,0,40,"yes",7,"Jump towards target location dealing physical damage, slowing targets and taunting them. Slows you briefly right after.","10 Base Damage + 5%  of Damage"],
-["Heal","Blue","Heal",2,0,25,"no",1.5,"Heals your character.","5% of your missing health."],
-["Quick Attack","Red","Time",6,35,50,"no",4.6,"Increases your Attack Speed by 10 for 4 seconds.","+10 Attack Speed"],
-["Find Person","Yellow","",1,0,20,"no",,"aa ","bb"],
+        ["Adjure","Blue","Heal",9,0,100,"no",,"Heal your character. Will heal 15% of your missing health.                                                                             ","50 Base Damage + 20% Magic"],
 ["Berserk","Red","Blade",1,20,35,"yes",7,"Damages everything around you in a 3x3 square area.","15 Base Damage + 35% of Damage"],
-["Fierce Thrust","Red","Blade",2,40,75,"yes",15,"Damages all enemies in the direction of cast.",""],
-["Dash","Yellow","Time",1,0,25,"no",5,"Dash towards location. Slows you briefly right after.",""],
-["Dark Bind","Evil","Death",15,0,500,"yes",7,"Shoots a projectile that latches unto an enemy, teleporting you towards it and dealing death damage.",""],
-["Shield Block","Yellow","Defense",2,10,30,"no",5,"Creates a magic shield equal to your current Defnse.","25 Base Damage + 35% of Magic"],
+["Charge","Red","Physical",3,30,75,"no",,"Jump towards target location, dealing damage and slowing targets.\nSlows you briefly right after.","25 Base Damage + 50% Damage"],
+["Conjure Arrow","Green","Conjure",3,3,"50-250","no",,"Conjures magic arrows.\nThe cost of this spell is lowered based on your weapon skill.",""],
 ["Conjure Death","Evil","Death",5,0,200,"yes",,"Casts a single square area death spell that damages enemies.",""],
+["Conjure Fire","Red","Fire",5,0,35,"no",,"Shoots a projectile that damages on impact.","20 Base Damage + 25% Magic"],
+["Crying Arrow","Red","Arrow",10,35,175,"no",,"Casts multiple arrows towards direction. ","35 Base Damage + 25% Magic + 65% Damage"],
+["Dark Bind","Evil","Death",15,0,500,"yes",7,"Shoots a projectile that latches unto an enemy, teleporting you towards it and dealing death damage.",""],
+["Dash","Yellow","Time",1,0,25,"no",5,"Dash towards location. Slows you briefly right after.",""],
+["Energy Bolt","Red","Energy",7,0,35,"no",,"Shoots a projectile that damages on impact. ","25 Base Damage + 20% Magic"],
+["Energy Hull","Red","Energy",25,0,175,"no",,"Conjures a large and slow projectile that passes through enemies, damaging them. ","40 Base Damage + 60% Magic"],
+["Fierce Thrust","Red","Blade",2,40,75,"yes",15,"Damages all enemies in the direction of cast.",""],
+["Find Person","Yellow","Conjure",1,0,20,"no",,"Finds a person using a name ",""],
+["Fireball","Red","Fire",30,0,125,"no",,"Shoots a projectile that on impact creates a fire spell in an area of 3x3 that damages enemies. ","35 Base Damage + 50% Magic"],
+["Haste","Green","Time",4,0,45,"no",,"Increases your speed by 4 for two minutes. Also removes slow. ",""],
+["Heal","Blue","Heal",2,0,25,"no",1.5,"Heals your character.","5% of your missing health."],
+["Holy","Yellow","Holy",10,0,35,"no",,"Casts a single square area spell that damages enemies and heals players ","25 Base Damage + 25% Magic"],
+["Ice Berserk","Blue","Physical",15,0,65,"no",,"Damages and slows everything around you in a 3x3 square area.",""],
+["Light","Blue","Light",1,0,20,"no",,"Conjures a light that attaches to your character for 5 minutes ",""],
+["Light Missile","Blue","Heal",10,0,30,"no",,"Shoots a light projectile that heals players it passes by ","10 Base Damage + 20% Magic"],
+["Lightning","Red","Energy",25,0,75,"no",,"Casts a 3x3 round area energy spell that damages enemies ","30 Base Damage + 40% Magic"],
 ["Magic Growth","Yellow","",35,0,200,"no",,"Adds maximum health to the affected target for 30 seconds.",""],
-["Ice Berserk","Blue","",15,0,65,"no",,"Damages and slows everything around you in a 3x3 square area.",""],
+["Magic Wall","Blue","",10,0,100,"no",," Creates a magic impenetrable wall that lasts for 30 seconds. ",""],
+["Mana Shield","Blue","",15,0,25,"no",,"Soak incoming damage through mana for 30 seconds.\nWhen doing so, all damage is doubled. ",""],
+["Precise Shot","Red","Arrow",5,10,40,"no",,"Shoots an arrow projectile that damages on impact. ","15 Base Damage + 10% Magic + 20% Damage"],
+["Quick Attack","Red","Time",6,35,50,"no",4.6,"Increases your Attack Speed by 10 for 4 seconds.","+10 Attack Speed"],
+["Rock Throw","Red","",15,0,65,"no",,"Shoots a projectile that on impact creates an earth spell in a round area of 1x1 that damages and slows enemies.     ","25 Base Damage + 35% Magic"],
+["Shield Block","Yellow","Defense",2,10,30,"no",5,"Creates a magic shield equal to your current Defense.","25 Base Damage + 35% of Magic"],
+["Slow","Red","",35,0,200,"no",,"Reduces target Move Speed by 25 for 5 seconds. ",""],
+["Starlight","Yellow","Light",6,0,75,"no",,"Conjures a big light that attaches to your character for 5 minutes. ",""],
+["Taunt","Green","Conjure",1,0,25,"yes",,"Monsters around a 3x3 area will target you. \nCasting this spell consecutevily will create the opposite effect.\nThis spell can be cast using health.","10 Base Damage + 5%  of Damage"],
+["Thrash","Red","Physical",0,0,40,"yes",7,"Jump towards target location dealing physical damage, slowing targets and taunting them. Slows you briefly right after.","10 Base Damage + 5%  of Damage"],
+["Vampiric Bite","Evil","Death",0,0,200,"yes",,"Jump towards target location, dealing death damage, slowing targets and leeching life.\nSlows you briefly right after.\nThis spell can be cast using health. ","10 Base Damage + 20% Magic"],
+["Water Pillar","Red","",30,0,95,"no",,"Casts a 2x2 square area water spell that damages enemies and heals players. ","30 Base Damage + 35% Magic"],
 
     ];
 
@@ -134,28 +159,38 @@
                 imgCell.appendChild(img);
                 //row.insertCell(0).innerHTML = `<img src="${item[2]}Spellbook.png">`; //name
                 row.insertCell(1).innerHTML = `<span>`+item[0]+"<span>"; //name
-                row.insertCell(2).innerHTML = `<span>`+item[1]+"<span>"; //spellbook
-                row.insertCell(3).textContent = item[2];; //type
-                row.insertCell(4).textContent = item[3] || ''; //magic
-                colorSizeAndShit(row.cells[4], item[4]); //dmg
-                row.cells[4].style.backgroundColor = '#8888ff33';
-                row.insertCell(5).textContent = item[4] || ''; //ability
-                row.cells[5].style.backgroundColor = '#dd88ff33';
+                //row.insertCell(2).innerHTML = `<span>`+item[1]+"<span>"; //spellbook
+
+                row.insertCell(2).textContent = item[2];; //type
+
+                row.insertCell(3).textContent = item[3] || ''; //magic
+                colorSizeAndShit(row.cells[3], item[3]); //dmg
+                row.cells[3].style.backgroundColor = '#8888ff33';
+
+                row.insertCell(4).textContent = item[4] || ''; //ability
+                row.cells[4].style.backgroundColor = '#dd88ff33';
+                colorSizeAndShit(row.cells[4], item[4]);
+
+                row.insertCell(5).textContent = item[5] || ''; //cost
+                row.cells[5].style.backgroundColor = '#4455ff33';
                 colorSizeAndShit(row.cells[5], item[5]);
-                row.insertCell(6).textContent = item[5] || ''; //cost
-                row.cells[6].style.backgroundColor = '#4455ff33';
-                colorSizeAndShit(row.cells[6], item[6]);
-                row.insertCell(7).textContent = item[6] || ''; //HP cast
+
+                row.insertCell(6).textContent = item[6] || ''; //HP cast
+                if(item[6] === "yes"){
+                    row.cells[6].style.color = '#ff5555dd';
+                }
+                else{
+                }
                 //row.cells[7].style.backgroundColor = '#8888ff33';
                 //colorSizeAndShit(row.cells[7], item[7]);
-                row.insertCell(8).textContent = item[7] || ''; //cooldown
-                row.cells[8].style.backgroundColor = '#fffa2235';
+                row.insertCell(7).textContent = item[7] || ''; //cooldown
+                row.cells[7].style.backgroundColor = '#fffa2235';
                 //row.cells[8].style.backgroundColor = '#ff00ff33';
                 //colorSizeAndShit(row.cells[8], item[8]);
-                row.insertCell(9).textContent = item[8] || ''; //description
+                row.insertCell(8).textContent = item[8] || ''; //description
                 //row.cells[9].style.backgroundColor = '#3333bb33';
                 //colorSizeAndShit(row.cells[9], item[9]);
-                row.insertCell(10).textContent = item[9] || ''; //formula
+                row.insertCell(9).textContent = item[9] || ''; //formula
                 //row.cells[10].style.backgroundColor = '#55555555';
                 //colorSizeAndShit(row.cells[10], item[10]);
                 /*

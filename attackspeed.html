@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        </head>
+<body class="small article">
+<h2 class="aspdtable">Attack Speed explained</h2>
+<p class="aspd">You might wonder - what exactly is 1 point of Attack Speed and if it's even worth it when compared to other stats. The answer isn't clear and depends on your current itemization and build.</p>
+<br>
+<div><p class="note">This article is based on Feb 2025 Playtest, last updated: 2025 Mar 17</p></div>
+
+<h2 class="aspdtable">Attack Speed - WTF is it?</h2>
+<p class="aspd">The higher Attack Speed is, the lower Attack Interval gets, so your functional DPS increases. However, the more Attack Speed you have, the less effective each additional point becomes. Below you can see the formula for Attack Interval - the time after which the next auto attack happens:</p>
+<p class="formulatitle">Attack Interval formula</p>
+<div class="formula">2 seconds / (AttackSpeed / 10)</div>
+<p class="aspd">By default, your Attack Speed is equal to <span style="color: #b5cf1e;">10</span>, so you attack once every 2 seconds. Let's assume that your Raw Damage (so the damage you deal every hit to an enemy with <span style="color: #b6126c;">0 Armor</span> and <span style="color: #487c80;">0 Defense</span>) is equal to 15. To get DPS value, you divide Raw Damage by Attack Interval.
+</p>
+<table class="aspdtable">
+    <tr><td>Raw Damage</td><td>Attack<br>Speed</td><td>Attack<br>Interval</td><td>Resulting<br>DPS</td><td>% DPS Gain<br>of 1 AtkSpd</td></tr>
+    <tr><td>15</td><td>8</td><td>2.500</td><td>6.00</td><td>-</td></tr>
+    <tr><td>15</td><td>9</td><td>2.222</td><td>6.75</td><td><span style="color: #00ff00;">12.50%</span></td></tr>
+    <tr><td>15</td><td><span style="color: #b5cf1e;">10</span></td><td>2.000</td><td>7.50</td><td><span style="color: #73ff00;">11.11%</span></td></tr>
+    <tr><td>15</td><td>11</td><td>1.818</td><td>8.25</td><td><span style="color: #88ff00;">10.00%</span></td></tr>
+    <tr><td>15</td><td>12</td><td>1.667</td><td>9.00</td><td><span style="color: #92ff00;">9.09%</span></td></tr>
+    <tr><td>15</td><td>13</td><td>1.538</td><td>9.75</td><td><span style="color: #b1ff00;">8.33%</span></td></tr>
+    <tr><td>15</td><td>14</td><td>1.429</td><td>10.50</td><td><span style="color: #d1ff00;">7.69%</span></td></tr>
+    <tr><td>15</td><td>15</td><td>1.333</td><td>11.25</td><td><span style="color: #ffff00;">7.14%</span></td></tr>
+    <tr><td>15</td><td>16</td><td>1.250</td><td>12.00</td><td><span style="color: #ffff00;">6.67%</span></td></tr>
+    <tr><td>15</td><td>17</td><td>1.176</td><td>12.75</td><td><span style="color: #ffc100;">6.25%</span></td></tr>
+    <tr><td>15</td><td>18</td><td>1.111</td><td>13.50</td><td><span style="color: #ffa100;">5.88%</span></td></tr>
+    <tr><td>15</td><td>19</td><td>1.053</td><td>14.25</td><td><span style="color: #ff9900;">5.56%</span></td></tr>
+    <tr><td>15</td><td>20</td><td>1.000</td><td>15.00</td><td><span style="color: #ff7700;">5.26%</span></td></tr>
+    <tr><td>15</td><td>21</td><td>0.952</td><td>15.75</td><td><span style="color: #ff3300;">5.00%</span></td></tr>
+    <tr><td>15</td><td>22</td><td>0.909</td><td>16.50</td><td><span style="color: #ff0000;">4.76%</span></td></tr>
+
+</table>
+<p class="note">The table doesn't take into account minimum-maximum damage ranges, but proportions stay the same.</p>
+
+<p class="aspd">As you can see, adding one point to get from <span style="color: #b5cf1e;">12 ASPD</span> to <span style="color: #b5cf1e;">13 ASPD</span> results in <span style="color: #b1ff00;">8.33% increased DPS</span>. But - the more Attack Speed you have, the less effective each additional point is. Adding 2 points to get <span style="color: #b5cf1e;">from 20 to 22 ASPD</span> offers the same net gain (15.00 -> 16.50, so +10% DPS) as adding just 1 point to get <span style="color: #b5cf1e;"></span>from 10 to 11</span> (also +10% DPS). And it just keeps getting lower.</p>
+</p>
+
+<h2 class="aspdtable">Attack Speed & Enemies' Armor</h2>
+<p class="aspd">One more thing to consider, is that you rarely fight creatures with 0 Armor and 0 Defense. These are both flat and % reductions to the damage you deal. Imagine that you have a weapon that deals <span style="color: #206dc4;">6 Raw Damage</span>, and you boosts your attack speed to get <span style="color: #206dc4;">10 attacks</span> every second, versus a weapon which deals <span style="color: #8220c4;">60 Raw Damage</span>, but you attack <span style="color: #8220c4;">once a second</span>. The both have the same Raw DPS of 60dmg/s. But here's the catch - if the enemy you're fighting has <span style="color: #c42057;">5 Armor</span>, the first weapon will deal 1 damage per hit, so the <span style="color: #206dc4;">resulting DPS would be equal 10</span>. The second weapon will deal 55 damage per hit, so the <span style="color: #8220c4;">resulting DPS would be equal 55</span>. So, in this case, the second weapon might be a better choice, even though they have the same Raw Damage output. Maybe a table will show that better:</p>
+<table class="aspdtable">
+    <tr><td>Raw Damage</td><td>Attack Interval</td><td>Target's Armor</td><td>Resulting DPS</td></tr>
+    <tr><td><span style="color: #206dc4;">6</span></td><td>0.1 sec</td><td>0</td><td><span style="color: #d0d30e;">60</span></td></tr>
+    <tr><td><span style="color: #8220c4;">60</span></td><td>1 sec</td><td>0</td><td><span style="color: #d0d30e;">60</span></td></tr>
+    <tr><td> </td><td> </td><td> </td><td> </td></tr>
+    <tr><td><span style="color: #206dc4;">6</span></td><td>0.1 sec</td><td><span style="color: #b84d87;">5</span></td><td>10</td></tr>
+    <tr><td><span style="color: #8220c4;">60</span></td><td>1 sec</td><td><span style="color: #b84d87;">5</span></td><td><span style="color: #00ff00;">55</span></td></tr>
+    <tr><td> </td><td> </td><td> </td><td> </td></tr>
+    <tr><td><span style="color: #206dc4;">6</span></td><td>0.1 sec</td><td><span style="color: #b6126c;">10</span></td><td>0</td></tr>
+    <tr><td><span style="color: #8220c4;">60</span></td><td>1 sec</td><td><span style="color: #b6126c;">10</span></td><td><span style="color: #00ff00;">50</span></td></tr>
+</table>
+<p class="note">The table doesn't take into account minimum-maximum damage ranges, but proportions stay the same.</p>
+
+<p class="aspd">With low Raw Damage, most of the damage will by mitigated by your target's armor.<br>Maybe something closer to a real situation would work better. You're still a low level, you've got an Ironsword and you want to know whether it's better to use a Silver Dagger or a Bone Knife as off-hand weapon. While a Silver Dagger would boost your attackspeed and Raw DPS considerably, you might find it troublesome when fighting heavy-armored enemies.</p>
+<div class="itemshowcase">
+<div class="showitem"><div><img src="Items/SilverDagger.png" alt="Silver Dagger"></div><div>Silver Dagger<br>Damage: 4<br>Attack Speed: 4</div></div>
+<div class="showitem"><div><img src="Items/BoneKnife.png" alt="Bone Knife"></div><div>Bone Knife<br>Damage: 9<br>Attack Speed: 1</div></div>
+</div>
+<table class="aspdtable">
+    <tr><td>Weapon Set</td><td>Total Raw DMG</td><td>Attack Speed</td><td>Target's Armor</td><td>Resulting DPS</td></tr>
+    <tr><td><img src="Items/Ironsword.png" alt="Ironsword"><img src="Items/SilverDagger.png" alt="Silver Dagger"></td><td>23</td><td><span style="color: #0fbb0f;">16</span></td><td>0</td><td><span class="green">18.4</span></td></tr>
+    <tr><td><img src="Items/Ironsword.png" alt="Ironsword"><img src="Items/BoneKnife.png" alt="Bone Knife"></td><td><span style="color: #0fbb0f;">28</span></td><td>13</td><td>0</td><td>18.2</td></tr>
+    <tr><td> </td><td> </td><td> </td><td> </td><td> </td></tr>
+    <tr><td><img src="Items/Ironsword.png" alt="Ironsword"><img src="Items/SilverDagger.png" alt="Silver Dagger"></td><td>23</td><td><span style="color: #0fbb0f;">16</span></td><td><span style="color: #b84d87;">5</span></td><td>13.94</td></tr>
+    <tr><td><img src="Items/Ironsword.png" alt="Ironsword"><img src="Items/BoneKnife.png" alt="Bone Knife"></td><td><span style="color: #0fbb0f;">28</span></td><td>13</td><td><span style="color: #b84d87;">5</span></td><td><span class="green">14.49</span></td></tr>
+    <tr><td> </td><td> </td><td> </td><td> </td><td> </td></tr>
+    <tr><td><img src="Items/Ironsword.png" alt="Ironsword"><img src="Items/SilverDagger.png" alt="Silver Dagger"></td><td>23</td><td><span style="color: #0fbb0f;">16</span></td><td><span style="color: #b6126c;">11</span></td><td>8.59</td></tr>
+    <tr><td><img src="Items/Ironsword.png" alt="Ironsword"><img src="Items/BoneKnife.png" alt="Bone Knife"></td><td><span style="color: #0fbb0f;">28</span></td><td>13</td><td><span style="color: #b6126c;">11</span></td><td><span class="green">10.05</span></td></tr>
+</table>
+<p class="note">The table doesn't take into account minimum-maximum damage ranges, but proportions stay the same.</p>
+<p class="aspd">
+As you see, while in theory Silver Dagger offers slightly higher DPS, in practice it's the Bone Knife that might be the better choice, especially when fighting stronger enemies.<br>Another example - choosing an off-hand piece for Broadsword, which suffers from -2 Attack Speed penalty. Mitigating this penalty by getting a dagger with Attack Speed bonus does wonders to your DPS.
+</p>
+<div class="itemshowcase">
+    <div class="showitem"><div><img src="Items/Orb.png" alt="Orb"></div><div>Orb<br>Magic: 2<br>Defense: 2</div></div>
+    <div class="showitem"><div><img src="Items/OldGloves.png" alt="Old Gloves"></div><div>Bone Knife<br>Damage: 2<br>Ability: 2</div></div><br>
+    <div class="showitem"><div><img src="Items/Knife.png" alt="Knife"></div><div>Knife<br>Damage: 3<br>Attack Speed: 3</div></div>
+    <div class="showitem"><div><img src="Items/LeatherGloves.png" alt="Leather Gloves"></div><div>Leather Gloves (rare)<br>Damage: 4<br>Ability: 5<br>Armor: 1</div></div>
+    </div>
+<table class="aspdtable">
+    <tr><td>Weapon Set</td><td>Total Raw DMG</td><td>Attack Speed</td><td>Resulting DPS</td></tr>
+    <tr><td>Broadsword + Orb</td><td>33</td><td>8</td><td>13.2</td></tr>
+    <tr><td>Broadsword + Old Gloves</td><td>35</td><td>8</td><td>14.0</td></tr>
+    <tr><td>Broadsword + Knife</td><td>36</td><td>11</td><td><span class="green">19.8</span></td></tr>
+    <tr><td>Broadsword + rare Leather Gloves</td><td>37</td><td>8</td><td>14.8</td></tr>
+</table>
+<p class="note">The table doesn't take into account minimum-maximum damage ranges, but proportions would stay mostly the same.</p>
+
+<h2 class="aspdtable">Attack Speed & Traits</h2>
+<p class="aspd">One more element you definitely have to take into consideration are on-hit effects. These are all bonuses which don't scale from extra Damage - like True Grip trait (Mana regen per hit from Gloves), Unnatural Flow trait (bonus damage if you hit the enemy) or low-level Stabbing Preference (Lifeleech from Daggers, which gets rounded up to +1 HP leeched per hit). These traits definitely benefit from higher attack speed, but not at all from extra damage. So if your resources rely on them, you might want to choose ASPD over damage in some cases.</p>
+
+<h2 class="aspdtable">TL;DR</h2>
+<p class="aspd">Attack Speed is good and its effects are palpable, but don't beeline it, as every point of it is less effective than the previous one. Getting +10% Damage is usually better than 1 ASPD, but limits resources you gain from on-hit traits.</p>
+
+<div class="emptyholder">
+
+</div>
+<script>
+    //every 3 seconds spawn random click-through images for 4 seconds
+    setInterval(() => {
+        const img = document.createElement('img');
+        let number = Math.floor(Math.random() * 6) + 1;
+        img.src = `Images/formulas${number}.png`;
+        img.style.position = 'fixed';
+        img.style.top = Math.floor(Math.random() * window.innerHeight) + 'px';
+        img.style.left = Math.floor(Math.random() * window.innerWidth) + 'px';
+        img.style.pointerEvents = 'none';
+        img.style.zIndex = 1000;
+        img.style.opacity = 0; // Initially transparent
+        img.style.transform = 'scale(0.7)'; // Initial zoom
+        img.style.transition = 'opacity 6s ease-in-out, transform 6s ease-in-out'; // Transition for opacity and zoom
+        document.body.appendChild(img);
+
+        // Force reflow to trigger the transition
+        img.offsetHeight;
+
+        img.style.opacity = 0.05; // Fade in
+        img.style.transform = 'scale(1.4)'; // Zoom in
+
+        setTimeout(() => {
+            img.style.opacity = 0; // Fade out
+        }, 7000);
+
+        setTimeout(() => {
+            img.remove();
+        }, 11000);
+    }, 1000);
+</script>
+</body>
+</html>
