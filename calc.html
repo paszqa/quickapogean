@@ -1863,7 +1863,7 @@ body::-webkit-scrollbar-thumb {
                             const selectionItem = document.createElement('div');
                             selectionItem.classList.add('selection-item');
                             const img = document.createElement('img');
-                            if(item[19]) img.src = `Items/${item[19].replace("'","").replace("%E2%80%99","")}`;
+                            if(item[19]) img.src = `Items/${item[19].replace("'","").replace("’","").replace("%E2%80%99","")}`;
                             img.alt = `${item[0]}`;
                             img.classList.remove('uncommon','rare','epic','legendary');
                             if (item[20]) img.classList.add(item[20]);

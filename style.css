@@ -198,7 +198,7 @@ p.formulatitle{
 }
 p.formulacomment{
     margin: 0;
-    padding: -3px 0 0 0;
+    padding: 0 0 0 0;
     color: #ffbb0070;
     font-size: 1em;
 }
@@ -210,7 +210,7 @@ div.formula{
     border-radius: 8px;
     background-color: #00000033;
     margin: 8px;
-    margin-top: -5px;
+    margin-top: 5px;
     margin-left: 30px;
     padding: 4px 14px 8px 8px;
 }
@@ -277,7 +277,7 @@ p.aspd{
     margin: 0 0 0 30px; 
 }
 p.note{
-    margin: 0 0 0 30px; 
+    margin: 0 0 0 20px; 
     font-size: 0.95em;
     color: #a37f1dc9;
     background: #00000055;
@@ -290,16 +290,41 @@ div.itemshowcase{
     text-align: center;
     margin: 20px;
 }
-div.showitem{
-    display: inline-block;
-    width: 170px;
-    height: 120px;
-    text-align: center;
+div.showitem {
+    display: inline-flex;
+    flex-direction: column; /* Stack image and text */
+    justify-content: center;
     align-items: center;
-    vertical-align: middle;
+    
+    width: 170px;
+    height: 150px;
+    text-align: center;
     border: 1px solid #000000;
     border-radius: 5px;
     margin: 5px;
     padding: 9px;
     background: #00000055;
+}
+
+div.showitem-imagebox {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    justify-content: center;  /* Center horizontally */
+    /*align-items: center;      /* Center vertically */
+    background-color: rgba(255, 255, 255, 0.1); /* Optional background */
+    border-radius: 5px;
+}
+
+/* Ensure images fit inside the imagebox */
+.showitem-imagebox img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: none;
+}
+
+/* Ensure text stays centered */
+div.showitem-text {
+    margin-top: 5px;
+    text-align: center;
 }
