@@ -2223,12 +2223,44 @@ body::-webkit-scrollbar-thumb {
             const url = `/index.html?page=calc.html&level=${level}&available=${availablePoints}&class=${characterClass}&items=${itemSlots.replace(/\s+/g, '%20')}&points=${addedPointsStr.replace(/\s+/g, '')}&traits=${selectedTraitsStr.replace(/\s+/g, '')}`;
             //get currentb ase website address but only until the last slash
             const baseUrl = getBaseUrl();
-            console.log("baseURL"+baseUrl);
+            //console.log("baseURL"+baseUrl);
+            /*
             navigator.clipboard.writeText(baseUrl+url).then(() => {
                 alert('Link copied to clipboard!');
             });
+            */
+            try {
+                copyToClipboard(baseUrl+url);
+            } catch(error) {
+                console.error(error);
+            }
         }
 
+        async function copyToClipboard(textToCopy) {
+            // Navigator clipboard api needs a secure context (https)
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(textToCopy);
+            } else {
+                // Use the 'out of viewport hidden text area' trick
+                const textArea = document.createElement("textarea");
+                textArea.value = textToCopy;
+                    
+                // Move textarea out of the viewport so it's not visible
+                textArea.style.position = "absolute";
+                textArea.style.left = "-999999px";
+                    
+                document.body.prepend(textArea);
+                textArea.select();
+
+                try {
+                    document.execCommand('copy');
+                } catch (error) {
+                    console.error(error);
+                } finally {
+                    textArea.remove();
+                }
+            }
+        }
         function getBaseUrl() {
             const url = window.location.href;
             const baseUrl = url.substring(0, url.lastIndexOf('/'));
