@@ -1051,6 +1051,27 @@ body::-webkit-scrollbar-thumb {
                 const stage = selectedTraits[traitId];
                 if (trait && stage) {
                     switch (traitId) {
+                        /* THESE BONUSES APPLY TO DPS ONLY, not to stats
+                        case "12": // Shearing Strike
+                            if (stage != "0%" && stage != "0") {
+                                //get character's damage with points
+                                console.log("Shearing Strike: "+stage);
+                                let damage = parseInt(baseStats.Damage) + parseInt(addedPoints.Damage) + parseInt(calculateItemBonuses().Damage);
+                                console.log("damage "+damage+" = "+baseStats.Damage+" + "+addedPoints.Damage+" + "+calculateItemBonuses().Damage);
+                                traitBonuses.Damage += parseInt(damage) * (parseInt(stage) / 100) * 0.5; //+50% damage, therefore 0.5 multiplier at the end
+                            }
+                            break;
+                        case "13": // luck foreseen
+                            if (stage === "On") {
+                                //get character's total ability from base and points and items
+                                let ability = parseInt(baseStats.Ability) + parseInt(addedPoints.Ability) + parseInt(calculateItemBonuses().Ability);
+                                let damage = parseInt(baseStats.Damage) + parseInt(addedPoints.Damage) + parseInt(calculateItemBonuses().Damage);
+                                let percentBonus = Math.ceiling(ability/7);
+                                //console.log("damage "+damage+" = "+baseStats.Damage+" + "+addedPoints.Damage+" + "+calculateItemBonuses().Damage);
+                                traitBonuses.Damage += parseInt(damage) * (parseInt(stage) / 100) * 0.5; //+50% damage, therefore 0.5 multiplier at the end
+                            }
+                            break;
+                            */
                         case "15": // Double Danger
                             if (stage === "On") {
                                 const leftHandSlot = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
@@ -1671,6 +1692,18 @@ body::-webkit-scrollbar-thumb {
                 if(stat == "Damage" && traitBonuses.MagicDamage > 0){
                     extraMagicDamageString = " + "+traitBonuses.MagicDamage;
                 }
+                // Add check for trait 12 (shearing stroke)
+                if (stat == "Damage" && selectedTraits["12"] && selectedTraits["12"] !== "0" && selectedTraits["12"] !== 0) {
+                    dphValue *= (1 + (parseFloat(selectedTraits["12"])/100)*0.5);
+                }
+                //add check for trait 13 (luck foreseen)
+                if (stat == "Damage" && selectedTraits["13"]  == "On") {
+                    //get total ability
+                    let ability = (parseInt(baseStats["Ability"][0]) + parseInt(baseStats["Ability"][1]) * parseInt(addedPoints["Ability"]) + parseInt(calculateItemBonuses().Ability) + parseInt(traitBonuses.Ability)) * parseFloat(classMultipliers[selectedClass]["Ability"]);
+                    console.log("Ability: "+ability+" added to "+dphValue);
+                    dphValue *= (1 + (Math.ceil(ability/7)/100));
+                    console.log("DPH after luck foreseeen: "+dphValue);
+                }
                 // Add check for trait 24
                 let unnaturalFlowBonusString = "";
                 if (stat == "Damage" && selectedTraits["57"] && selectedTraits["57"] !== "0" && selectedTraits["57"] !== 0) {
@@ -2244,14 +2277,14 @@ body::-webkit-scrollbar-thumb {
                 let currentItemSlot = 0;
                 let allItemSlots = document.querySelectorAll('.item-slot img');
                 itemParams.forEach(itemParam => {
-                    console.log("ITEM PARAMS: "+itemParam);
+                    //console.log("ITEM PARAMS: "+itemParam);
                     const [name, rarity] = itemParam.split(':');
                     if (name === ""){
                         currentItemSlot++;
                         return;
                     }
                     currentItemSlot++;
-                    console.log("YAA"+currentItemSlot);
+                    //console.log("YAA"+currentItemSlot);
                     //const slot = document.querySelector(`.item-slot img[alt="${name}"]`);
                     //find all item-slot class, and select currentItemSlot
                     const slot = allItemSlots[currentItemSlot - 1];

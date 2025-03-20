@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .container {
+            max-width: 250px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .containerwide{
+            max-width: 450px;
+        }
+        .container h2{
+            font-size: 1.5em;
+            margin: 0;
+            margin-bottom: 10px;
+            color: #ffbb00;
+        }
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .calc-row img{
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+            image-rendering: pixelated;
+        }
+        .calc-row label {
+            flex: 1;
+            text-align: right;
+            padding:0;
+            margin: 0;
+            padding-right: 20px;
+            font-size: 1.2em;
+            width: 50px;
+        }
+        .calc-row input {
+            flex: 1;
+            padding: 8px;
+            background: #000000d2;
+            color: #fff;
+            border: 1px solid #555;
+            font-size: 1.5em;
+            text-align: center;
+            font-family: '9Px3bus-WpXV', Arial, sans-serif;
+            width: 70px;
+        }
+        .widefield{
+            width: 140px;
+        }
+        .containerwide input{
+            width: 300px;
+        }
+        .containerwide .widething{
+            width: 300px;
+        }
+        .result {
+            font-weight: bold;
+            margin-top: 10px;
+            color: #00ffcc;
+            pointer-events: none;
+            user-select: none;
+            background: #003512d2;
+            color: #fff;
+            border: 1px solid #555;
+            font-size: 1.5em;
+            text-align: center;
+            font-family: '9Px3bus-WpXV', Arial, sans-serif;
+            width: 70px;
+            flex: 1;
+            padding: 8px;
+        }
+        .containerwide .result{
+            width: 300px;
+        }
+        /* Remove number input arrows */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        
+        @font-face {
+            font-family: '9Px3bus-WpXV';
+            src: url('VT323-Regular.ttf') format('truetype');
+        }
+        .calculator-grid{
+            width: 950px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px;
+            margin: 20px;
+        }
+        
+        .calculator-grid-wide{
+            width: 950px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+            margin: 20px;
+        }
+    </style>
+</head>
+
+<body class="small article">
+    <h2 class="aspdtable">Calculators</h2>
+    <br> <br>
+    <p class="note">These calculators are based on Feb 2025 Playtest, last updated: 2025 Mar 20</p>
+    <br> <br>
+<div class="calculator-grid">
+    <div class="container">
+        <h2>DPS Calculator</h2>
+        <div class="calc-row">
+            <img src="Items/SteelSword.png" alt="Sword" style="width: 32px; height: 32px;">
+            <label for="field1">Damage:</label>
+            <input type="number" value="9" id="field1" placeholder="Damage">
+        </div>
+    
+        <div class="calc-row">
+            <img src="Images/aspdicon.png" alt="Sword" style="width: 32px; height: 32px;">
+            <label for="field2">Attackspeed:</label>
+            <input type="number" value="12" id="field2" placeholder="Attackspeed">
+        </div>
+    
+        <div class="calc-row">
+            <img src="Images/exclamationicon.png" alt="Sword" style="width: 32px; height: 32px;">
+            <label for="result">DPS:</label>
+            <div class="result" id="result"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Damage received calc</h2>
+        <div class="calc-row">
+            <img src="Items/Broadsword.png" alt="Sword" style="width: 32px; height: 32px;">
+            <label for="field3">Enemy's Damage:</label>
+            <input type="number" value="20" id="field3" placeholder="Enemy's Damage">
+        </div>
+    
+        <div class="calc-row">
+            <img src="Items/RoyalArmor.png" alt="Sword" style="width: 32px; height: 32px;">
+            <label for="field4">Your Armor:</label>
+            <input type="number" value="5" id="field4" placeholder="Your Armor">
+        </div>
+        <div class="calc-row">
+            <img src="Items/TowerShield.png" alt="Sword" style="width: 32px; height: 32px;">
+            <label for="field5">Your Defense:</label>
+            <input type="number" value="12" id="field5" placeholder="Your Defense">
+        </div>
+        <div class="calc-row">
+            <img src="Images/trollicon.png" alt="Sword" style="width: 32px; height: 32px;">
+            <label for="field6">No. of Attackers:</label>
+            <input type="number" value="1" id="field6" placeholder="Attackers">
+        </div>
+    
+        <div class="calc-row">
+            <img src="Images/exclamationicon.png" alt="Sword" style="width: 32px; height: 32px;">
+            <label for="result2">You get hit for:</label>
+            <div class="result" id="result2"></div>
+        </div>
+    </div>
+    <div class="container">
+        <h2>Bow Calculator</h2>
+        <div class="calc-row">
+            <img src="Items/Broadsword.png" alt="Sword" style="width: 32px; height: 32px;">
+            <label for="field7">Weapon Damage:</label>
+            <input type="number" value="9" id="field7" placeholder="Damage">
+        </div>
+    
+        <div class="calc-row">
+            <img src="Images/boots2icon.png" alt="Sword" style="width: 32px; height: 32px;">
+            <label for="field8">Movespeed:</label>
+            <input type="number" value="12" id="field8" placeholder="Attackspeed">
+        </div>
+        <div class="calc-row">
+            <img src="Images/aspdicon.png" alt="Sword" style="width: 32px; height: 32px;">
+            <label for="field9">Attackspeed:</label>
+            <input type="number" value="12" id="field9" placeholder="Attackspeed">
+        </div>
+    
+        <div class="calc-row">
+            <img src="Items/Longbow.png" alt="Sword" style="width: 32px; height: 32px;">
+            <label for="result3">Bow Damage:</label>
+            <div class="result" id="result3"></div>
+        </div>
+    </div>
+</div>
+<div class="calculator-grid-wide">
+    <div class="container containerwide">
+        <h2>Experience Calculator</h2>
+        <div class="calc-row">
+            <img src="Images/mageicon.png" alt="Sword" style="width: 32px; height: 32px;">
+            <label for="field10">Level:</label>
+            <input class="widefield" type="number" value="2" id="field10" placeholder="Level">
+        </div>
+    
+        <div class="calc-row">
+            <img src="Images/exclamationicon.png" alt="Sword" style="width: 32px; height: 32px;">
+            <label for="result4">Experience:</label>
+            <div class="result widething" style="width: 300px;" id="result4"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    ///DPS CAlculator
+function calculateDps() {
+    let field1 = parseFloat(document.getElementById('field1').value);
+    let field2 = parseFloat(document.getElementById('field2').value);
+    let resultField = document.getElementById('result');
+
+    if (isNaN(field1) || isNaN(field2)) {
+        resultField.innerHTML = "Invalid";
+        return;
+    }
+
+    if (field2 === 0) {
+        resultField.innerHTML = "Error";
+        return;
+    }
+
+    let result = field1 / (2 / (field2 / 10));
+    resultField.innerHTML = result.toFixed(2);
+}
+///-----Damage received calc
+function calculateReceived() {
+    let field3 = parseFloat(document.getElementById('field3').value);
+    let field4 = parseFloat(document.getElementById('field4').value);
+    let field5 = parseFloat(document.getElementById('field5').value);
+    let field6 = parseFloat(document.getElementById('field6').value);
+    let resultField2 = document.getElementById('result2');
+
+    if (isNaN(field3) || isNaN(field4) || isNaN(field5)) {
+        resultField2.innerHTML = "Invalid";
+        return;
+    }
+
+    if (field2 === 0) {
+        resultField2.innerHTML = "Error";
+        return;
+    }
+
+    let damage = Math.floor(Math.max(0,field3));
+    let armor = Math.floor(Math.max(0,field4));
+    let defense = Math.floor(Math.max(0,field5));
+    let attackers = Math.floor(Math.max(1,field6));
+    //let armorFlatReduction = armor/2;
+    //=B3-((B3 - C3/2)/(1+C3/100))
+    let armorReduction = damage -((damage - armor/2)/(1+armor/100))
+    let defenseReduction = defense/attackers;
+    let result2 = damage - armorReduction - defenseReduction;
+    result2 = Math.max(0,result2);
+    resultField2.innerHTML = result2.toFixed(2);
+}
+
+
+
+    ///BOW damage calc:;
+    function calculateBow() {
+    let weaponDmg = parseFloat(document.getElementById('field7').value);
+    let moveSpeed = parseFloat(document.getElementById('field8').value);
+    let aspd = parseFloat(document.getElementById('field9').value);
+    let resultField3 = document.getElementById('result3');
+
+        if (isNaN(weaponDmg) || isNaN(moveSpeed) || isNaN(aspd)) {
+            resultField3.innerHTML = "Invalid";
+            return;
+        }
+    let bowDamage = weaponDmg + moveSpeed/5 + aspd/5;
+    resultField3.innerHTML = (bowDamage).toFixed(2);
+    }
+
+    ///Level calc:
+    function calculateExp() {
+        let level = Math.floor(parseFloat(document.getElementById('field10').value));
+        let resultField4 = document.getElementById('result4');
+
+        if (isNaN(level)) {
+            resultField4.innerHTML = "Invalid";
+            return;
+        }
+
+        //=50*(A147-1)*(A147-1)*(1+(A147-1)/2)
+        //A147 = level
+        let result4 = 50*(level-1)*(level-1)*(1+(level-1)/2);
+        //put "," every 3 digits
+        result4 = result4.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        resultField4.innerHTML = result4;
+    }
+
+// Initial calculation and event listeners
+calculateBow();
+calculateDps();
+calculateReceived();
+calculateExp();
+document.getElementById('field1').addEventListener('input', calculateDps);
+document.getElementById('field2').addEventListener('input', calculateDps);
+document.getElementById('field3').addEventListener('input', calculateReceived);
+document.getElementById('field4').addEventListener('input', calculateReceived);
+document.getElementById('field5').addEventListener('input', calculateReceived);
+document.getElementById('field6').addEventListener('input', calculateReceived);
+document.getElementById('field7').addEventListener('input', calculateBow);
+document.getElementById('field8').addEventListener('input', calculateBow);
+document.getElementById('field9').addEventListener('input', calculateBow);
+document.getElementById('field10').addEventListener('input', calculateExp);
+    //every 3 seconds spawn random click-through images for 4 seconds
+    setInterval(() => {
+        const img = document.createElement('img');
+        let number = Math.floor(Math.random() * 6) + 1;
+        img.src = `Images/formulas${number}.png`;
+        img.style.position = 'fixed';
+        img.style.top = Math.floor(Math.random() * window.innerHeight) + 'px';
+        img.style.left = Math.floor(Math.random() * window.innerWidth) + 'px';
+        img.style.pointerEvents = 'none';
+        img.style.zIndex = 1000;
+        img.style.opacity = 0; // Initially transparent
+        img.style.transform = 'scale(0.7)'; // Initial zoom
+        img.style.transition = 'opacity 6s ease-in-out, transform 6s ease-in-out'; // Transition for opacity and zoom
+        document.body.appendChild(img);
+
+        // Force reflow to trigger the transition
+        img.offsetHeight;
+
+        img.style.opacity = 0.05; // Fade in
+        img.style.transform = 'scale(1.4)'; // Zoom in
+
+        setTimeout(() => {
+            img.style.opacity = 0; // Fade out
+        }, 7000);
+
+        setTimeout(() => {
+            img.remove();
+        }, 11000);
+    }, 1000);
+</script>
+</body>
+</html>

@@ -11,10 +11,12 @@
 <br>
 <div><p class="note">This article is based on Feb 2025 Playtest, last updated: 2025 Mar 17</p></div>
 
-<h2 class="aspdtable">Attack Speed - WTF is it?</h2>
+<h2 class="aspdtable">The Basics</h2>
 <p class="aspd">The higher Attack Speed is, the lower Attack Interval gets, so your functional DPS increases. However, the more Attack Speed you have, the less effective each additional point becomes. Below you can see the formula for Attack Interval - the time after which the next auto attack happens:</p>
 <p class="formulatitle">Attack Interval formula</p>
 <div class="formula">2 seconds / (AttackSpeed / 10)</div>
+<p class="formulatitle">Resulting DPS formula</p>
+<div class="formula">(Raw Damage) / (Attack Interval)</div>
 <p class="aspd">By default, your Attack Speed is equal to <span style="color: #b5cf1e;">10</span>, so you attack once every 2 seconds. Let's assume that your Raw Damage (so the damage you deal every hit to an enemy with <span style="color: #b6126c;">0 Armor</span> and <span style="color: #487c80;">0 Defense</span>) is equal to 15. To get DPS value, you divide Raw Damage by Attack Interval.
 </p>
 <table class="aspdtable">
@@ -38,11 +40,11 @@
 </table>
 <p class="note">The table doesn't take into account minimum-maximum damage ranges, but proportions stay the same.</p>
 
-<p class="aspd">As you can see, adding one point to get from <span style="color: #b5cf1e;">12 ASPD</span> to <span style="color: #b5cf1e;">13 ASPD</span> results in <span style="color: #b1ff00;">8.33% increased DPS</span>. But - the more Attack Speed you have, the less effective each additional point is. Adding 2 points to get <span style="color: #b5cf1e;">from 20 to 22 ASPD</span> offers the same net gain (15.00 -> 16.50, so +10% DPS) as adding just 1 point to get <span style="color: #b5cf1e;"></span>from 10 to 11</span> (also +10% DPS). And it just keeps getting lower.</p>
+<p class="aspd">As you can see, adding one point to go from <span style="color: #b5cf1e;">12 AtkSpd</span> to <span style="color: #b5cf1e;">13 AtkSpd</span> results in <span style="color: #b1ff00;">8.33% increased DPS</span>. But - the more Attack Speed you have, the less effective each additional point is. Adding 2 points to get <span style="color: #13ad28;">from 20 to 22 AtkSpd</span> offers the same net gain (15.00 -> 16.50, so +10% DPS) as adding just 1 point to get <span style="color: #13ad28;">from 10 to 11 AtkSpd</span> (also +10% DPS). And it just keeps getting lower.</p>
 </p>
 
 <h2 class="aspdtable">Attack Speed & Enemies' Armor</h2>
-<p class="aspd">One more thing to consider, is that you rarely fight creatures with 0 Armor and 0 Defense. These are both flat and % reductions to the damage you deal. Imagine that you have a weapon that deals <span style="color: #206dc4;">6 Raw Damage</span>, and you boosts your attack speed to get <span style="color: #206dc4;">10 attacks</span> every second, versus a weapon which deals <span style="color: #8220c4;">60 Raw Damage</span>, but you attack <span style="color: #8220c4;">once a second</span>. The both have the same Raw DPS of 60dmg/s. But here's the catch - if the enemy you're fighting has <span style="color: #c42057;">5 Armor</span>, the first weapon will deal 1 damage per hit, so the <span style="color: #206dc4;">resulting DPS would be equal 10</span>. The second weapon will deal 55 damage per hit, so the <span style="color: #8220c4;">resulting DPS would be equal 55</span>. So, in this case, the second weapon might be a better choice, even though they have the same Raw Damage output. Maybe a table will show that better:</p>
+<p class="aspd">Just to state the obvious - you rarely fight creatures with 0 Armor and 0 Defense. These two stats on your enemy are both flat and % reductions to the damage you deal. Imagine that you have a weapon that deals <span style="color: #206dc4;">6 Raw Damage</span> and boosts your attack speed to get <span style="color: #206dc4;">10 attacks</span> every second, versus a weapon which deals <span style="color: #8220c4;">60 Raw Damage</span>, but you attack <span style="color: #8220c4;">once a second</span>. The both have the same Raw DPS of 60dmg/s. But here's the catch - if the enemy you're fighting has <span style="color: #c42057;">5 Armor</span>, the first weapon will deal 1 damage per hit, so the <span style="color: #206dc4;">resulting DPS would be equal 10</span>. The second weapon will deal 55 damage per hit, so the <span style="color: #8220c4;">resulting DPS would be equal 55</span>. So, in this case, the second weapon might be a better choice, even though they have the same Raw Damage output. Maybe a table will show that better:</p>
 <table class="aspdtable">
     <tr><td>Raw Damage</td><td>Attack Interval</td><td>Target's Armor</td><td>Resulting DPS</td></tr>
     <tr><td><span style="color: #206dc4;">6</span></td><td>0.1 sec</td><td>0</td><td><span style="color: #d0d30e;">60</span></td></tr>
@@ -56,7 +58,7 @@
 </table>
 <p class="note">The table doesn't take into account minimum-maximum damage ranges, but proportions stay the same.</p>
 
-<p class="aspd">With low Raw Damage, most of the damage will by mitigated by your target's armor.<br>Maybe something closer to a real situation would work better. You're still a low level, you've got an Ironsword and you want to know whether it's better to use a Silver Dagger or a Bone Knife as off-hand weapon. While a Silver Dagger would boost your attackspeed and Raw DPS considerably, you might find it troublesome when fighting heavy-armored enemies.</p>
+<p class="aspd">With low Raw Damage, most of the damage will by mitigated by <span style="color: #b6126c;">your target's armor</span>.<br>Maybe something closer to a real situation would work better. You're still a low level, you've got an Ironsword and you want to know whether it's better to use a Silver Dagger or a Bone Knife as off-hand weapon. While a Silver Dagger would boost your <span style="color: #b5cf1e;">Attackspeed</span> and <span style="color: #8220c4;">Raw DPS</span> considerably, you might find it troublesome when fighting <span style="color: #b6126c;">heavy-armored enemies</span>.</p>
 <div class="itemshowcase">
 <div class="showitem"><div><img src="Items/SilverDagger.png" alt="Silver Dagger"></div><div>Silver Dagger<br>Damage: 4<br>Attack Speed: 4</div></div>
 <div class="showitem"><div><img src="Items/BoneKnife.png" alt="Bone Knife"></div><div>Bone Knife<br>Damage: 9<br>Attack Speed: 1</div></div>
@@ -92,10 +94,10 @@ As you see, while in theory Silver Dagger offers slightly higher DPS, in practic
 <p class="note">The table doesn't take into account minimum-maximum damage ranges, but proportions would stay mostly the same.</p>
 
 <h2 class="aspdtable">Attack Speed & Traits</h2>
-<p class="aspd">One more element you definitely have to take into consideration are on-hit effects. These are all bonuses which don't scale from extra Damage - like True Grip trait (Mana regen per hit from Gloves), Unnatural Flow trait (bonus damage if you hit the enemy) or low-level Stabbing Preference (Lifeleech from Daggers, which gets rounded up to +1 HP leeched per hit). These traits definitely benefit from higher attack speed, but not at all from extra damage. So if your resources rely on them, you might want to choose ASPD over damage in some cases.</p>
+<p class="aspd">One more element you definitely have to take into consideration are <span style="color: #f84f00;">on-hit effects</span>. These are all bonuses which don't scale from extra Damage - like <span style="color: #f84f00;">True Grip</span> trait (Mana regen per hit from Gloves), <span style="color: #f84f00;">Unnatural Flow</span> trait (bonus damage if you hit the enemy) or low-level <span style="color: #f84f00;">Stabbing Preference</span> (Lifeleech from Daggers, which gets rounded up to +1 HP leeched per hit). These traits definitely benefit from higher attack speed, but not at all from extra damage. So if your resources rely on them, you might want to choose <span style="color: #b5cf1e;">Attackspeed</span> over <span style="color: #8220c4;">damage</span> in some cases.</p>
 
-<h2 class="aspdtable">TL;DR</h2>
-<p class="aspd">Attack Speed is good and its effects are palpable, but don't beeline it, as every point of it is less effective than the previous one. Getting +10% Damage is usually better than 1 ASPD, but limits resources you gain from on-hit traits.</p>
+<h2 class="aspdtable">TL;DR - is it worth it?</h2>
+<p class="aspd">Well, yes, but it depends. <span style="color: #b5cf1e;">Attack Speed</span> is good and its effects are palpable, but don't beeline it, as every point of it is less effective than the previous one. Getting  <span style="color: #8220c4;">+10% Damage</span> is usually much better than <span style="color: #b5cf1e;">1 AtkSpd</span>, but limits the resources you gain from on-hit traits.</p>
 
 <div class="emptyholder">
 
