@@ -7,15 +7,15 @@
     <title>Talent Tree Calculator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'bedstead', Arial, sans-serif;
             position: relative;
             /*background: linear-gradient(90deg, #2e0a0a 0%, #1d1717 50%, #1b1b1b 100%);*/
             user-select: none; /* Disable text selection */
         }
         
         @font-face {
-                font-family: '9Px3bus-WpXV';
-                src: url('VT323-Regular.ttf') format('truetype');
+                font-family: 'bedstead';
+                src: url('bedstead-extracondensed.otf') format('truetype');
             }
         .talent-node {
             position: absolute;
@@ -24,10 +24,10 @@
             background: #3d3d3d;
             cursor: pointer;
             text-align: center;
-            width: 145px;
+            width: 125px;
             max-height: 150px;
             z-index: 1;
-            font-family: '9Px3bus-WpXV';
+            font-family: 'bedstead';
             font-weight: 100;
             text-shadow: 2px 2px 2px #000, -2px -2px 2px #000, -2px 2px 2px #000, 2px -2px 2px #000;
             border-radius: 5px;
@@ -50,7 +50,7 @@
             font-size: 1.1em;
         }
         p.description {
-            font-size: 1em;
+            font-size: 0.86em;
             color:#dace8d;
             margin: 0px 0;
         }
@@ -74,7 +74,7 @@
             font-size: 2em;
             font-weight: bold;
             margin: 0 20px;
-            font-family: '9Px3bus-WpXV';
+            font-family: 'bedstead';
             font-weight: 100;
             text-shadow: 2px 2px 2px #000, -2px -2px 2px #000, -2px 2px 2px #000, 2px -2px 2px #000;
             vertical-align: middle;
@@ -84,7 +84,7 @@
             font-size: 2em;
             font-weight: bold;
             margin: 0 20px;
-            font-family: '9Px3bus-WpXV';
+            font-family: 'bedstead';
             font-weight: 100;
             text-shadow: 2px 2px 2px #000, -2px -2px 2px #000, -2px 2px 2px #000, 2px -2px 2px #000;
             vertical-align: middle;
@@ -99,7 +99,7 @@
             border-radius: 5px;
             cursor: pointer;
             margin: 10px;
-            font-family: '9Px3bus-WpXV';
+            font-family: 'bedstead';
             font-weight: 100;
             text-shadow: 2px 2px 2px #000, -2px -2px 2px #000, -2px 2px 2px #000, 2px -2px 2px #000;
         }
@@ -221,7 +221,7 @@
                 //let parts = line.split(';');
             for(let i=0; i<traits.length; i++){
                 let id = parseInt(traits[i][0]);
-                let posX = (parseInt(traits[i][9])) * 1.6 + 800;
+                let posX = (parseInt(traits[i][9])) * 1.45 + 730;
                 //console.log(parts[9]+"=>"+posX);
                 let posY = (parseInt(traits[i][10])) * 2.2 + 900;
                 let levels = traits[i][4];//.map(Number).filter(n => !isNaN(n));
@@ -259,13 +259,13 @@
                 if (skill.id === 0) {
                     //traitDiv.style.display = 'none';
                     //console.log("Hello");
-                    let centerSpot = [780, 6301];
+                    let centerSpot = [640, 6301];
                     let locationMultiplier = 1.78;
                     let traitDiv = node;
                     traitDiv.setAttribute('data-trait-id', skill[0]);
                     traitDiv.style.position = 'absolute';
                     //traitDiv.style.left = `${(centerSpot[0] + skill[9])*locationMultiplier}px`;
-                    traitDiv.style.left = "781px";
+                    traitDiv.style.left = "701px";
                     //traitDiv.style.top = `${(centerSpot[1] + skill[10])*locationMultiplier}px`;
                     traitDiv.style.top = "850px";
                     traitDiv.style.width = "130px";
@@ -523,9 +523,6 @@
             }).catch(err => {
                 console.error('Failed to copy link: ', err);
             });*/
-
-            
-            
             try {
                 copyToClipboard(baseUrl+url);
             } catch(error) {

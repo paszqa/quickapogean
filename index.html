@@ -6,6 +6,13 @@
     <title>Quick Apogean - some knowledge base for Apogea</title>
     <link rel="icon" type="image/png" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /*
+        body{
+            font-family: 'Jersey15', 'Comic Sans', sans-serif;
+        }*/
+        
+    </style>
 </head>
 <body>
     <div id="top-menu">
@@ -28,11 +35,7 @@
         <h3>Tools</h3>
         <div class="menu-item" onclick="openContent('calc.html')">
             <img src="Images/char2icon.png" alt="Calc">
-            <span>Character Calculator</span>
-        </div>
-        <div class="menu-item" onclick="openContent('traits.html')">
-            <img src="Images/traiticon.png" alt="Traits">
-            <span>Trait Calculator</span>
+            <span>Character Calc</span>
         </div>
         <div class="menu-item" onclick="openContent('traits2.html')">
             <img src="Images/trait2icon.png" alt="New Traits">
@@ -64,7 +67,7 @@
         <h3>Articles</h3>
         <div class="menu-item" onclick="openContent('attackspeed.html', 'articles', 'articles')">
             <img src="Images/aspdicon.png" alt="Attackspeed">
-            <span>Attack Speed explained</span>
+            <span>Attack Speed?</span>
         </div>
         <div class="menu-item" onclick="openContent('armor.html', 'articles', 'articles')">
             <img src="Images/char3icon.png" alt="Armor">
@@ -96,6 +99,10 @@
             <img src="Items/Orb.png" alt="Orbs">
             <span>Orbs</span>
         </div>
+        <div class="menu-item" onclick="openContent('items.html', 'gloves', 'gloves')">
+            <img src="Items/LeatherGloves.png" alt="Gloves">
+            <span>Gloves</span>
+        </div>
         <div class="menu-item" onclick="openContent('items.html', 'helmet', 'mask')">
             <img src="Items/Spangenhelm.png" alt=">Helmets & Masks">
             <span>Helmets & Masks</span>
@@ -124,6 +131,15 @@
             <img src="Images/exclamationicon.png" alt="All Items">
             <span>All Items</span>
         </div>
+        <h3>Stuff</h3>
+        <div class="menu-item" onclick="openContent('traits.html')">
+            <img src="Images/traiticon.png" alt="Traits">
+            <span>Old Trait Calculator</span>
+        </div>
+        <div class="menu-item" onclick="openContent('credits.html')">
+            <img src="Images/question2icon.png" alt="Credits">
+            <span>Changelog & Credits</span>
+        </div>
     </div>
     <div id="content">
         <iframe id="content-frame" src="about:blank" frameborder="0" style="width: 100%; height: 100vh;"></iframe>
@@ -133,24 +149,24 @@
         function openContent(page, filter1 = '', filter2 = '') {
             const iframe = document.getElementById('content-frame');
             const currentParams = new URLSearchParams(window.location.search);
-            console.log("B1"+currentParams);
+            //console.log("B1"+currentParams);
             const filterParams = new URLSearchParams();
 
             if (filter1) filterParams.set('filter1', filter1);
             if (filter2) filterParams.set('filter2', filter2);
             // Preserve calc.html-specific parameters
             if (page === 'calc.html' || 'traits.html' || 'traits2.html') {
-                ['level', 'available', 'class', 'items', 'points', 'traits'].forEach(param => {
+                ['level', 'available', 'class', 'items', 'points', 'traits', 'tt'].forEach(param => {
                     if (currentParams.has(param)) {
-                        console.log("param sending:"+param);
+                        //console.log("param sending:"+param);
                         filterParams.set(param, currentParams.get(param));
                     }
                 });
-                console.log("X1 "+currentParams);
+                //console.log("X1 "+currentParams);
                 //if key includes "skill" then send it
                 currentParams.forEach((value, key) => {
                     if (key.includes("skill")) {
-                        console.log("key sending:"+key);
+                        //console.log("key sending:"+key);
                         filterParams.set(key, value);
                     }
                 });

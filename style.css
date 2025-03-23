@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: '9Px3bus-WpXV', Arial, sans-serif;
+    font-family: 'Bedstead', Arial, sans-serif;
     background-color: #1e1e1e;
     color: #cfcfcf;
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7), -2px -2px 2px rgba(0, 0, 0, 0.3), -2px 2px 2px rgba(0, 0, 0, 0.3), 2px -2px 2px rgba(0, 0, 0, 0.3);
@@ -19,6 +19,11 @@ body.article{
 @font-face {
     font-family: '9Px3bus-WpXV';
     src: url('VT323-Regular.ttf') format('truetype');
+}
+
+@font-face{
+    font-family: 'Bedstead';
+    src: url('bedstead-extracondensed.otf') format('truetype');
 }
 
 #top-menu {
@@ -52,6 +57,7 @@ body.article{
     float: left;
     height: 100vh;
     padding: 10px;
+    line-height: 0.6em;
     box-sizing: border-box;
     overflow-y: auto;
 }
@@ -296,8 +302,8 @@ div.showitem {
     justify-content: center;
     align-items: center;
     
-    width: 170px;
-    height: 150px;
+    width: 180px;
+    height: 170px;
     text-align: center;
     border: 1px solid #000000;
     border-radius: 5px;
@@ -323,8 +329,26 @@ div.showitem-imagebox {
     object-fit: none;
 }
 
-/* Ensure text stays centered */
+/* Fixed size for text container */
 div.showitem-text {
-    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
+    font-size: 1.25em;
+    
+    width: 100%;
+    height: 120px; /* Adjust this so all items stay aligned */
+    overflow: hidden;
+}
+
+ul.coollist{
+    padding: 0px;
+    padding-left: 40px;
+    margin: 0;
+    font-size: 1.4em;
+    list-style-type: square;
+}
+ul.coollist li{
+    padding: 0px;
 }
