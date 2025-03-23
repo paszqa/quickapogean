@@ -352,3 +352,28 @@ ul.coollist{
 ul.coollist li{
     padding: 0px;
 }
+table.classes{
+    width: 700px;
+    margin: 20px;
+    border-collapse: collapse;
+    border-spacing: 0;
+    text-align: center;
+    font-size: 1.4em;
+    align-items: center;
+}
+table.classes td{
+    width: 100px;
+}
+table.classes tr{
+    background-color: #3a3a3a;
+}
+table.classes tr:nth-child(odd){
+    background-color: #2e2e2e;
+}
+table.classes tr:hover{
+    background-color: #8b8b8b;
+}
+table.classes img{
+    width: 70px;
+    height: auto;
+}

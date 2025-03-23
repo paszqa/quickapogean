@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        </head>
+<body class="small">
+    <!-- table with 5 columns and 12 rows with class names on top and each row is stat name-->
+    <table class="classes">
+        <tr>
+            <th></th>
+            <th><img src="squire.png"></th>
+            <th><img src="knight.png"></th>
+            <th><img src="rogue.png"></th>
+            <th><img src="mage.png"></th>
+        </tr>
+        <tr>
+            <th>Class</th>
+            <th>Squire</th>
+            <th>Knight</th>
+            <th>Rogue</th>
+            <th>Mage</th>
+        </tr>
+        <tr>
+            <td>Health</td>
+            <td>100%</td>
+            <td><span class="green">200%</span></td>
+            <td>100%</td>
+            <td><span class="red">75%</span></td>
+        </tr>
+        <tr>
+            <td>Mana</td>
+            <td>100%</td>
+            <td><span class="red">50%</span></td>
+            <td><span class="green">125%</span></td>
+            <td><span class="green">200%</span></td>
+        </tr>
+        <tr>
+            <td>Magic</td>
+            <td>100%</td>
+            <td><span class="red">50%</span></td>
+            <td><span class="green">150%</span></td>
+            <td><span class="green">200%</span></td>
+        </tr>
+        <tr>
+            <td>Damage</td>
+            <td>100%</td>
+            <td>100%</td>
+            <td>100%</td>
+            <td>100%</td>
+        </tr>
+        <tr>
+            <td>Movespeed</td>
+            <td>100%</td>
+            <td>100%</td>
+            <td>100%</td>
+            <td>100%</td>
+        </tr>
+        <tr>
+            <td>Ability</td>
+            <td>100%</td>
+            <td><span class="green">125%</span></td>
+            <td><span class="green">150%</span></td>
+            <td><span class="red">75%</span></td>
+        </tr>
+        <tr>
+            <td>Attackspeed</td>
+            <td>100%</td>
+            <td>100%</td>
+            <td><span class="green">125%</span></td>
+            <td>100%</td>
+        </tr>
+        <tr>
+            <td>HP Regen</td>
+            <td>100%</td>
+            <td><span class="green">125%</span></td>
+            <td>100%</td>
+            <td><span class="red">75%</span></td>
+        </tr>
+        <tr>
+            <td>MP Regen</td>
+            <td>100%</td>
+            <td><span class="red">50%</span></td>
+            <td>100%</td>
+            <td><span class="green">200%</span></td>
+        </tr>
+        <tr>
+            <td>Range</td>
+            <td>100%</td>
+            <td><span class="red">50%</span></td>
+            <td>100%</td>
+            <td>100%</td>
+        </tr>
+        <tr>
+            <td>Armor</td>
+            <td>100%</td>
+            <td><span class="green">150%</span></td>
+            <td>100%</td>
+            <td><span class="red">75%</span></td>
+        </tr>
+        <tr>
+            <td>Defense</td>
+            <td>100%</td>
+            <td><span class="green">150%</span></td>
+            <td>100%</td>
+            <td><span class="red">75%</span></td>
+        </tr>
+        <tr>
+            <td>Capacity</td>
+            <td>100%</td>
+            <td><span class="green">150%</span></td>
+            <td>100%</td>
+            <td><span class="red">75%</span></td>
+        </tr>
+    </table>
+
+     
+<script>
+    //every 3 seconds spawn random click-through images for 4 seconds
+    setInterval(() => {
+        const img = document.createElement('img');
+        let number = Math.floor(Math.random() * 6) + 1;
+        img.src = `Images/formulas${number}.png`;
+        img.style.position = 'fixed';
+        img.style.top = Math.floor(Math.random() * window.innerHeight) + 'px';
+        img.style.left = Math.floor(Math.random() * window.innerWidth) + 'px';
+        img.style.pointerEvents = 'none';
+        img.style.zIndex = 1000;
+        img.style.opacity = 0; // Initially transparent
+        img.style.transform = 'scale(0.7)'; // Initial zoom
+        img.style.transition = 'opacity 6s ease-in-out, transform 6s ease-in-out'; // Transition for opacity and zoom
+        document.body.appendChild(img);
+
+        // Force reflow to trigger the transition
+        img.offsetHeight;
+
+        img.style.opacity = 0.05; // Fade in
+        img.style.transform = 'scale(1.4)'; // Zoom in
+
+        setTimeout(() => {
+            img.style.opacity = 0; // Fade out
+        }, 7000);
+
+        setTimeout(() => {
+            img.remove();
+        }, 11000);
+    }, 1000);
+</script>
+</body>
+</html>
