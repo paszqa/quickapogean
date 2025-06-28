@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>2003 Style Website</title>
+        <link rel="stylesheet" href="style.css">
+        <!-- Leaflet CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <!-- Leaflet JS -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        </head>
+<body class="small">
+<p class="normal">
+Information taken from the Discord. It may get changed any time.
+</p>    
+<div id="map" style="width: 100%; height: 600px;"></div>
+
+<script>
+  // Image size in pixels (e.g., 4000x3000)
+  const imageWidth = 4000;
+  const imageHeight = 4000;
+
+    // Define a custom icon
+    const customIcon = L.icon({
+    iconUrl: 'Images/swordicon.png', // Path to your custom icon image
+    iconSize: [32, 32], // Size of the icon [width, height]
+    iconAnchor: [16, 32], // Point of the icon which will correspond to marker's location
+    popupAnchor: [0, -32] // Point from which the popup should open relative to the iconAnchor
+    });
+
+  // Create the map and set the bounds
+  const map = L.map('map', {
+    crs: L.CRS.Simple,
+    minZoom: -5,
+    maxZoom: 2,
+    zoomSnap: 0.1,
+  });
+
+  const bounds = [[0, 0], [imageHeight, imageWidth]];
+  const image = L.imageOverlay('logo_apogea.png', bounds).addTo(map);
+  map.fitBounds(bounds);
+
+  // Example marker
+  const marker = L.marker([1500, 2000]).addTo(map);
+  marker.bindPopup("My Marker").openPopup();
+// Add a marker with the custom icon
+    const customMarker = L.marker([1000, 1000], { icon: customIcon }).addTo(map);
+    customMarker.bindPopup("Custom Marker!");
+
+  // More markers can be added the same way
+  
+</script>
