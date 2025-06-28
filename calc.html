@@ -598,7 +598,7 @@ body::-webkit-scrollbar-thumb {
     <div class="tabs">
         
         <div class="calctitle">
-            Character Stat Calculator v0.5
+            Character Stat Calculator v0.6
         </div>
         <button class="copylink" onclick="copyLink()">Copy Link 📋</button>
         <button class="tab-button active" onclick="openTab('equipment-stats')">Equipment & Stats</button>
@@ -867,71 +867,77 @@ body::-webkit-scrollbar-thumb {
 
         ];
         const traits = [
-        [0,0,"Start here","Level 1 starting point.",[],0,0,0,0, 0,0],
-[1,0,"Staff Mastery","Staves have a chance of shooting without a cost",["0%","5%","10%","20%","35%","75%"],0,0,0,0,-100,0],
-[2,1,"Charge the Staff","Casting an energy Fire spell using a staff will make your next attack deal damage",["Off","ML/5","ML/4","ML/2"],0,0,0,0,-200,50],
-[3,2,"Frantic Conjury","Casting a Fire spell has a chance your next attack will cast Conjure Fire on target's location",["0%","20%","30%","50%"],0,0,0,0,-300,50],
-[4,3,"Warlock","While holding a staff, gain 1 extra Area of Effect for Energy and Fire spells",["Off","On"],3,3,1,5,-400,50],
-[5,1,"Magic Touch","Heal spells are stronger by:",["0%","10%","15%","25%"],0,0,0,0,-200,-50],
-[6,5,"Healing Stick","While holding a staff, reduces the cooldown of Heal and Holy spells by:",["0%","10%","20%","35%"],0,0,0,0,-300,-50],
-[7,6,"Child's Channel","Healing others also heals you by 50% and Heal and Light spells are 50% cheaper",["Off","On"],6,3,1,5,-400,-50],
-[8,5,"Apogea's Ardor","Reduces the cooldown of Earth and Water spells by:",["0%","10%","20%","35%"],0,0,0,0,-300,-150],
-[9,8,"Gallop's Fall","While holding a staff, gain 1 extra area of effect for Water and Holy spells",["Off","On"],8,3,1,5,-400,-150],
-[10,0,"Stabbing preference","Daggers provide Lifeleech",["0%","1%","3%","6%","10%","15%"],0,0,0,0,-100,-100],
-[11,10,"Thorough Puncture","Physical attacks ignore some of the target's armor",["0%","8%","13%","20%"],0,0,0,0,-200,-200],
-[12,11,"Shearing Stroke","Attacks have a chance of dealing 1.5x damage",["0%","10%","14%","20%"],0,0,0,0,-300,-300],
-[13,12,"Luck Foreseen","Converts 7 Ability into 1% chance of attacking twice",["Off","On"],10,5,12,3,-400,-400],
-[14,11,"Gaff Hack","Casting a Mystic or Time spell has a chance of boosting your Attackspeed by 10 for 4s",["0%","20%","30%","50%"],0,0,0,0,-200,-300],
-[15,14,"Double Danger","Using two daggers doubles your Item Damage",["Off","On"],10,5,14,3,-200,-400],
-[16,0,"Bow Guidance","Bows have extra Attackspeed",[0,1,2,3,4,6],0,0,0,0,0,-100],
-[17,16,"Good Technique","Gain extra Range",[0,1,2,4],0,0,0,0,-50,-200],
-[18,17,"Artisanal Arsenal","Non-magic arrows deal extra Damage and break less often",["0%","1","2","4"],0,0,0,0,-50,-300],
-[19,18,"Explosive Ammo","Arrows have a 25% chance of exploding dealing area damage that briefly slows",["Off","On"],16,5,18,3,-50,-400],
-[20,17,"Shineshooter","Reduces the cooldown of Light and Arrow of spells by:",["0%","10%","20%","35%"],0,0,0,0,50,-300],
-[21,20,"Bullseye","Increases the Damage of Arrow and Blade spells against enemies you have currently targeted",["Off","On"],16,5,20,3,50,-400],
-[22,16,"True Grip","While wearing Gloves attacking regenerates Mana",[0,1,2,5],0,0,0,0,50,-200],
-[23,22,"Elvish Practice","Reduces the cooldown of Time and Mystic spells by:",["0%","10%","20%","35%"],0,0,0,0,150,-300],
-[24,23,"Arcane Trickster","While using Gloves, casting Time or Mystic spells has a 50% chance of blocking all physical damage for 3 seconds",["Off","On"],23,3,16,5,150,-400],
-[25,0,"Cozy and Useful","Light Armor is lighter",["0%","1%","5%","10%","17%","25%"],0,0,0,0,100,-100],
-[26,25,"Breeze in Your Hair","Not wearing a helmet gives you Movespeed",[0,1,2,3],0,0,0,0,200,-200],
-[27,26,"Lightfoot","If all your equipment weighs less than 150oz, gain Movespeed",[0,1,2,3],0,0,0,0,300,-300],
-[28,27,"Battle Boots","Converts all extra Movespeed into 2 Damage",["Off","On"],27,3,25,5,400,-400],
-[29,25,"Dressing Wizardly","Armor gives you Mana for each oz under X oz, capped at 20 Mana",[0,25,33,45],0,0,0,0,200,-100],
-[30,29,"Powerful Space","Gain 5% Magic for each X Free Capacity you have, capping at 20%",[0,50,35,15],0,0,0,0,300,-200],
-[31,30,"Clothes of the Damned","Removes negative effects from light armor and gain 5% Magic for each equipped light armor",["Off","On"],30,3,25,5,400,-300],
-[32,0,"Block Efficacy","Shields have more defense",["0%","1%","4%","8%","14%","20%"],0,0,0,0,100,0],
-[33,32,"Bread and Butter","Using a sword and shield gives you extra damage",[0,2,4,8],0,0,0,0,200,0],
-[34,33,"Deflect","Blocking with a magic shield reflects damage taken",["0%","50%","70%","100%"],0,0,0,0,300,-100],
-[35,31,"Darkness Embrace","Death spells are 10 times cheaper. Heal and Light spells are 10 times more expensive",["Off","On"],0,0,0,0,400,-200],
-[36,34,"Bulwark Leap","While holding a shield, casting a Time spell will double your magic shield, capping at 200",["Off","On"],32,5,34,3,400,-100],
-[37,33,"Shieldslam","Blocking an attack has a chance of staggering the attacker",["0%","7%","10%","15%"],0,0,0,0,300,0],
-[38,37,"Hex Parry","Successfully blocking an attack will empower your next Arrow or Blade spell",["Off","On"],37,3,32,5,400,0],
-[39,0,"Well Protected","Heavy Armor has more Armor",["0%","1%","5%","10%","17%","25%"],0,0,0,0,100,100],
-[40,39,"Bulking Up","Gain Health for each equipped heavy armor",[0,5,10,25],0,0,0,0,200,100],
-[41,40,"Heavy Metal","If all your equipment weighs more than 150oz, gain Armor",["0%","5%","10%","20%"],0,0,0,0,300,100],
-[42,41,"Carry your might","Each 75 max capacity gives you 1 extra Armor and 10 Health, capping at 15 Armor and 150 Health",["Off","On"],41,3,39,5,400,100],
-[43,39,"Royal Banner","Reduces the cooldown of Time and Heal spells by:",["0%","10%","20%","35%"],0,0,0,0,200,200],
-[44,43,"Magic Steel","Casting a Time or Heal spell will give you a shield equal to a percentage of your total armor:",["0%","75%","100%","150%"],0,0,0,0,300,200],
-[45,44,"Blessed Plate","Removes negative stats from heavy armor and gain 15 Mana for each equipped heavy armor",["Off","On"],44,3,39,5,400,300],
-[46,45,"Endowed in Steel","Attacking using both your hands gives you multiple stat boosts",["Off","On"],0,0,0,0,400,200],
-[47,0,"Blade Training","Swords have more Damage",["0%","1%","4%","8%","14%","20%"],0,0,0,0,0,100],
-[48,47,"Wrecking It","Gain extra Item Damage",["0%","3%","6%","10%"],0,0,0,0,50,200],
-[49,48,"No Defense Needed","Damage to swords of size 7 or bigger",["0%","3%","6%","10%"],0,0,0,0,150,300],
-[50,49,"Magic Blade","Removes negative effects from size 7 or bigger swords and gain 10% Manaleech",["Off","On"],49,3,47,5,150,400],
-[51,48,"Hand Finesse","Gain 1 Attackspeed for each X Ability you have capping at 5",[0,15,13,10],0,0,0,0,50,300],
-[52,51,"Blade Prowess","While holding one sword of size 6 and no shield, reduces the cooldown of Blade spells by 50%",["Off","On"],51,3,47,5,50,400],
-[53,48,"Dual-wielding","Size 6 swords have an equipsize of 5, but deal reduced Damage by:",["0%","40%","36%","30%"],0,0,0,0,-50,300],
-[54,53,"To Be Ninja","Converts all extra Ability into Attackspeed",["Off","On"],47,5,53,3,-50,400],
-[55,47,"Fancing Classes","Blade spells are stronger by:",["0%","5%","9%","15%"],0,0,0,0,-50,200],
-[56,0,"Pondering It","Orbs provide Spellvamp",["0%","1%","3%","6%","10%","15%"],0,0,0,0,-100,100],
-[57,56,"Unnatural Flow","Your attacks will deal extra magic damage",[0,4,7,12],0,0,0,0,-200,200],
-[58,57,"Flaming Sword","Casting a Fire or Blade spell will make your next attack deal extra magic damage",[0,4,8,15],0,0,0,0,-200,300],
-[59,58,"Conflagrated Mind","While holding an orb, reduces the cooldown of Fire spells by 35%",["Off","On"],56,5,58,3,-200,400],
-[60,57,"Diamond Skin","Casting an Energy or Arrow spell will give you shield, stacking 3 times",[0,20,35,50],0,0,0,0,-300,300],
-[61,60,"Unstable Aegis","Taking shield damage will cast Unstable Berserk around yourself",["Off","On"],56,5,60,3,-400,400],
-[62,2,"Electric Nature","Reduces the cooldown of Energy spells by:",["0%","10%","20%","35%"],0,0,0,0,-300,150],
-[63,62,"Steering Insight","Energy and Arrow projectile spells bounce when colliding with enemies and explode on death",["Off","On"],62,3,1,5,-400,150],
-
+        [0,0,"start","starts",[0],0,0,0,0,0,0],
+[1,0,"Staff Mastery","Staves have a X% chance of shooting without cost",[0,15,25,40,60,90],0,0,0,0,-100,50],
+[2,1,"Charge the Staff","Casting an Elemental spell using a staff will make your next attack deal extra (Magic Level / X) damage",["Off",5,4,2],0,0,0,0,-200,100],
+[3,2,"Gallop’s Fall","Reduces the cooldown of Water spells by X%",[0,10,20,35],0,0,0,0,-300,200],
+[4,3,"Sacred Stick","While holding a staff, gain 1 extra Area of Effect for Holy spells and 25% cooldown reduction for Holy spells",["Off", "active"],3,3,1,5,-400,200],
+[5,2,"Franctic Conjury","Casting a Fire spell has a X% chance your next attack will cast Conjure Fire at target's location",[0, 15,20,30],0,0,0,0,-300,100],
+[6,5,"Conflagrated Mind","While holding a staff gain 1 extra Area of Effect and 25% cooldown reudction for Fire spells",["Off","active"],5,3,1,5,-400,100],
+[7,6,"Warlock","Gain 1 Area of Effect and doubles the cooldown of all spells",["Off","active"],0,0,0,0,-500,100],
+[8,0,"Pondering It","Orbs give +X% Spellvamp",[0,1,3,6,10,15],0,0,0,0,-100,-20],
+[9,8,"Electric Nature","Reduces the cooldown of spells by X%",[0,7,10,15],0,0,0,0,-200,-20],
+[10,9,"Diamond Skin","Hitting and enemy with an Energy or Arrow spell gives you X magic shield, capping at 100",[0,20,30,50],0,0,0,0,-300,-20],
+[11,10,"Unstable Aegis","Taking Magic Shield damage has a 50% chance of casting Unstable Berserk around yourself",["Off","active"],10,3,8,5,-400,-20],
+[12,9,"Magic Touch","Heal spells are X% stronger",[0,10,15,25],0,0,0,0,-300,-100],
+[13,12,"Apogea’s Ardor","While holding an Orb, Heal spells cost 50% less mana",["Off","active"],12,3,8,5,-400,-100],
+[14,13,"Child’s channel","Healing others also heals you, reduces the cooldown of all spells by 50% and spells deal 75% less dammage",["Off","active"],0,0,0,0,-500,-100],
+[15,0,"Blade training","Regular swords have X% extra damage",[0,1,4,8,13,20],0,0,0,0,-100,-100],
+[16,15,"Hand Finesse","Gain 1 Attackspeed for each X Ability you have capping at 5",[0,15,13,10],0,0,0,0,-200,-150],
+[17,16,"Fencing Classes","Blade spells are X% stronger",[0,5,9,15],0,0,0,0,-300,-200],
+[18,17,"Blade Prowess","While holding one sword of size 6 and no shield, reduces the cooldown of Blade spells by 50%",["Off","active"],17,3,15,5,-400,-250],
+[19,18,"Highlander","Blade spells cost 50% less mana, lose the ability to auto-attack. Additionally, converts every 2 Attackspeed into 1 Damage",["Off","active"],0,0,0,0,-500,-200],
+[20,16,"Dual-wielding","Size 6 swords have an equipsize of 5, but deal X% less damage",[0,40,36,30],0,0,0,0,-200,-250],
+[21,20,"To be Ninja","Attacking has a 25% chance of boosting your Movespeed by 10 for 4 seconds",["Off","active"],16,3,15,5,-350,-350],
+[22,0,"Glove Passion","While wearing gloves, gain X Mana or Health Regen depending on the item you're holding",[0,1,2,3,6,10],0,0,0,0,0,-100],
+[23,22,"True Grip","While wearing gloves, attacking regenerates X mana",[0,1,2,4],0,0,0,0,0,-200],
+[24,23,"Unnatural Flow","Your attacks deal X extra True Damage",[0,4,7,12],0,0,0,0,-50,-300],
+[25,24,"Battle Mage","Converts 50 Max Mana into 1 extra True Damage",["Off","active"],24,3,22,5,-50,-400],
+[26,25,"One with Apogea","Mana damage is reduced in half. Mana damage is reduced in half, all spells cost 5 times more.",["Off","active"],0,0,0,0,-150,-400],
+[27,23,"Elvish Practice","Spells cost X% less mana",[0,7,10,15],0,0,0,0,50,-300],
+[28,27,"Arcane Trickster","While using Gloves, casting a Time or Mystic spell has a 50% chance of blocking all physical damage for 4 seconds",["Off","active"],27,3,22,5,50,-400],
+[29,0,"Going Big","Large weapons have X% extra damage",[0,1,4,8,14,20],0,0,0,0,100,-100],
+[30,29,"Steady Bloodflow","Casting a spell using health regenerates X mana",[0,4,7,12],0,0,0,0,200,-200],
+[31,30,"Berserker","Being below 66% Health gives you X extra Damage",[0,5,8,13],0,0,0,0,200,-300],
+[32,31,"Overwhelming Force","When using Large weapon, attacking has a 35% chance of casting an area of effect spell around the target",["Off","active"],31,3,29,5,200,-400],
+[33,30,"Wrecking It","Casting a Blade or Physical spell will make your next attack deal X extra True Damage",[0,4,8,14],0,0,0,0,300,-300],
+[34,33,"Magic Blade","Removes negative effects from Large Weapnsand gain 10% Manaleech",["Off","active"],33,3,29,5,375,-400],
+[35,34,"Unfathomable Rage","Converts every 2 damage taken into 1 mana, doubles the cost of all spells",["Off","active"],0,0,0,0,425,-300],
+[36,0,"Stabbing Preference","Daggers provide X% Lifeleech",[0,1,3,7,12,20],0,0,0,0,100,-20],
+[37,36,"Through Puncture","Physical attacks ignore X% of the target’s armor",[0,8,20,35],0,0,0,0,200,-20],
+[38,37,"Jagged Rhythm","Attacking using a dagger has a X% chance of dealing extra (Ability/4) True Damage",[0,15,25,50],0,0,0,0,250,-100],
+[39,38,"Luck Foreseen","Converts every 6 Ability into 1% chance of attacking twice",["Off","active"],38,3,36,5,350,-100],
+[40,39,"Dark Blade","Doubles all extra damage you deal, you also receive the True Damage dealt",["Off","active"],0,0,0,0,425,-200],
+[41,37,"Gaff Hack","Casting a Mystic or Time spell has a X% chance of boosting your Attackspeed by 7 for 4 seconds",[0,20,30,50],0,0,0,0,300,-20],
+[42,41,"Double Danger","Using two daggers doubles your item damage",["Off","active"],41,3,36,5,425,-20],
+[43,0,"Bow Guidance","Bows have X extra Attackspeed",[0,1,2,3,4,6],0,0,0,0,100,50],
+[44,43,"Good Technique","Gain X extra Range",[0,1,2,4],0,0,0,0,200,100],
+[45,44,"Artisenal Arsenal","Non-magic arrow get +X Damage and break less often",[0,2,4,7],0,0,0,0,300,100],
+[46,45,"Explosive Ammo","Arrows have a 25% chance of exploding, dealing area damage that briefly slows",["Off","active"],45,3,43,5,425,100],
+[47,44,"Shineshooter","Reduces the cooldown of Arrow spells by X%",[0,10,20,35],0,0,0,0,300,175],
+[48,47,"Bullseye","Increases the damage of Arrow and Blade spells on enemies you currently have targeted",["Off","active"],47,3,43,5,425,175],
+[49,48,"Tunnelvision","Gain 10 Attackspeed, but you can no longer move while targeting an enemy.",["Off","active"],0,0,0,0,425,250],
+[50,0,"Cozy and Useful","Light Armor has X extra mana",[0,1,3,6,10,15],0,0,0,0,-100,150],
+[51,50,"Lightfoot","Converts X Free Capacity into 1 Movespeed capping at 3",[0,35,25,10],0,0,0,0,-170,200],
+[52,51,"Dress Wizardly","Gear that weighs less than X oz gives you +1 Magic",[0,10,20,35],0,0,0,0,-270,300],
+[53,52,"Clothes of the Damned","Removes negative effects from light armor and gain 5% Magic for each equipped Light Armor.",["Off","active"],52,3,50,5,-370,300],
+[54,53,"Darkness Embrace","Death spells are 10 times cheaper. Heal, Light and Holy spells are 10 times more expensive.",["Off","active"],0,0,0,0,-445,400],
+[55,51,"Breeze in your hair","Not wearing a helmet gives you +X Movespeed",[0,1,2,3],0,0,0,0,-170,300],
+[56,55,"Battleboots","Gives 2 Damage for every extra Movespeed",["Off","active"],55,3,50,5,-270,400],
+[57,0,"Block Efficiacy","Shields have X% extra defense",[0,1,4,8,13,20],0,0,0,0,0,150],
+[58,57,"Rooted Guard","Blocking an attack regenerates X health",[0,1,2,5],0,0,0,0,0,225],
+[59,58,"Hex Parry","Successfully blocking an attack will empower your next Arrow or Blade spell by X%",[0,15,35,50],0,0,0,0,50,325],
+[60,59,"Bulwark Leap","Casting a Time or Physical spell will double your magic shield, capping at 200",["Off","active"],59,3,57,5,50,400],
+[61,58,"Royal Shield","Reduces the cooldown of Defense spells by X%",[0,10,20,35],0,0,0,0,-50,325],
+[62,61,"Deflect","Blocking with a magic shield reflects 15% of the damage taken as true damage",["Off","active"],61,3,57,5,-50,400],
+[63,62,"Monster Candy","Taunt lasts 100% longer, Conjure and Defense spells are 50% cheaper. Lose 99 Damage.",["Off","active"],0,0,0,0,-150,400],
+[64,0,"Well Protected","Heavy Armor has X extra health",[0,1,3,6,10,15],0,0,0,0,100,150],
+[65,64,"Heavy Metal","Heavy Armor that weighs more than 100oz has 1 Ability extra",[0,100,75,35],0,0,0,0,150,250],
+[66,65,"Magic Steel","Casting a Time or Heal spell will give you a shield equal to X% of your total Armor, capping at 100",[0,50,100,150],0,0,0,0,200,325],
+[67,66,"Blessed Plate","Gain 15 Mana and 1 Magic for every equipped Heavy Armor",["Off","active"],66,3,64,5,275,400],
+[68,65,"Carry Your Might","Gain 1 Armor for every 100 Max Capacity, capping at X",[0,2,4,8],0,0,0,0,275,250],
+[69,68,"Juggernaut","Removes negative effects from Heavy Armor. Gain 5% Ability for each equipped Heavy Armor.",["Off","active"],68,3,64,5,400,325],
+[70,69,"Endowed in Steel","Using both your hands gives you multiple stat boosts",["Off","monk"],0,0,0,0,425,400],
         ];
 
         let selectedTraits = {};
@@ -1081,7 +1087,7 @@ body::-webkit-scrollbar-thumb {
                             }
                             break;
                             */
-                        case "15": // Double Danger
+                        case "42": // Double Danger
                             if (stage === "On") {
                                 const leftHandSlot = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
                                 const rightHandSlot = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
@@ -1095,7 +1101,7 @@ body::-webkit-scrollbar-thumb {
                                 }
                             }
                             break;
-                        case "16": // Bow Guidance
+                        case "43": // Bow Guidance
                             //check if bow is equipped in left hand
                             const leftHandSlot = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
                             const leftHandItem = items.find(i => i[0] === leftHandSlot.querySelector('img').getAttribute('alt'));
@@ -1109,10 +1115,10 @@ body::-webkit-scrollbar-thumb {
                                 traitBonuses["Attack Speed"] += stage;
                             }
                             break;
-                        case "17": //Goo dtechnique
+                        case "44": // Good Technique
                             traitBonuses.Range += parseInt(stage);
                             break;
-                        case "25": // Cozy and Useful
+                        case "50": // Cozy and Useful
                             const lightArmorSlots = document.querySelectorAll('.item-slot img');
                             lightArmorSlots.forEach(img => {
                                 const itemName = img.getAttribute('alt');
@@ -1122,7 +1128,7 @@ body::-webkit-scrollbar-thumb {
                                 }
                             });
                             break;
-                        case "26": //breeze in your hair
+                        case "55": // Breeze in your hair
                             const headSlot = document.querySelector('.item-slot[data-slot="head"] img');
                             //check if head slot's item stats, and check if item type (item[2]) contains "helmet", if not, add stage to movespeed
                             if (headSlot) {
@@ -1136,14 +1142,14 @@ body::-webkit-scrollbar-thumb {
                                 }
                             }
                             break;
-                        case "27": //lightfoot
+                        case "51": // Lightfoot
                             const totalWeight = calculateItemBonuses().TotalWeight;
                             //check if weight is below 150 and lightfoot trait is set to > 0
                             if (totalWeight < 150 & parseInt(stage) > 0) {
                                 traitBonuses.Movespeed += parseInt(stage);
                             }
                             break;
-                        case "28": //battle boots
+                        case "56": // Battleboots
                             //count extra movementspeed from item bonuses + extra movement speed form traitbonuses * 2
                             //console.log("ZZZZ Item+trait bonus movespeed: "+calculateItemBonuses().Movespeed+traitBonuses.Movespeed);
                             if (stage == "On") {
@@ -1153,7 +1159,7 @@ body::-webkit-scrollbar-thumb {
                                 //traitBonuses.Movespeed -= calculateItemBonuses().Movespeed; //it's conversion, so it's negative // IT IS NOT CONVERSION ACCORDING TO AEIKZ
                             }
                             break;
-                        case "29": //dressing wizardly
+                        case "52": // Dress Wizardly
                             const armorSlots = document.querySelectorAll('.item-slot img');
                             armorSlots.forEach(img => {
                                 const itemName = img.getAttribute('alt');
@@ -1169,29 +1175,7 @@ body::-webkit-scrollbar-thumb {
                                 }
                             });
                             break;
-                        case "30": //powerful space
-                            //only if this trait is higher stage than 0
-                            if (parseInt(stage) > 0) {
-                                //get final capacity
-                                const maxCapacity = baseStats["Capacity"][0] + baseStats["Capacity"][1] * addedPoints["Capacity"] + calculateItemBonuses().Capacity
-                                console.log("Free cap: "+maxCapacity);
-                                //get total weight of all equipped items (not just item bonus total w)
-                                const totalWeight = calculateItemBonuses().TotalWeight;
-                                console.log("Total weight: "+totalWeight);
-                                //get how many times the stage fits into the free capacity
-                                const freeCapacity = maxCapacity - totalWeight;
-                                const capacityFits = Math.min(4,parseInt(freeCapacity / stage));
-                                console.log("Capacity fits: "+capacityFits);
-                                const bonusPercentage = Math.min(0.2, ((capacityFits * 5) / 100));
-                                console.log("Bonus percentage: "+bonusPercentage);
-                                //get base magic + bonus + item bonus
-                                let magic = baseStats["Magic"][0] + baseStats["Magic"][1] * addedPoints["Magic"] + calculateItemBonuses().Magic;
-                                console.log("Magic total before traits: "+magic);
-                                //add the bonus percentage to the magic
-                                traitBonuses.Magic += magic * (bonusPercentage);
-                            }
-                            break;
-                        case "31": //clothes of the damned
+                        case "53": // Clothes of the Damned
                             if (stage === "On") {
                                 const armorSlots = document.querySelectorAll('.item-slot img');
                                 //scan list for every item with "light" in its type, and check if any of its bonuses are negative
@@ -1257,7 +1241,7 @@ body::-webkit-scrollbar-thumb {
 
                             }
                             break;
-                        case "32": // Block Efficiacy
+                        case "57": // Block Efficiacy
                             const leftHandSlotTrait = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
                             const rightHandSlotTrait = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
                             const leftHandItemTrait = items.find(i => i[0] === leftHandSlotTrait.querySelector('img').getAttribute('alt'));
@@ -1269,7 +1253,7 @@ body::-webkit-scrollbar-thumb {
                                 traitBonuses.Defense += rightHandItemTrait[11] * (parseInt(stage)/100)
                             }
                             break;
-                        case "33": // Bread and Butter
+                        case "111": // Bread and Butter
                             const leftHandSlotTrait2 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
                             const rightHandSlotTrait2 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
                             const leftHandItemTrait2 = items.find(i => i[0] === leftHandSlotTrait2.querySelector('img').getAttribute('alt'));
@@ -1281,26 +1265,7 @@ body::-webkit-scrollbar-thumb {
                                 traitBonuses.Damage += parseInt(stage);
                             }
                             break;
-                        case "39": // Well Protected
-                            const armorSlotsTrait = document.querySelectorAll('.item-slot img');
-                            let heavyArmorTotalArmor = 0;
-                            //sum up all +armor values from heavy armor
-                            armorSlotsTrait.forEach(img => {
-                                const itemName = img.getAttribute('alt');
-                                const item = items.find(i => i[0] === itemName);
-                                if (item && item[2].includes("heavy")) {
-                                    console.log("HEAVY ARMOR CALC: "+item+" adds "+item[10]+" to total armor");
-                                    if(item[10] > 0 && item[10] != "" && item[10] != null){
-                                        console.log(item+" adds "+item[10]);
-                                        heavyArmorTotalArmor += item[10] || 0;
-                                        console.log("HEAVY ARMOR is now: "+heavyArmorTotalArmor);
-                                    }
-                                }
-                            });
-                            //add the bonus to the total armor
-                            traitBonuses.Armor += heavyArmorTotalArmor * (parseInt(stage) / 100);
-                            break;
-                        case "40": // Bulking Up
+                        case "64": // Well Protected (old Bulking Up, extra health from each heavy piece)
                             const armorSlotsTrait2 = document.querySelectorAll('.item-slot img');
                             let heavyArmorPieces = 0;
                             //sum up all +health values from heavy armor
@@ -1314,8 +1279,23 @@ body::-webkit-scrollbar-thumb {
                             //add the bonus to the total health
                             traitBonuses.Health += heavyArmorPieces * parseInt(stage);
                             break;
-                        case "41": // Heavy Metal
-                            const totalWeightTrait = calculateItemBonuses().TotalWeight;
+                        case "65": // Heavy Metal
+                            //const totalWeightTrait = calculateItemBonuses().TotalWeight;
+                            //change it, so that for every heavy equipment weighing more than stage, it adds 1 ability, capping at 3
+                            let armorSlotsTraitHeavyMetal = document.querySelectorAll('.item-slot img');
+                            armorSlotsTraitHeavyMetal.forEach(img => {
+                                const itemName = img.getAttribute('alt');
+                                const item = items.find(i => i[0] === itemName);
+                                if(item){
+                                    console.log("Heavy Metal: "+itemName+" "+item[2]+" "+item[3]+" at stage "+stage);
+                                }
+                                if (item && item[2].includes("heavy") && item[3]/10 > parseInt(stage)) {
+                                    traitBonuses.Ability += 1;
+                                    console.log("Heavy Metal: "+itemName+" adds 1 ability for a total of "+traitBonuses.Ability);
+                                }
+                            });
+                            
+                            /*
                             if (totalWeightTrait > 150) {
                                 //calculate total armor
                                 const armorSlotsTrait3 = document.querySelectorAll('.item-slot img');
@@ -1335,8 +1315,9 @@ body::-webkit-scrollbar-thumb {
                                 traitBonuses.Armor += heavyArmorTotalArmor2 * (parseInt(stage) / 100);
 
                             }
+                                */
                             break;
-                        case "42": // Carry your might
+                        case "68": // Carry Your Might
                             if(stage === "On"){
                                 const maxCapacityTrait = baseStats["Capacity"][0] + baseStats["Capacity"][1] * addedPoints["Capacity"] + calculateItemBonuses().Capacity;
                                 const totalWeightTrait2 = calculateItemBonuses().TotalWeight;
@@ -1346,8 +1327,20 @@ body::-webkit-scrollbar-thumb {
                                 traitBonuses.Health += Math.min(150,capacityFitsTrait * 10);
                             }
                             break;
-                        case "45": // Blessed Plate
+                        case "67": // Blessed Plate
                             if (stage === "On") {
+                                //for each equipped heavy armor, add 15 mana and 1 magic
+                                const armorSlotsTrait3 = document.querySelectorAll('.item-slot img');
+                                armorSlotsTrait3.forEach(img => {
+                                    const itemName = img.getAttribute('alt');
+                                    const item = items.find(i => i[0] === itemName);
+                                    if (item && item[2].includes("heavy")) {
+                                        traitBonuses.Mana += 15;
+                                        traitBonuses.Magic += 1;
+                                    }
+                                });
+                            }
+                                /*
                                 const armorSlotsTrait3 = document.querySelectorAll('.item-slot img');
                                 //scan list for every item with "heavy" in its type, and check if any of its bonuses are negative
                                 //if yes, then add the same amount to remove the negative effect
@@ -1402,7 +1395,69 @@ body::-webkit-scrollbar-thumb {
                                 });
                                 traitBonuses.Mana += manaBonus;
                             }
+                            */
                             break;
+                        case "69": // Juggernaut
+                            if (stage === "On") {
+                                const armorSlotsTrait4 = document.querySelectorAll('.item-slot img');
+                                //scan list for every item with "heavy" in its type, and check if any of its bonuses are negative
+                                //if yes, then add the same amount to remove the negative effect
+                                //also, for every such item (with "heavy" in its type), add 5% ability
+                                let abilityBonusPercent = 0;
+                                armorSlotsTrait4.forEach(img => {
+                                    const itemName = img.getAttribute('alt');
+                                    const item = items.find(i => i[0] === itemName);
+                                    if (item && item[2].includes("heavy")) {
+                                        //scan all attrributes
+                                        //THIS IS HELL
+                                        //NO RETURN
+                                        if (item[4] < 0) {
+                                            traitBonuses.Range += Math.abs(item[4]);
+                                        }
+                                        if (item[5] < 0) {
+                                            traitBonuses.Damage += Math.abs(item[5]);
+                                        }
+                                        if (item[6] < 0) {
+                                            traitBonuses.Health += Math.abs(item[6]);
+                                        }
+                                        if (item[7] < 0) {
+                                            traitBonuses.Mana += Math.abs(item[7]);
+                                        }
+                                        if (item[8] < 0) {
+                                            traitBonuses.Ability += Math.abs(item[8]);
+                                        }
+                                        if (item[9] < 0) {
+                                            traitBonuses.Magic += Math.abs(item[9]);
+                                        }
+                                        if (item[10] < 0) {
+                                            traitBonuses.Armor += Math.abs(item[10]);
+                                        }
+                                        if (item[11] < 0) {
+                                            traitBonuses.Defense += Math.abs(item[11]);
+                                        }
+                                        if (item[12] < 0) {
+                                            traitBonuses.Movespeed += Math.abs(item[12]);
+                                        }
+                                        if (item[13] < 0) {
+                                            traitBonuses["Attack Speed"] += Math.abs(item[13]);
+                                        }
+                                        if (item[16] < 0) {
+                                            traitBonuses["HP Regen"] += Math.abs(item[16]);
+                                        }
+                                        if (item[17] < 0) {
+                                            traitBonuses["MP Regen"] += Math.abs(item[17]);
+                                        }
+                                        
+                                        abilityBonusPercent += 5;
+                                    }
+                                });
+                                //get the sum of ability total from stats and items and multiply using the percent
+                                let ability = baseStats.Ability[0] + baseStats.Ability[1] * addedPoints.Ability + calculateItemBonuses().Ability;
+                                console.log("Juggernaut: "+ability+" * "+abilityBonusPercent+"% = "+(ability * (abilityBonusPercent / 100)));
+                                traitBonuses.Ability += ability * (abilityBonusPercent / 100);
+                            }
+                            break;
+
                         case "47": // Blade Training
                             const leftHandSlotTrait4 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
                             const rightHandSlotTrait4 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
@@ -1546,6 +1601,7 @@ body::-webkit-scrollbar-thumb {
                             }
                             break;
                         case "57": // Unnatural Flow
+                            console.log("Unnatural Flow trait bonus: "+stage);
                             if(stage > 0){
                                 traitBonuses.MagicDamage += parseInt(stage);
                             }
@@ -1697,6 +1753,7 @@ body::-webkit-scrollbar-thumb {
                     //console.log(stat+ "--->1 DPH: "+dphValue);
                 //Unnatural flow is unnatural
                 let extraMagicDamageString;
+                console.log("traitBonuses.MagicDamage: "+traitBonuses.MagicDamage);
                 //if current stat = Damage and trait Unnatural Flow is active, add its stage to the Damage as an extra string in format "36 + 7", where 7 is Unnatural Flow's stage 2
                 if(stat == "Damage" && traitBonuses.MagicDamage > 0){
                     extraMagicDamageString = " + "+traitBonuses.MagicDamage;
