@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Character Planner Skeleton</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        #planner-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .planner-upper {
+            width: 100%;
+            height: 50%;
+            display: flex;
+            flex-direction: row;
+            border-bottom: 1px solid #000;
+        }
+        .planner-lower {
+            width: 100%;
+            height: 50%;
+            border-top: 1px solid #000;
+            display: flex;
+            align-items: stretch;
+            justify-content: stretch;
+        }
+        /* Upper columns */
+        .upper-col1 {
+            width: 20%;
+            height: 100%;
+            border-right: 1px solid #000;
+            display: flex;
+            flex-direction: column;
+        }
+        .upper-col1-segment {
+            width: 100%;
+            border-bottom: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+        }
+        .class-choice { height: 50%; }
+        .level-choice { height: 15%; }
+        .stat-counter { height: 15%; }
+        .trait-counter { height: 15%; border-bottom: none; }
+        .upper-col2 {
+            width: 55%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #000;
+        }
+        .upper-col2-row1 {
+            width: 100%;
+            height: 69%;
+            display: flex;
+            border-bottom: 1px solid #000;
+        }
+        .upper-col2-row1-equip {
+            width: 69%;
+            height: 100%;
+            border-right: 1px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .upper-col2-row1-desc {
+            width: 31%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .upper-col2-row2 {
+            width: 100%;
+            height: 29%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .upper-col3 {
+            width: 25%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-left: 1px solid #000;
+        }
+        /* Lower segment */
+        .stats-table-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #000;
+        }
+        .class-choice-row {
+            display: flex;
+            align-items: center;
+            border: 1px solid #aaa;
+            margin: 2px 0;
+            padding: 4px;
+            cursor: pointer;
+            background: #222;
+            color: #fff;
+            transition: background 0.2s;
+        }
+        .class-choice-row.selected {
+            background: #eaff8c;
+            color: #222;
+            border: 2px solid #eaff8c;
+        }
+        .class-choice-row img {
+            width: 32px;
+            height: 32px;
+            margin-right: 10px;
+        }
+        .level-choice-inner {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .leveltitle {
+            margin-bottom: 5px;
+            color: #fff;
+        }
+        .levelnumber {
+            width: 80px;
+            height: 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            border: 1px solid #aaa;
+            border-radius: 8px;
+            background-color: #222;
+            color: #eaff8c;
+        }
+    </style>
+</head>
+<body>
+<div id="planner-container">
+    <div class="planner-upper">
+        <div class="upper-col1">
+            <div class="upper-col1-segment class-choice">
+                <div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-evenly;align-items:stretch;">
+                    <div class="class-choice-row" data-class="Squire"><img src="squire.png" alt="Squire"> Squire</div>
+                    <div class="class-choice-row" data-class="Knight"><img src="knight.png" alt="Knight"> Knight</div>
+                    <div class="class-choice-row" data-class="Rogue"><img src="rogue.png" alt="Rogue"> Rogue</div>
+                    <div class="class-choice-row" data-class="Mage"><img src="mage.png" alt="Mage"> Mage</div>
+                </div>
+            </div>
+            <div class="upper-col1-segment level-choice">
+                <div class="level-choice-inner">
+                    <label class="leveltitle" for="level-input">Character Level:</label>
+                    <input class="levelnumber" type="number" id="level-input" min="1" max="100" value="1">
+                </div>
+            </div>
+            <div class="upper-col1-segment stat-counter">Stat Counter</div>
+            <div class="upper-col1-segment trait-counter">Trait Counter</div>
+        </div>
+        <div class="upper-col2">
+            <div class="upper-col2-row1">
+                <div class="upper-col2-row1-equip">Equipment Grid</div>
+                <div class="upper-col2-row1-desc">Description</div>
+            </div>
+            <div class="upper-col2-row2">Traits Info</div>
+        </div>
+        <div class="upper-col3">Item Picker</div>
+    </div>
+    <div class="planner-lower">
+        <div class="stats-table-container" id="stats-table-container">
+            <!-- Stats table will be generated here by JS -->asdasd
+        </div>
+    </div>
+</div>
+<script>
+        // --- Class selection logic ---
+        const classRows = [
+            { name: "Squire", icon: "squire.png" },
+            { name: "Knight", icon: "knight.png" },
+            { name: "Rogue", icon: "rogue.png" },
+            { name: "Mage", icon: "mage.png" }
+        ];
+        let selectedClass = null;
+        let selectedLevel = 1;
+        window.addEventListener('DOMContentLoaded', function() {
+            // Make class rows selectable
+            document.querySelectorAll('.class-choice-row').forEach(row => {
+                row.addEventListener('click', function() {
+                    document.querySelectorAll('.class-choice-row').forEach(r => r.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedClass = this.getAttribute('data-class');
+                    updateDebug();
+                });
+            });
+            // Level input
+            const levelInput = document.getElementById('level-input');
+            levelInput.addEventListener('input', function() {
+                let val = parseInt(this.value) || 1;
+                if(val < 1) val = 1;
+                if(val > 100) val = 100;
+                this.value = val;
+                selectedLevel = val;
+                updateDebug();
+            });
+            // Set default selection
+            document.querySelector('.class-choice-row[data-class="Squire"]').click();
+        });
+        function updateDebug() {
+            document.getElementById('stats-table-container').innerText =
+                `Selected class: ${selectedClass || ''}\nLevel: ${selectedLevel}`;
+        }
+        </script>
+</body>
+</html>
