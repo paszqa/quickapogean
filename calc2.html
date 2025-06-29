@@ -65,7 +65,7 @@
             display: flex;
         }
         .upper-col2 {
-            width: 55%;
+            width: 35%;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -78,7 +78,7 @@
             border-bottom: 1px solid #000;
         }
         .upper-col2-row1-equip {
-            width: 69%;
+            width: 55%;
             height: 100%;
             border-right: 1px solid #000;
             display: flex;
@@ -86,7 +86,7 @@
             justify-content: center;
         }
         .upper-col2-row1-desc {
-            width: 31%;
+            width: 44%;
             height: 100%;
             display: flex;
             align-items: center;
@@ -100,7 +100,7 @@
             justify-content: center;
         }
         .upper-col3 {
-            width: 25%;
+            width: 35%;
             height: 100%;
             display: flex;
             align-items: center;
@@ -197,6 +197,29 @@
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+        .selected-equip-slot {
+            outline: 2px solid #eaff8c;
+        }
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 48px);
+            gap: 6px;
+            margin: 10px;
+        }
+        .selection-item {
+            width: 48px;
+            height: 48px;
+            border: 1px solid #aaa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #222;
+            cursor: pointer;
+        }
+        .selection-item img {
+            width: 40px;
+            height: 40px;
         }
     </style>
 </head>
@@ -693,6 +716,171 @@ function subtractPoint(stat) {
         updateStatTable();
     }
 }
+</script>
+<script>
+// Equipment grid interactivity
+let selectedEquipSlot = null;
+function setupEquipmentGrid() {
+    const itemSlots = document.querySelectorAll('.item-slot');
+    itemSlots.forEach(slot => {
+        slot.addEventListener('click', function() {
+            selectedEquipSlot = slot;
+            // Highlight selected slot
+            itemSlots.forEach(s => s.classList.remove('selected-equip-slot'));
+            slot.classList.add('selected-equip-slot');
+            // Populate Item Picker
+            populateItemPicker(slot.getAttribute('data-slot'));
+        });
+    });
+}
+function populateItemPicker(slotType) {
+    const picker = document.querySelector('.upper-col3');
+    picker.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'selection-grid';
+    items.forEach(item => {
+        if(item[1] === slotType) {
+            const selectionItem = document.createElement('div');
+            selectionItem.className = 'selection-item';
+            const img = document.createElement('img');
+            img.src = `Items/${item[item.length-2]}`;
+            img.alt = item[0];
+            selectionItem.appendChild(img);
+            selectionItem.addEventListener('click', function() {
+                if(selectedEquipSlot) {
+                    let slotImg = selectedEquipSlot.querySelector('img');
+                    if(!slotImg) {
+                        slotImg = document.createElement('img');
+                        selectedEquipSlot.appendChild(slotImg);
+                    }
+                    slotImg.src = `Items/${item[item.length-2]}`;
+                    slotImg.alt = item[0];
+                    slotImg.style.display = 'block';
+                }
+            });
+            grid.appendChild(selectionItem);
+        }
+    });
+    picker.appendChild(grid);
+}
+</script>
+<script>
+function showItemName(item) {
+    const descCell = document.querySelector('.upper-col2-row1-desc');
+    if (!descCell || !item) return;
+    // Build description
+    let html = `${item[0]}<br>`;
+    if(item[16]) html += `${item[16]}<br>`;
+    if(item[2]) html += `Type: ${item[2]}<br>`;
+    // List of stat fields to check and display
+    const statFields = [
+        { label: 'Ability', idx: 8 },
+        { label: 'Magic', idx: 9 },
+        { label: 'Armor', idx: 10 },
+        { label: 'Defense', idx: 11 },
+        { label: 'Move Speed', idx: 12 },
+        { label: 'Attack Speed', idx: 13 },
+        { label: 'HP', idx: 6 },
+        { label: 'Mana', idx: 7 },
+        { label: 'Damage', idx: 5 },
+        { label: 'Range', idx: 4 },
+        { label: 'Equip Size', idx: 15 }
+    ];
+    statFields.forEach(f => {
+        const val = item[f.idx];
+        if(val && !isNaN(val) && Number(val) !== 0) {
+            html += `${f.label}: ${val}<br>`;
+        }
+    });
+    if(item[3] && !isNaN(item[3])) {
+        html += `It weighs ${(item[3]/10).toFixed(2)} oz.<br>`;
+    }
+    // Show rarity if present
+    const rarity = item[item.length-1] || '';
+    if(rarity) html += `[${rarity}]`;
+    descCell.innerHTML = html;
+}
+function clearItemName() {
+    const descCell = document.querySelector('.upper-col2-row1-desc');
+    if (descCell) descCell.innerHTML = 'Description';
+}
+function patchSimpleItemHover() {
+    // Equipment grid
+    document.querySelectorAll('.item-slot').forEach(slot => {
+        slot.onmouseover = function() {
+            const img = slot.querySelector('img');
+            if(img && img.alt) {
+                const [name, rarity] = img.alt.split(';');
+                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                if(item) showItemName(item);
+            }
+        };
+        slot.onmouseout = clearItemName;
+    });
+    // Item picker
+    document.querySelectorAll('.selection-item').forEach(sel => {
+        sel.onmouseover = function() {
+            const img = sel.querySelector('img');
+            if(img && img.alt) {
+                const [name, rarity] = img.alt.split(';');
+                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                if(item) showItemName(item);
+            }
+        };
+        sel.onmouseout = clearItemName;
+    });
+}
+// Call patchSimpleItemHover after populating equipment grid and item picker
+function setupEquipmentGrid() {
+    const itemSlots = document.querySelectorAll('.item-slot');
+    itemSlots.forEach(slot => {
+        slot.onclick = function() {
+            selectedEquipSlot = slot;
+            itemSlots.forEach(s => s.classList.remove('selected-equip-slot'));
+            slot.classList.add('selected-equip-slot');
+            populateItemPicker(slot.getAttribute('data-slot'));
+        };
+    });
+    patchSimpleItemHover();
+}
+function populateItemPicker(slotType) {
+    const picker = document.querySelector('.upper-col3');
+    picker.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'selection-grid';
+    items.forEach(item => {
+        if(item[1] === slotType) {
+            const selectionItem = document.createElement('div');
+            selectionItem.className = 'selection-item';
+            const img = document.createElement('img');
+            const rarity = item[item.length-1] || '';
+            img.src = `Items/${item[item.length-2]}`;
+            img.alt = `${item[0]};${rarity}`;
+            selectionItem.appendChild(img);
+            selectionItem.onclick = function() {
+                if(selectedEquipSlot) {
+                    let slotImg = selectedEquipSlot.querySelector('img');
+                    if(!slotImg) {
+                        slotImg = document.createElement('img');
+                        selectedEquipSlot.appendChild(slotImg);
+                    }
+                    slotImg.src = `Items/${item[item.length-2]}`;
+                    slotImg.alt = `${item[0]};${rarity}`;
+                    slotImg.style.display = 'block';
+                }
+            };
+            grid.appendChild(selectionItem);
+        }
+    });
+    picker.appendChild(grid);
+    patchSimpleItemHover();
+}
+</script>
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+    // ...existing code...
+    setupEquipmentGrid();
+});
 </script>
 </body>
 </html>
