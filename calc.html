@@ -1608,7 +1608,7 @@ body::-webkit-scrollbar-thumb {
                                 traitBonuses["Attack Speed"] += Math.min(5,abilityFits);
                             }
                             break;
-                        case "53": // Dual-wielding
+                        case "20": // Dual-wielding
                             const leftHandSlotTrait7 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(4)');
                             const rightHandSlotTrait7 = document.querySelector('.item-slot[data-slot="hand"]:nth-of-type(6)');
                             const leftHandItemTrait7 = items.find(i => i[0] === leftHandSlotTrait7.querySelector('img').getAttribute('alt'));
@@ -1627,7 +1627,7 @@ body::-webkit-scrollbar-thumb {
                             traitBonuses.Damage += newDamage - oldDamage;
                             console.log("Trait bonuses after Dual-wielding: "+traitBonuses["Damage"]);
                             break;
-                        case "54": // To Be Ninja
+                        case "21": // To Be Ninja
                             if (stage != "Off") {
                                 //get total ability
                                 let extraAbility = calculateItemBonuses().Ability;//according to TUTZ, baseStats and addedPoints are not used for EXTRA
