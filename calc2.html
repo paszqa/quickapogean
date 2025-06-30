@@ -13,6 +13,7 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            color: #fff;
         }
         body, .stat-container, .stat-container > div, .levelnumber, .leveltitle {
             font-family: 'bedstead', Arial, sans-serif;
@@ -20,44 +21,38 @@
         #planner-container {
             width: 100vw;
             height: 100vh;
-            display: flex;
             flex-direction: column;
         }
         .planner-upper {
             width: 100%;
-            height: 55%;
+            height: 500px;
             display: flex;
             flex-direction: row;
             border-bottom: 1px solid #000;
         }
         .planner-lower {
             width: 100%;
-            height: 44%;
+            height: 400px;
             border-top: 1px solid #000;
-            display: flex;
             align-items: stretch;
             justify-content: stretch;
         }
         /* Upper columns */
         .upper-col1 {
-            width: 25%;
-            height: 100%;
+            width: 350px;
             border-right: 1px solid #000;
-            display: flex;
-            flex-direction: column;
         }
         .upper-col1-segment {
             width: 100%;
             border-bottom: 1px solid #000;
-            display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1em;
         }
-        .class-choice { height: 65%; }
-        .level-choice { height: 12%; }
-        .stat-counter { height: 10%; }
-        .trait-counter { height: 13%; border-bottom: none; }
+        .class-choice { height: 100px; }
+        .level-choice { height: 50px }
+        .stat-counter { height: 50px; }
+        .trait-counter { height: 400px; border-bottom: none; }
         .upper-dynamic-cell {
             width: 80%;
             height: 100%;
@@ -110,10 +105,9 @@
         /* Lower segment */
         .stats-table-container {
             width: 100%;
-            height: 100%;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: left;
             border: 1px solid #000;
         }
         .class-choice-row {
@@ -375,22 +369,22 @@
 <div id="planner-container">
     <div class="planner-upper">
         <div class="upper-col1">
-            <div class="upper-col1-segment class-choice" style="height:15%;display:flex;align-items:center;justify-content:center;">
-                <div class="class-choice-row-images" style="display:flex;gap:10px;width:100%;justify-content:center;align-items:center;">
-                    <img src="squire.png" alt="Squire" class="class-choice-img" data-class="Squire" style="width:48px;height:48px;cursor:pointer;">
-                    <img src="knight.png" alt="Knight" class="class-choice-img" data-class="Knight" style="width:48px;height:48px;cursor:pointer;">
-                    <img src="rogue.png" alt="Rogue" class="class-choice-img" data-class="Rogue" style="width:48px;height:48px;cursor:pointer;">
-                    <img src="mage.png" alt="Mage" class="class-choice-img" data-class="Mage" style="width:48px;height:48px;cursor:pointer;">
+            <div class="upper-col1-segment class-choice" style="align-items:center;justify-content:center;">
+                <div class="class-choice-row-images" style="display:flex;padding-top: 5px; gap:10px;width:100%;justify-content:center;align-items:center;">
+                    <img src="squire.png" alt="Squire" class="class-choice-img" data-class="Squire" style="width:48px;height:72px;cursor:pointer;">
+                    <img src="knight.png" alt="Knight" class="class-choice-img" data-class="Knight" style="width:48px;height:72px;cursor:pointer;">
+                    <img src="rogue.png" alt="Rogue" class="class-choice-img" data-class="Rogue" style="width:48px;height:72px;cursor:pointer;">
+                    <img src="mage.png" alt="Mage" class="class-choice-img" data-class="Mage" style="width:48px;height:72px;cursor:pointer;">
                 </div>
             </div>
-            <div class="upper-col1-segment level-choice" style="height:8%;display:flex;align-items:center;justify-content:center;">
+            <div class="upper-col1-segment level-choice" style="display: flex; align-items:center;justify-content:center;">
                 <span style="color:#fff;margin-right:8px;">Level:</span>
                 <input class="levelnumber" type="number" id="level-input" min="1" max="100" value="1" style="width:60px;height:32px;font-size:1em;">
             </div>
-            <div class="upper-col1-segment stat-counter" style="height:8%;display:flex;align-items:center;justify-content:center;">
+            <div class="upper-col1-segment stat-counter" style="align-items:center;justify-content:center;">
                 <span style="color:#fff;">Stat Points <span id="available-points">0</span>/<span id="total-points">0</span></span>
             </div>
-            <div class="upper-col1-segment traits-panel-col" style="height:68%;display:flex;align-items:center;justify-content:center;padding:0;">
+            <div class="upper-col1-segment traits-panel-col" style="align-items:center;justify-content:center;padding:0;">
                 <div id="traits-panel-mini" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"></div>
             </div>
         </div>
@@ -841,9 +835,12 @@ function updateStatTable() {
     let usedPoints = 0;
     statList.forEach(stat => usedPoints += addedPoints[stat]);
     availablePoints = totalStatPoints - usedPoints;
-    // Update stat counter cell
+    // Stat and trait counter
     document.querySelector('.stat-counter').innerHTML =
-        `<div style='width:100%;text-align:center;'>Available: <span id='available-points'>${availablePoints}</span>/<span id='total-points'>${totalStatPoints}</span></div>`;
+        `<div style='width:100%;text-align:center;'>
+            Stat Points: <span id='available-points'>${availablePoints}</span>/<span id='total-points'>${totalStatPoints}</span><br>
+            Trait Points: <span id='available-trait-points'>${getRemainingTraitPoints()}</span>/<span id='total-trait-points'>${getAvailableTraitPoints(level)}</span>
+        </div>`;
     // Build stat table (manual rows for each stat)
     let html = `<div class=\"stat-table-outer\">`;
     html += `<div class=\"stat-container\">
@@ -1125,12 +1122,13 @@ function renderTraitTree() {
     // Draw connectors first, as first children of traitsPanel (before traitsList)
     const connectorSvgs = [];
     traits.forEach(trait => {
+        if (trait[0] === 0) return; // Skip root trait
         if (trait[1] > -1) {
             const parentTrait = traits.find(t => t[0] === trait[1]);
             if (parentTrait) {
                 const locationMultiplierX = 0.35;
                 const locationMultiplierY = 0.35;
-                const centerSpot = [500, 450];
+                const centerSpot = [500, 350];
                 const traitX = (centerSpot[0] + trait[9]) * locationMultiplierX + 12;
                 const traitY = (centerSpot[1] + trait[10]) * locationMultiplierY + 13;
                 const parentX = (centerSpot[0] + parentTrait[9]) * locationMultiplierX + 12;
@@ -1163,12 +1161,13 @@ function renderTraitTree() {
     connectorSvgs.forEach(svg => traitsPanel.insertBefore(svg, traitsList));
     // Now create trait divs (compact, only ID)
     traits.forEach(trait => {
+        if (trait[0] === 0) return; // Skip root trait
         const traitDiv = document.createElement('div');
         traitDiv.setAttribute('data-trait-id', trait[0]);
         traitDiv.classList.add('trait');
         const locationMultiplierX = 0.35;
         const locationMultiplierY = 0.35;
-        const centerSpot = [500, 450];
+        const centerSpot = [500, 350];
         traitDiv.style.position = 'absolute';
         traitDiv.style.left = `${(centerSpot[0] + trait[9])*locationMultiplierX}px`;
         traitDiv.style.top = `${(centerSpot[1] + trait[10])*locationMultiplierY}px`;
@@ -1228,8 +1227,12 @@ function renderTraitTree() {
                     highlightFailedRequirement(reqCheck.failedTraitId);
                     return;
                 }
-                selectedTraits[traitId] = trait[4][currentIdx + 1];
-                renderMiniTraitTree();
+                // --- ADDITIONAL CHECK FOR TRAIT POINTS ---
+                if (getRemainingTraitPoints() > 0) {
+                    selectedTraits[traitId] = trait[4][currentIdx + 1];
+                    renderMiniTraitTree();
+                    updateStatTable();
+                }
             }
         };
         // Right-click: decrement stage if allowed
@@ -1262,6 +1265,7 @@ function renderTraitTree() {
                 }
                 selectedTraits[traitId] = trait[4][currentIdx - 1];
                 renderMiniTraitTree();
+                updateStatTable();
             }
         };
         // Make sure traitDiv uses display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
@@ -1281,7 +1285,7 @@ function renderMiniTraitTree() {
     panel.innerHTML = '';
     const locationMultiplierX = 0.35;
     const locationMultiplierY = 0.35;
-    const centerSpot = [500, 450];
+    const centerSpot = [450, 340];
     const container = document.createElement('div');
     container.style.position = 'relative';
     container.style.width = '100%';
@@ -1289,6 +1293,7 @@ function renderMiniTraitTree() {
     // Draw connectors first
     const connectorSvgs = [];
     traits.forEach(trait => {
+        if (trait[0] === 0) return; // Skip root trait
         if (trait[1] > -1) {
             const parentTrait = traits.find(t => t[0] === trait[1]);
             if (parentTrait) {
@@ -1323,6 +1328,7 @@ function renderMiniTraitTree() {
     connectorSvgs.forEach(svg => container.appendChild(svg));
     // Draw trait nodes
     traits.forEach(trait => {
+        if (trait[0] === 0) return; // Skip root trait
         const traitDiv = document.createElement('div');
         traitDiv.setAttribute('data-trait-id', trait[0]);
         traitDiv.classList.add('trait');
@@ -1383,8 +1389,12 @@ function renderMiniTraitTree() {
                     highlightFailedRequirement(reqCheck.failedTraitId);
                     return;
                 }
-                selectedTraits[traitId] = trait[4][currentIdx + 1];
-                renderMiniTraitTree();
+                // --- ADDITIONAL CHECK FOR TRAIT POINTS ---
+                if (getRemainingTraitPoints() > 0) {
+                    selectedTraits[traitId] = trait[4][currentIdx + 1];
+                    renderMiniTraitTree();
+                    updateStatTable();
+                }
             }
         };
         // Right-click: decrement stage if allowed
@@ -1417,6 +1427,7 @@ function renderMiniTraitTree() {
                 }
                 selectedTraits[traitId] = trait[4][currentIdx - 1];
                 renderMiniTraitTree();
+                updateStatTable();
             }
         };
         // Make sure traitDiv uses display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
@@ -1765,6 +1776,25 @@ function highlightFailedRequirement(traitId) {
             traitDiv.classList.remove('requirement-error');
         }, 1000);
     }
+}
+</script>
+<script>
+function getAvailableTraitPoints(level) {
+    return Math.floor((level) / 2);
+}
+function getUsedTraitPoints() {
+    let used = 0;
+    for (const traitId in selectedTraits) {
+        const trait = traits.find(t => t[0] == traitId);
+        if (trait) {
+            const idx = trait[4].findIndex(s => s == selectedTraits[traitId]);
+            if (idx > 0) used += idx;
+        }
+    }
+    return used;
+}
+function getRemainingTraitPoints() {
+    return getAvailableTraitPoints(selectedLevel) - getUsedTraitPoints();
 }
 </script>
 </body>
