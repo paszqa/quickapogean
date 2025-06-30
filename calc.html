@@ -1595,12 +1595,15 @@ body::-webkit-scrollbar-thumb {
                                 }
                             }
                             break;
-                        case "51": // Hand Finesse
+                        case "16": // Hand Finesse
+                            console.log("Hand Finesse trait bonus: "+stage);
                             if(stage > 0){
+                                console.log("Hand Finesse trait bonus: "+stage);
                                 //Get total ability
                                 let ability = baseStats["Ability"][0] + baseStats["Ability"][1] * (addedPoints["Ability"] || 0) + calculateItemBonuses().Ability + traitBonuses.Ability;
                                 //check how many times the stage fits into the ability
                                 const abilityFits = Math.min(5,parseInt(ability / stage));
+                                console.log("Hand Finesse trait bonus: "+stage+" - ability fits: "+abilityFits);
                                 //add the bonus to attackspeed
                                 traitBonuses["Attack Speed"] += Math.min(5,abilityFits);
                             }
@@ -1814,8 +1817,8 @@ body::-webkit-scrollbar-thumb {
                 let extraMagicDamageString;
                 //console.log("traitBonuses.MagicDamage: "+traitBonuses.MagicDamage);
                 //if current stat = Damage and trait Unnatural Flow is active, add its stage to the Damage as an extra string in format "36 + 7", where 7 is Unnatural Flow's stage 2
-                console.log("TRAIT BONUS 1804 --> "+traitBonuses["Damage"]);
-                console.log("TRAIT BONUS 1805 --> "+traitBonuses.Damage);
+                //console.log("TRAIT BONUS 1804 --> "+traitBonuses["Damage"]);
+                //console.log("TRAIT BONUS 1805 --> "+traitBonuses.Damage);
                 if(stat == "Damage" && traitBonuses.MagicDamage > 0){
                     extraMagicDamageString = " + "+traitBonuses.MagicDamage;
                 }
