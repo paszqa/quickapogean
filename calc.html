@@ -1967,12 +1967,12 @@ body::-webkit-scrollbar-thumb {
                 for(let i = 0; i < Object.keys(selectedTraits).length; i++){
                     //console.log("Selected trait "+i+" == "+selectedTraits[i]);
                 }
-                /*
+                
                 console.log("SELECTED TRAIaaaTS COUNT:"+Object.keys(selectedTraits).length);
                 console.log("SELECTED TRAITS ==> "+selectedTraits["53"]);
                 console.log(dualWieldingTrait);
-                */
-                if(parseInt(dualWieldingTrait.replace("%","")) > 0){
+                
+                if(parseInt(String(dualWieldingTrait).replace("%","")) > 0){
                     if(leftHandSize == 6){
                         leftHandSize = 5;
                     }
