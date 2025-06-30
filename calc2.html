@@ -221,6 +221,31 @@
             width: 40px;
             height: 40px;
         }
+        .class-choice-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-items: center;
+        }
+        .class-choice-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .class-choice-cell:hover {
+            transform: scale(1.1);
+        }
+        .class-choice-cell img {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -228,11 +253,23 @@
     <div class="planner-upper">
         <div class="upper-col1">
             <div class="upper-col1-segment class-choice">
-                <div style="width:100%;height:100%;display:flex;flex-direction:column;justify-content:space-evenly;align-items:stretch;">
-                    <div class="class-choice-row" data-class="Squire"><img src="squire.png" alt="Squire"> Squire</div>
-                    <div class="class-choice-row" data-class="Knight"><img src="knight.png" alt="Knight"> Knight</div>
-                    <div class="class-choice-row" data-class="Rogue"><img src="rogue.png" alt="Rogue"> Rogue</div>
-                    <div class="class-choice-row" data-class="Mage"><img src="mage.png" alt="Mage"> Mage</div>
+                <div class="class-choice-grid">
+                    <div class="class-choice-cell" data-class="Squire">
+                        <img src="squire.png" alt="Squire">
+                        <span>Squire</span>
+                    </div>
+                    <div class="class-choice-cell" data-class="Knight">
+                        <img src="knight.png" alt="Knight">
+                        <span>Knight</span>
+                    </div>
+                    <div class="class-choice-cell" data-class="Rogue">
+                        <img src="rogue.png" alt="Rogue">
+                        <span>Rogue</span>
+                    </div>
+                    <div class="class-choice-cell" data-class="Mage">
+                        <img src="mage.png" alt="Mage">
+                        <span>Mage</span>
+                    </div>
                 </div>
             </div>
             <div class="upper-col1-segment level-choice">
@@ -289,9 +326,9 @@
         let selectedLevel = 1;
         window.addEventListener('DOMContentLoaded', function() {
             // Make class rows selectable
-            document.querySelectorAll('.class-choice-row').forEach(row => {
+            document.querySelectorAll('.class-choice-cell').forEach(row => {
                 row.addEventListener('click', function() {
-                    document.querySelectorAll('.class-choice-row').forEach(r => r.classList.remove('selected'));
+                    document.querySelectorAll('.class-choice-cell').forEach(r => r.classList.remove('selected'));
                     this.classList.add('selected');
                     selectedClass = this.getAttribute('data-class');
                     updateDebug();
@@ -308,7 +345,7 @@
                 updateDebug();
             });
             // Set default selection
-            document.querySelector('.class-choice-row[data-class="Squire"]').click();
+            document.querySelector('.class-choice-cell[data-class="Squire"]').click();
         });
         function updateDebug() {
             document.getElementById('stats-table-container').innerText =
@@ -501,6 +538,81 @@
 ["Wooden Staff","hand","staff",180,41,7,,,,,,,,4,,8,,,"A simple piece of wood, however, curled weirdly.","WoodenStaff.png","epic"],
 ["Zircon Ring","ring","ring",12,,,,,,,,,,1,,,,,"","ZirconRing.png",""],
 
+];
+
+// --- Traits database ---
+const traits = [
+        [0,0,"start","starts",[0],0,0,0,0,0,0],
+[1,0,"Staff Mastery","Staves have a X% chance of shooting without cost",[15,25,40,60,90],0,0,0,0,-100,50],
+[2,1,"Charge the Staff","Casting an Elemental spell using a staff will make your next attack deal extra (Magic Level / X) damage",[5,4,2],0,0,0,0,-200,100],
+[3,2,"Gallop’s Fall","Reduces the cooldown of Water spells by X%",[10,20,35],0,0,0,0,-300,200],
+[4,3,"Sacred Stick","While holding a staff, gain 1 extra Area of Effect for Holy spells and 25% cooldown reduction for Holy spells",["active"],3,3,1,5,-400,200],
+[5,2,"Franctic Conjury","Casting a Fire spell has a X% chance your next attack will cast Conjure Fire at target's location",[15,20,30],0,0,0,0,-300,100],
+[6,5,"Conflagrated Mind","While holding a staff gain 1 extra Area of Effect and 25% cooldown reudction for Fire spells",["active"],5,3,1,5,-400,100],
+[7,6,"Warlock","Gain 1 Area of Effect and doubles the cooldown of all spells",["active"],0,0,0,0,-500,100],
+[8,0,"Pondering It","Orbs give +X% Spellvamp",[1,3,6,10,15],0,0,0,0,-100,-20],
+[9,8,"Electric Nature","Reduces the cooldown of spells by X%",[7,10,15],0,0,0,0,-200,-20],
+[10,9,"Diamond Skin","Hitting and enemy with an Energy or Arrow spell gives you X magic shield, capping at 100",[20,30,50],0,0,0,0,-300,-20],
+[11,10,"Unstable Aegis","Taking Magic Shield damage has a 50% chance of casting Unstable Berserk around yourself",["active"],10,3,8,5,-400,-20],
+[12,9,"Magic Touch","Heal spells are X% stronger",[10,15,25],0,0,0,0,-300,-100],
+[13,12,"Apogea’s Ardor","While holding an Orb, Heal spells cost 50% less mana",["active"],12,3,8,5,-400,-100],
+[14,13,"Child’s channel","Healing others also heals you, reduces the cooldown of all spells by 50% and spells deal 75% less dammage",["active"],0,0,0,0,-500,-100],
+[15,0,"Blade training","Regular swords have X% extra damage",[1,4,8,13,20],0,0,0,0,-100,-100],
+[16,15,"Hand Finesse","Gain 1 Attackspeed for each X Ability you have capping at 5",[15,13,10],0,0,0,0,-200,-150],
+[17,16,"Fencing Classes","Blade spells are X% stronger",[5,9,15],0,0,0,0,-300,-200],
+[18,17,"Blade Prowess","While holding one sword of size 6 and no shield, reduces the cooldown of Blade spells by 50%",["active"],17,3,15,5,-400,-250],
+[19,18,"Highlander","Blade spells cost 50% less mana, lose the ability to auto-attack. Additionally, converts every 2 Attackspeed into 1 Damage",["active"],0,0,0,0,-500,-200],
+[20,16,"Dual-wielding","Size 6 swords have an equipsize of 5, but deal X% less damage",[40,36,30],0,0,0,0,-200,-250],
+[21,20,"To be Ninja","Attacking has a 25% chance of boosting your Movespeed by 10 for 4 seconds",["active"],16,3,15,5,-350,-350],
+[22,0,"Glove Passion","While wearing gloves, gain X Mana or Health Regen depending on the item you're holding",[1,2,3,6,10],0,0,0,0,0,-100],
+[23,22,"True Grip","While wearing gloves, attacking regenerates X mana",[1,2,4],0,0,0,0,0,-200],
+[24,23,"Unnatural Flow","Your attacks deal X extra True Damage",[4,7,12],0,0,0,0,-50,-300],
+[25,24,"Battle Mage","Converts 50 Max Mana into 1 extra True Damage",["active"],24,3,22,5,-50,-400],
+[26,25,"One with Apogea","Mana damage is reduced in half. Mana damage is reduced in half, all spells cost 5 times more.",["active"],0,0,0,0,-150,-400],
+[27,23,"Elvish Practice","Spells cost X% less mana",[7,10,15],0,0,0,0,50,-300],
+[28,27,"Arcane Trickster","While using Gloves, casting a Time or Mystic spell has a 50% chance of blocking all physical damage for 4 seconds",["active"],27,3,22,5,50,-400],
+[29,0,"Going Big","Large weapons have X% extra damage",[1,4,8,14,20],0,0,0,0,100,-100],
+[30,29,"Steady Bloodflow","Casting a spell using health regenerates X mana",[4,7,12],0,0,0,0,200,-200],
+[31,30,"Berserker","Being below 66% Health gives you X extra Damage",[5,8,13],0,0,0,0,200,-300],
+[32,31,"Overwhelming Force","When using Large weapon, attacking has a 35% chance of casting an area of effect spell around the target",["active"],31,3,29,5,200,-400],
+[33,30,"Wrecking It","Casting a Blade or Physical spell will make your next attack deal X extra True Damage",[4,8,14],0,0,0,0,300,-300],
+[34,33,"Magic Blade","Removes negative effects from Large Weapnsand gain 10% Manaleech",["active"],33,3,29,5,375,-400],
+[35,34,"Unfathomable Rage","Converts every 2 damage taken into 1 mana, doubles the cost of all spells",["active"],0,0,0,0,425,-300],
+[36,0,"Stabbing Preference","Daggers provide X% Lifeleech",[1,3,7,12,20],0,0,0,0,100,-20],
+[37,36,"Through Puncture","Physical attacks ignore X% of the target’s armor",[8,20,35],0,0,0,0,200,-20],
+[38,37,"Jagged Rhythm","Attacking using a dagger has a X% chance of dealing extra (Ability/5) True Damage",[15,25,50],0,0,0,0,250,-100],
+[39,38,"Luck Foreseen","Converts every 6 Ability into 1% chance of attacking twice",["active"],38,3,36,5,350,-100],
+[40,39,"Dark Blade","Doubles all extra damage you deal, you also receive the True Damage dealt",["active"],0,0,0,0,425,-200],
+[41,37,"Gaff Hack","Casting a Mystic or Time spell has a X% chance of boosting your Attackspeed by 7 for 4 seconds",[20,30,50],0,0,0,0,300,-20],
+[42,41,"Double Danger","Using two daggers doubles your item damage",["active"],41,3,36,5,425,-20],
+[43,0,"Bow Guidance","Bows have X extra Attackspeed",[1,2,3,4,6],0,0,0,0,100,50],
+[44,43,"Good Technique","Gain X extra Range",[1,2,4],0,0,0,0,200,100],
+[45,44,"Artisenal Arsenal","Non-magic arrow get +X Damage and break less often",[2,4,7],0,0,0,0,300,100],
+[46,45,"Explosive Ammo","Arrows have a 25% chance of exploding, dealing area damage that briefly slows",["active"],45,3,43,5,425,100],
+[47,44,"Shineshooter","Reduces the cooldown of Arrow spells by X%",[10,20,35],0,0,0,0,300,175],
+[48,47,"Bullseye","Increases the damage of Arrow and Blade spells on enemies you currently have targeted",["active"],47,3,43,5,425,175],
+[49,48,"Tunnelvision","Gain 10 Attackspeed, but you can no longer move while targeting an enemy.",["active"],0,0,0,0,425,250],
+[50,0,"Cozy and Useful","Light Armor has X extra mana",[1,3,6,10,15],0,0,0,0,-100,150],
+[51,50,"Lightfoot","Converts X Free Capacity into 1 Movespeed capping at 3",[35,25,10],0,0,0,0,-170,200],
+[52,51,"Dress Wizardly","Gear that weighs less than X oz gives you +1 Magic",[10,20,35],0,0,0,0,-270,300],
+[53,52,"Clothes of the Damned","Removes negative effects from light armor and gain 5% Magic for each equipped Light Armor.",["active"],52,3,50,5,-370,300],
+[54,53,"Darkness Embrace","Death spells are 10 times cheaper. Heal, Light and Holy spells are 10 times more expensive.",["active"],0,0,0,0,-445,400],
+[55,51,"Breeze in your hair","Not wearing a helmet gives you +X Movespeed",[1,2,3],0,0,0,0,-170,300],
+[56,55,"Battleboots","Gives 2 Damage for every extra Movespeed",["active"],55,3,50,5,-270,400],
+[57,0,"Block Efficiacy","Shields have X% extra defense",[1,4,8,13,20],0,0,0,0,0,150],
+[58,57,"Rooted Guard","Blocking an attack regenerates X health",[1,2,5],0,0,0,0,0,225],
+[59,58,"Hex Parry","Successfully blocking an attack will empower your next Arrow or Blade spell by X%",[15,35,50],0,0,0,0,50,325],
+[60,59,"Bulwark Leap","Casting a Time or Physical spell will double your magic shield, capping at 200",["active"],59,3,57,5,50,400],
+[61,58,"Royal Shield","Reduces the cooldown of Defense spells by X%",[10,20,35],0,0,0,0,-50,325],
+[62,61,"Deflect","Blocking with a magic shield reflects 15% of the damage taken as true damage",["active"],61,3,57,5,-50,400],
+[63,62,"Monster Candy","Taunt lasts 100% longer, Conjure and Defense spells are 50% cheaper. Lose 99 Damage.",["active"],0,0,0,0,-150,400],
+[64,0,"Well Protected","Heavy Armor has X extra health",[1,3,6,10,15],0,0,0,0,100,150],
+[65,64,"Heavy Metal","Heavy Armor that weighs more than 100oz has 1 Ability extra",[100,75,35],0,0,0,0,150,250],
+[66,65,"Magic Steel","Casting a Time or Heal spell will give you a shield equal to X% of your total Armor, capping at 100",[50,100,150],0,0,0,0,200,325],
+[67,66,"Blessed Plate","Gain 15 Mana and 1 Magic for every equipped Heavy Armor",["active"],66,3,64,5,275,400],
+[68,65,"Carry Your Might","Gain 1 Armor for every 100 Max Capacity, capping at X",[2,4,8],0,0,0,0,275,250],
+[69,68,"Juggernaut","Removes negative effects from Heavy Armor. Gain 5% Ability for each equipped Heavy Armor.",["active"],68,3,64,5,400,325],
+[70,69,"Endowed in Steel","Using both your hands gives you multiple stat boosts",["monk"],0,0,0,0,425,400],
 ];
 // --- Stat Table Logic ---
 const statList = [
@@ -839,8 +951,8 @@ function buildStatRow(stat, baseValue, currentClass) {
         <div>${statBonus}</div>
         <div>${itemCalc}</div>
         <div>${itemBonus * classMult}</div>
-        <div>-</div>
-        <div>-</div>
+        <div style='min-width:120px;'>-</div>
+        <div style='min-width:120px;'>-</div>
     </div>`;
 }
 // Hook stat table update to level and class selection
