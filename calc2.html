@@ -54,10 +54,10 @@
             justify-content: center;
             font-size: 1em;
         }
-        .class-choice { height: 50%; }
-        .level-choice { height: 15%; }
-        .stat-counter { height: 15%; }
-        .trait-counter { height: 15%; border-bottom: none; }
+        .class-choice { height: 65%; }
+        .level-choice { height: 12%; }
+        .stat-counter { height: 10%; }
+        .trait-counter { height: 13%; border-bottom: none; }
         .upper-dynamic-cell {
             width: 80%;
             height: 100%;
@@ -167,9 +167,9 @@
         }
         .stat-container {
             display: grid;
-            grid-template-columns: 120px 100px 50px 40px 40px 40px 140px 140px 100px 100px;
+            grid-template-columns: 120px 100px 50px 40px 40px 40px 140px 100px 140px 100px 140px 100px ;
             gap: 0px;
-            width: 900px;
+            width: 1140px;
             margin-bottom: 0px;
             border-bottom: 1px solid #333;
             margin-top: 2px;
@@ -629,6 +629,8 @@ function updateStatTable() {
         <div>Stat Bonus</div>
         <div style='min-width:120px;'>Item Calculation</div>
         <div>Item Bonus</div>
+        <div style='min-width:120px;'>Traits Calculation</div>
+        <div>Traits Bonus</div>
     </div>`;
     const currentClass = selectedClass || "Squire";
     // Health
@@ -667,20 +669,165 @@ function buildStatRow(stat, baseValue, currentClass) {
     let multiplier = '';
     let pointVal = 0;
     let statCalc = '';
-    let itemCalc = '';
     let statBonus = 0;
+    let itemCalc = '';
     let itemBonus = 0;
     canAllocate = allocatableStats.includes(stat);
     classMult = classMultipliers[currentClass][stat] || 1;
     multiplier = (classMult * 100).toFixed(0)+"%";
     pointVal = pointValues[stat] || 0;
     statCalc = `${baseValue}`;
-    if (canAllocate && added > 0) statCalc += ` + (${added} x ${pointVal})`;
+    if (canAllocate && added > 0) statCalc += ` + [(${added} x ${pointVal}) x ${multiplier}]`;
+    
     if (canAllocate) statBonus += added * pointVal;
     statBonus = (statBonus * classMult).toFixed(2);
-    // For now, itemCalc and itemBonus are always 0
-    itemCalc = '0';
-    itemBonus = '0';
+    //get this stat's item bonus from all class item-slot elements
+    const itemSlots = document.querySelectorAll('.item-slot');
+    itemSlots.forEach(slot => {
+        const img = slot.querySelector('img');
+        if (img && img.alt) {
+            console.log(`Processing item: ${img.alt}`);
+            const itemName = img.alt.split(';')[0];
+            const itemRarity = img.alt.split(';')[1] || '';
+            console.log(`Item name: ${itemName}, Rarity: ${itemRarity}`);
+            //find using item's name and rarity [1]
+            const item = items.find(i => i[0] === itemName && i[20] === itemRarity);
+            if (item) {
+                //name	 slot	 type	 weight	 range	 DMG	 hp	 mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??	 eqSize	HP reg	MP reg	 description 	rarity
+
+                switch(stat){
+                    case "Health":
+                        itemBonus += item[6] || 0;
+                        if(item[6] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` + `;
+                            }
+                            itemCalc += `${item[6] || 0}`;
+                        }
+                        break;
+                    case "Mana":
+                        itemBonus += item[7] || 0;
+                        if(item[7] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` + `;
+                            }
+                            itemCalc += `${item[7] || 0}`;
+                        }
+                        break;
+                    case "Magic":
+                        itemBonus += item[9] || 0;
+                        if(item[9] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` + `;
+                            }
+                            itemCalc += `${item[9] || 0}`;
+                        }
+                        break;
+                    case "Damage":
+                        itemBonus += item[5] || 0;
+                        if(item[5] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` + `;
+                            }
+                            itemCalc += `${item[5] || 0}`;
+                        }
+                        break;
+                    case "Movespeed":
+                        itemBonus += item[12] || 0;
+                        if(item[12] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` + `;
+                            }
+                            itemCalc += `${item[12] || 0}`;
+                        }
+                        break;
+                    case "Ability":
+                        itemBonus += item[8] || 0;
+                        if(item[8] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` + `;
+                            }
+                            itemCalc += `${item[8] || 0}`;
+                        }
+                        break;
+                    case "Attack Speed":
+                        itemBonus += item[13] || 0;
+                        if(item[13] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` + `;
+                            }
+                            itemCalc += `${item[13] || 0}`;
+                        }
+                        break;
+                    case "HP Regen":
+                        itemBonus += item[16] || 0;
+                        if(item[16] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` + `;
+                            }
+                            itemCalc += `${item[16] || 0}`;
+                        }
+                        break;
+                    case "MP Regen":
+                        itemBonus += item[17] || 0;
+                        if(item[17] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` + `;
+                            }
+                            itemCalc += `${item[17] || 0}`;
+                        }
+                        break;
+                    case "Range":
+                        itemBonus += item[4] || 0;
+                        if(item[4] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` + `;
+                            }
+                            itemCalc += `${item[4] || 0}`;
+                        }
+                        break;
+                    case "Armor":
+                        itemBonus += item[10] || 0;
+                        if(item[10] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` + `;
+                            }
+                            itemCalc += `${item[10] || 0}`;
+                        }
+                        break;
+                    case "Defense":
+                        itemBonus += item[11] || 0;
+                        if(item[11] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` + `;
+                            }
+                            itemCalc += `${item[11] || 0}`;
+                        }
+                        break;
+                    case "Capacity":
+                        itemBonus += item[15] || 0;
+                        if(item[15] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` + `;
+                            }
+                            itemCalc += `${item[15] || 0}`;
+                        }
+                        break;
+                }
+                
+                console.log(`Found item: ${item[0]} with rarity ${itemRarity}`);
+                const itemStat = item[stat.toLowerCase().replace(' ', '')];
+                if (itemStat && !isNaN(itemStat)) {
+                    itemBonus += itemStat * classMult;
+                    itemCalc += ` + ${itemStat}`;
+                }
+            }
+        }
+    });
+
+    if (itemCalc != ''){
+        itemCalc =  `[(`+itemCalc+`) x ${multiplier}]`;
+    }
     return `<div class=\"stat-container\">
         <div>${stat}</div>
         <div>${multiplier}</div>
@@ -691,7 +838,9 @@ function buildStatRow(stat, baseValue, currentClass) {
         <div>${statCalc}</div>
         <div>${statBonus}</div>
         <div>${itemCalc}</div>
-        <div>${itemBonus}</div>
+        <div>${itemBonus * classMult}</div>
+        <div>-</div>
+        <div>-</div>
     </div>`;
 }
 // Hook stat table update to level and class selection
@@ -867,6 +1016,9 @@ function populateItemPicker(slotType) {
                     slotImg.src = `Items/${item[item.length-2]}`;
                     slotImg.alt = `${item[0]};${rarity}`;
                     slotImg.style.display = 'block';
+                    //run function when item is clicked
+                    console.log("CHosen item:", item[0]);
+                    updateDebug();
                 }
             };
             grid.appendChild(selectionItem);
@@ -881,6 +1033,7 @@ window.addEventListener('DOMContentLoaded', function() {
     // ...existing code...
     setupEquipmentGrid();
 });
+
 </script>
 </body>
 </html>
