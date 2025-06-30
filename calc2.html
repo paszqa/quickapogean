@@ -40,7 +40,7 @@
         }
         /* Upper columns */
         .upper-col1 {
-            width: 12%;
+            width: 25%;
             height: 100%;
             border-right: 1px solid #000;
             display: flex;
@@ -65,7 +65,7 @@
             display: flex;
         }
         .upper-col2 {
-            width: 35%;
+            width: 30%;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -265,23 +265,27 @@
             position: absolute;
             z-index: 0;
             pointer-events: none;
-            stroke: black;
+            stroke: rgb(255, 255, 255);
             stroke-width: 2;
         }
         .trait {
-            z-index: 1;
-            position: absolute;
-            margin: 2px;
-            border: 2px solid #000000;
-            background: #3d3d3d;
-            display: flex;
-            flex-direction: column;
-            width: 100px;
-            height: fit-content;
-            border-radius: 5px;
+            width: 24px !important;
+            height: 30px !important;
+            min-width: 24px !important;
+            min-height: 28px !important;
+            max-width: 24px !important;
+            max-height: 28px !important;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.4em;
+            font-weight: bold;
+            background: transparent;
+            color: #eaff8c;
+            border: 1px solid transparent;;
+            border-radius: 0px;
             user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
+            overflow: hidden;
+            padding: 0;
         }
         div.trait.active {
             background-color: rgb(57, 117, 0);
@@ -345,9 +349,25 @@
             display: none;
         }
         .trait.requirement-error {
-            border: 2px solid #ff3333 !important;
-            box-shadow: 0 0 8px 2px #ff3333;
-            transition: border 0.2s, box-shadow 0.2s;
+            border: 1px solid #ff3333 !important;
+        }
+        /* --- ADDITIONAL STYLES FOR TINY STAGES BAR --- */
+        .trait img{
+            padding: 0;
+            margin: 0;
+        }
+        .tiny-stages {
+            width: 100%;
+            height: 4px;
+            display: flex;
+            flex-direction: row;
+            background: #444444;
+            margin-top: 0px;
+            padding: 0;
+            border: 1px solid #000;;
+        }
+        .tiny-stages div {
+            margin-right: 1px;
         }
     </style>
 </head>
@@ -355,34 +375,24 @@
 <div id="planner-container">
     <div class="planner-upper">
         <div class="upper-col1">
-            <div class="upper-col1-segment class-choice">
-                <div class="class-choice-grid">
-                    <div class="class-choice-cell" data-class="Squire">
-                        <img src="squire.png" alt="Squire">
-                        <span>Squire</span>
-                    </div>
-                    <div class="class-choice-cell" data-class="Knight">
-                        <img src="knight.png" alt="Knight">
-                        <span>Knight</span>
-                    </div>
-                    <div class="class-choice-cell" data-class="Rogue">
-                        <img src="rogue.png" alt="Rogue">
-                        <span>Rogue</span>
-                    </div>
-                    <div class="class-choice-cell" data-class="Mage">
-                        <img src="mage.png" alt="Mage">
-                        <span>Mage</span>
-                    </div>
+            <div class="upper-col1-segment class-choice" style="height:15%;display:flex;align-items:center;justify-content:center;">
+                <div class="class-choice-row-images" style="display:flex;gap:10px;width:100%;justify-content:center;align-items:center;">
+                    <img src="squire.png" alt="Squire" class="class-choice-img" data-class="Squire" style="width:48px;height:48px;cursor:pointer;">
+                    <img src="knight.png" alt="Knight" class="class-choice-img" data-class="Knight" style="width:48px;height:48px;cursor:pointer;">
+                    <img src="rogue.png" alt="Rogue" class="class-choice-img" data-class="Rogue" style="width:48px;height:48px;cursor:pointer;">
+                    <img src="mage.png" alt="Mage" class="class-choice-img" data-class="Mage" style="width:48px;height:48px;cursor:pointer;">
                 </div>
             </div>
-            <div class="upper-col1-segment level-choice">
-                <div class="level-choice-inner">
-                    <label class="leveltitle" for="level-input">Character Level:</label>
-                    <input class="levelnumber" type="number" id="level-input" min="1" max="100" value="1">
-                </div>
+            <div class="upper-col1-segment level-choice" style="height:8%;display:flex;align-items:center;justify-content:center;">
+                <span style="color:#fff;margin-right:8px;">Level:</span>
+                <input class="levelnumber" type="number" id="level-input" min="1" max="100" value="1" style="width:60px;height:32px;font-size:1em;">
             </div>
-            <div class="upper-col1-segment stat-counter">Stat Counter</div>
-            <div class="upper-col1-segment trait-counter">Trait Counter</div>
+            <div class="upper-col1-segment stat-counter" style="height:8%;display:flex;align-items:center;justify-content:center;">
+                <span style="color:#fff;">Stat Points <span id="available-points">0</span>/<span id="total-points">0</span></span>
+            </div>
+            <div class="upper-col1-segment traits-panel-col" style="height:68%;display:flex;align-items:center;justify-content:center;padding:0;">
+                <div id="traits-panel-mini" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"></div>
+            </div>
         </div>
         <div class="upper-dynamic-cell">
             <div id="planner-ui" style="width: 100%; height: 100%; display: flex; flex-direction: row;">
@@ -432,9 +442,9 @@
         let selectedLevel = 1;
         window.addEventListener('DOMContentLoaded', function() {
             // Make class rows selectable
-            document.querySelectorAll('.class-choice-cell').forEach(row => {
-                row.addEventListener('click', function() {
-                    document.querySelectorAll('.class-choice-cell').forEach(r => r.classList.remove('selected'));
+            document.querySelectorAll('.class-choice-img').forEach(img => {
+                img.addEventListener('click', function() {
+                    document.querySelectorAll('.class-choice-img').forEach(i => i.classList.remove('selected'));
                     this.classList.add('selected');
                     selectedClass = this.getAttribute('data-class');
                     updateDebug();
@@ -451,7 +461,7 @@
                 updateDebug();
             });
             // Set default selection
-            document.querySelector('.class-choice-cell[data-class="Squire"]').click();
+            document.querySelector('.class-choice-img[data-class="Squire"]').click();
         });
         function updateDebug() {
             document.getElementById('stats-table-container').innerText =
@@ -648,77 +658,77 @@
 
 // --- Traits database ---
 const traits = [
-        [0,0,"start","starts",[0],0,0,0,0,0,0],
-[1,0,"Staff Mastery","Staves have a X% chance of shooting without cost",[0,15,25,40,60,90],0,0,0,0,-100,50],
+        [0,0,"start","starts",[0],0,0,0,0,0,50],
+[1,0,"Staff Mastery","Staves have a X% chance of shooting without cost",[0,15,25,40,60,90],0,0,0,0,-100,100],
 [2,1,"Charge the Staff","Casting an Elemental spell using a staff will make your next attack deal extra (Magic Level / X) damage",["Off",5,4,2],0,0,0,0,-200,100],
 [3,2,"Gallop’s Fall","Reduces the cooldown of Water spells by X%",[0,10,20,35],0,0,0,0,-300,200],
-[4,3,"Sacred Stick","While holding a staff, gain 1 extra Area of Effect for Holy spells and 25% cooldown reduction for Holy spells",["Off", "active"],3,3,1,5,-400,200],
+[4,3,"Sacred Stick","While holding a staff, gain 1 extra Area of Effect for Holy spells and 25% cooldown reduction for Holy spells",["Off", "active"],3,3,1,5,-400,300],
 [5,2,"Franctic Conjury","Casting a Fire spell has a X% chance your next attack will cast Conjure Fire at target's location",[0, 15,20,30],0,0,0,0,-300,100],
 [6,5,"Conflagrated Mind","While holding a staff gain 1 extra Area of Effect and 25% cooldown reudction for Fire spells",["Off","active"],5,3,1,5,-400,100],
-[7,6,"Warlock","Gain 1 Area of Effect and doubles the cooldown of all spells",["Off","active"],0,0,0,0,-500,100],
-[8,0,"Pondering It","Orbs give +X% Spellvamp",[0,1,3,6,10,15],0,0,0,0,-100,-20],
-[9,8,"Electric Nature","Reduces the cooldown of spells by X%",[0,7,10,15],0,0,0,0,-200,-20],
-[10,9,"Diamond Skin","Hitting and enemy with an Energy or Arrow spell gives you X magic shield, capping at 100",[0,20,30,50],0,0,0,0,-300,-20],
-[11,10,"Unstable Aegis","Taking Magic Shield damage has a 50% chance of casting Unstable Berserk around yourself",["Off","active"],10,3,8,5,-400,-20],
+[7,6,"Warlock","Gain 1 Area of Effect and doubles the cooldown of all spells",["Off","active"],0,0,0,0,-400,200],
+[8,0,"Pondering It","Orbs give +X% Spellvamp",[0,1,3,6,10,15],0,0,0,0,-100,0],
+[9,8,"Electric Nature","Reduces the cooldown of spells by X%",[0,7,10,15],0,0,0,0,-200,0],
+[10,9,"Diamond Skin","Hitting and enemy with an Energy or Arrow spell gives you X magic shield, capping at 100",[0,20,30,50],0,0,0,0,-300,0],
+[11,10,"Unstable Aegis","Taking Magic Shield damage has a 50% chance of casting Unstable Berserk around yourself",["Off","active"],10,3,8,5,-400,0],
 [12,9,"Magic Touch","Heal spells are X% stronger",[0,10,15,25],0,0,0,0,-300,-100],
 [13,12,"Apogea’s Ardor","While holding an Orb, Heal spells cost 50% less mana",["Off","active"],12,3,8,5,-400,-100],
-[14,13,"Child’s channel","Healing others also heals you, reduces the cooldown of all spells by 50% and spells deal 75% less dammage",["Off","active"],0,0,0,0,-500,-100],
+[14,13,"Child’s channel","Healing others also heals you, reduces the cooldown of all spells by 50% and spells deal 75% less dammage",["Off","active"],0,0,0,0,-400,-200],
 [15,0,"Blade training","Regular swords have X% extra damage",[0,1,4,8,13,20],0,0,0,0,-100,-100],
-[16,15,"Hand Finesse","Gain 1 Attackspeed for each X Ability you have capping at 5",[0,15,13,10],0,0,0,0,-200,-150],
+[16,15,"Hand Finesse","Gain 1 Attackspeed for each X Ability you have capping at 5",[0,15,13,10],0,0,0,0,-200,-100],
 [17,16,"Fencing Classes","Blade spells are X% stronger",[0,5,9,15],0,0,0,0,-300,-200],
-[18,17,"Blade Prowess","While holding one sword of size 6 and no shield, reduces the cooldown of Blade spells by 50%",["Off","active"],17,3,15,5,-400,-250],
-[19,18,"Highlander","Blade spells cost 50% less mana, lose the ability to auto-attack. Additionally, converts every 2 Attackspeed into 1 Damage",["Off","active"],0,0,0,0,-500,-200],
-[20,16,"Dual-wielding","Size 6 swords have an equipsize of 5, but deal X% less damage",[0,40,36,30],0,0,0,0,-200,-250],
-[21,20,"To be Ninja","Attacking has a 25% chance of boosting your Movespeed by 10 for 4 seconds",["Off","active"],16,3,15,5,-350,-350],
+[18,17,"Blade Prowess","While holding one sword of size 6 and no shield, reduces the cooldown of Blade spells by 50%",["Off","active"],17,3,15,5,-300,-300],
+[19,18,"Highlander","Blade spells cost 50% less mana, lose the ability to auto-attack. Additionally, converts every 2 Attackspeed into 1 Damage",["Off","active"],0,0,0,0,-400,-300],
+[20,16,"Dual-wielding","Size 6 swords have an equipsize of 5, but deal X% less damage",[0,40,36,30],0,0,0,0,-200,-200],
+[21,20,"To be Ninja","Attacking has a 25% chance of boosting your Movespeed by 10 for 4 seconds",["Off","active"],16,3,15,5,-200,-300],
 [22,0,"Glove Passion","While wearing gloves, gain X Mana or Health Regen depending on the item you're holding",[0,1,2,3,6,10],0,0,0,0,0,-100],
 [23,22,"True Grip","While wearing gloves, attacking regenerates X mana",[0,1,2,4],0,0,0,0,0,-200],
-[24,23,"Unnatural Flow","Your attacks deal X extra True Damage",[0,4,7,12],0,0,0,0,-50,-300],
-[25,24,"Battle Mage","Converts 50 Max Mana into 1 extra True Damage",["Off","active"],24,3,22,5,-50,-400],
-[26,25,"One with Apogea","Mana damage is reduced in half. Mana damage is reduced in half, all spells cost 5 times more.",["Off","active"],0,0,0,0,-150,-400],
-[27,23,"Elvish Practice","Spells cost X% less mana",[0,7,10,15],0,0,0,0,50,-300],
-[28,27,"Arcane Trickster","While using Gloves, casting a Time or Mystic spell has a 50% chance of blocking all physical damage for 4 seconds",["Off","active"],27,3,22,5,50,-400],
+[24,23,"Unnatural Flow","Your attacks deal X extra True Damage",[0,4,7,12],0,0,0,0,-100,-200],
+[25,24,"Battle Mage","Converts 50 Max Mana into 1 extra True Damage",["Off","active"],24,3,22,5,-100,-300],
+[26,25,"One with Apogea","Mana damage is reduced in half. Mana damage is reduced in half, all spells cost 5 times more.",["Off","active"],0,0,0,0,0,-300],
+[27,23,"Elvish Practice","Spells cost X% less mana",[0,7,10,15],0,0,0,0,100,-200],
+[28,27,"Arcane Trickster","While using Gloves, casting a Time or Mystic spell has a 50% chance of blocking all physical damage for 4 seconds",["Off","active"],27,3,22,5,100,-300],
 [29,0,"Going Big","Large weapons have X% extra damage",[0,1,4,8,14,20],0,0,0,0,100,-100],
 [30,29,"Steady Bloodflow","Casting a spell using health regenerates X mana",[0,4,7,12],0,0,0,0,200,-200],
 [31,30,"Berserker","Being below 66% Health gives you X extra Damage",[0,5,8,13],0,0,0,0,200,-300],
-[32,31,"Overwhelming Force","When using Large weapon, attacking has a 35% chance of casting an area of effect spell around the target",["Off","active"],31,3,29,5,200,-400],
-[33,30,"Wrecking It","Casting a Blade or Physical spell will make your next attack deal X extra True Damage",[0,4,8,14],0,0,0,0,300,-300],
-[34,33,"Magic Blade","Removes negative effects from Large Weapnsand gain 10% Manaleech",["Off","active"],33,3,29,5,375,-400],
-[35,34,"Unfathomable Rage","Converts every 2 damage taken into 1 mana, doubles the cost of all spells",["Off","active"],0,0,0,0,425,-300],
-[36,0,"Stabbing Preference","Daggers provide X% Lifeleech",[0,1,3,6,10,15],0,0,0,0,100,-20],
-[37,36,"Through Puncture","Physical attacks ignore X% of the target’s armor",[0,8,20,35],0,0,0,0,200,-20],
-[38,37,"Jagged Rhythm","Attacking using a dagger has a X% chance of dealing extra (Ability/4) True Damage",[0,15,25,50],0,0,0,0,250,-100],
-[39,38,"Luck Foreseen","Converts every 6 Ability into 1% chance of attacking twice",["Off","active"],38,3,36,5,350,-100],
-[40,39,"Dark Blade","Doubles all True Damage you deal, you also receive the True Damage dealt",["Off","active"],0,0,0,0,425,-200],
-[41,37,"Gaff Hack","Casting a Mystic or Time spell has a X% chance of boosting your Attackspeed by 7 for 4 seconds",[0,20,30,50],0,0,0,0,300,-20],
-[42,41,"Double Danger","Using two daggers doubles your item damage",["Off","active"],41,3,36,5,425,-20],
-[43,0,"Bow Guidance","Bows have X extra Attackspeed",[0,1,2,3,4,6],0,0,0,0,100,50],
+[32,31,"Overwhelming Force","When using Large weapon, attacking has a 35% chance of casting an area of effect spell around the target",["Off","active"],31,3,29,5,300,-300],
+[33,30,"Wrecking It","Casting a Blade or Physical spell will make your next attack deal X extra True Damage",[0,4,8,14],0,0,0,0,300,-200],
+[34,33,"Magic Blade","Removes negative effects from Large Weapnsand gain 10% Manaleech",["Off","active"],33,3,29,5,400,-200],
+[35,34,"Unfathomable Rage","Converts every 2 damage taken into 1 mana, doubles the cost of all spells",["Off","active"],0,0,0,0,400,-300],
+[36,0,"Stabbing Preference","Daggers provide X% Lifeleech",[0,1,3,6,10,15],0,0,0,0,100,0],
+[37,36,"Through Puncture","Physical attacks ignore X% of the target’s armor",[0,8,20,35],0,0,0,0,200,0],
+[38,37,"Jagged Rhythm","Attacking using a dagger has a X% chance of dealing extra (Ability/4) True Damage",[0,15,25,50],0,0,0,0,200,-100],
+[39,38,"Luck Foreseen","Converts every 6 Ability into 1% chance of attacking twice",["Off","active"],38,3,36,5,300,-100],
+[40,39,"Dark Blade","Doubles all True Damage you deal, you also receive the True Damage dealt",["Off","active"],0,0,0,0,400,-100],
+[41,37,"Gaff Hack","Casting a Mystic or Time spell has a X% chance of boosting your Attackspeed by 7 for 4 seconds",[0,20,30,50],0,0,0,0,300,0],
+[42,41,"Double Danger","Using two daggers doubles your item damage",["Off","active"],41,3,36,5,400,0],
+[43,0,"Bow Guidance","Bows have X extra Attackspeed",[0,1,2,3,4,6],0,0,0,0,100,100],
 [44,43,"Good Technique","Gain X extra Range",[0,1,2,4],0,0,0,0,200,100],
 [45,44,"Artisenal Arsenal","Non-magic arrow get +X Damage and break less often",[0,2,4,7],0,0,0,0,300,100],
-[46,45,"Explosive Ammo","Arrows have a 25% chance of exploding, dealing area damage that briefly slows",["Off","active"],45,3,43,5,425,100],
-[47,44,"Shineshooter","Reduces the cooldown of Arrow spells by X%",[0,10,20,35],0,0,0,0,300,175],
-[48,47,"Bullseye","Increases the damage of Arrow and Blade spells on enemies you currently have targeted",["Off","active"],47,3,43,5,425,175],
-[49,48,"Tunnelvision","Gain 10 Attackspeed, but you can no longer move while targeting an enemy.",["Off","active"],0,0,0,0,425,250],
-[50,0,"Cozy and Useful","Light Armor has X extra mana",[0,1,3,6,10,15],0,0,0,0,-100,150],
-[51,50,"Lightfoot","Converts X Free Capacity into 1 Movespeed capping at 3",[0,35,25,10],0,0,0,0,-170,200],
-[52,51,"Dress Wizardly","Gear that weighs less than X oz gives you +1 Magic",[0,10,20,35],0,0,0,0,-270,300],
-[53,52,"Clothes of the Damned","Removes negative effects from light armor and gain 5% Magic for each equipped Light Armor.",["Off","active"],52,3,50,5,-370,300],
-[54,53,"Darkness Embrace","Death spells are 10 times cheaper. Heal, Light and Holy spells are 10 times more expensive.",["Off","active"],0,0,0,0,-445,400],
-[55,51,"Breeze in your hair","Not wearing a helmet gives you +X Movespeed",[0,1,2,3],0,0,0,0,-170,300],
-[56,55,"Battleboots","Gives 2 Damage for every extra Movespeed",["Off","active"],55,3,50,5,-270,400],
-[57,0,"Block Efficiacy","Shields have X% extra defense",[0,1,4,8,13,20],0,0,0,0,0,150],
-[58,57,"Rooted Guard","Blocking an attack regenerates X health",[0,1,2,5],0,0,0,0,0,225],
-[59,58,"Hex Parry","Successfully blocking an attack will empower your next Arrow or Blade spell by X%",[0,15,35,50],0,0,0,0,50,325],
-[60,59,"Bulwark Leap","Casting a Time or Physical spell will double your magic shield, capping at 200",["Off","active"],59,3,57,5,50,400],
-[61,58,"Royal Shield","Reduces the cooldown of Defense spells by X%",[0,10,20,35],0,0,0,0,-50,325],
-[62,61,"Deflect","Blocking with a magic shield reflects 15% of the damage taken as true damage",["Off","active"],61,3,57,5,-50,400],
-[63,62,"Monster Candy","Taunt lasts 100% longer, Conjure and Defense spells are 50% cheaper. Lose 99 Damage.",["Off","active"],0,0,0,0,-150,400],
-[64,0,"Well Protected","Heavy Armor has X extra health",[0,1,3,6,10,15],0,0,0,0,100,150],
-[65,64,"Heavy Metal","Heavy Armor that weighs more than 100oz has 1 Ability extra",[0,100,75,35],0,0,0,0,150,250],
-[66,65,"Magic Steel","Casting a Time or Heal spell will give you a shield equal to X% of your total Armor, capping at 100",[0,50,100,150],0,0,0,0,200,325],
-[67,66,"Blessed Plate","Gain 15 Mana and 1 Magic for every equipped Heavy Armor",["Off","active"],66,3,64,5,275,400],
-[68,65,"Carry Your Might","Gain 1 Armor for every 100 Max Capacity, capping at X",[0,2,4,8],0,0,0,0,275,250],
-[69,68,"Juggernaut","Removes negative effects from Heavy Armor. Gain 5% Ability for each equipped Heavy Armor.",["Off","active"],68,3,64,5,400,325],
-[70,69,"Endowed in Steel","Using both your hands gives you +10% lifesteal, +23 Damage, +13 Ability and +7 Attack Speed",["Off","monk"],0,0,0,0,425,400],
+[46,45,"Explosive Ammo","Arrows have a 25% chance of exploding, dealing area damage that briefly slows",["Off","active"],45,3,43,5,400,100],
+[47,44,"Shineshooter","Reduces the cooldown of Arrow spells by X%",[0,10,20,35],0,0,0,0,300,200],
+[48,47,"Bullseye","Increases the damage of Arrow and Blade spells on enemies you currently have targeted",["Off","active"],47,3,43,5,400,200],
+[49,48,"Tunnelvision","Gain 10 Attackspeed, but you can no longer move while targeting an enemy.",["Off","active"],0,0,0,0,400,300],
+[50,0,"Cozy and Useful","Light Armor has X extra mana",[0,1,3,6,10,15],0,0,0,0,-100,200],
+[51,50,"Lightfoot","Converts X Free Capacity into 1 Movespeed capping at 3",[0,35,25,10],0,0,0,0,-200,200],
+[52,51,"Dress Wizardly","Gear that weighs less than X oz gives you +1 Magic",[0,10,20,35],0,0,0,0,-300,300],
+[53,52,"Clothes of the Damned","Removes negative effects from light armor and gain 5% Magic for each equipped Light Armor.",["Off","active"],52,3,50,5,-300,400],
+[54,53,"Darkness Embrace","Death spells are 10 times cheaper. Heal, Light and Holy spells are 10 times more expensive.",["Off","active"],0,0,0,0,-400,400],
+[55,51,"Breeze in your hair","Not wearing a helmet gives you +X Movespeed",[0,1,2,3],0,0,0,0,-200,300],
+[56,55,"Battleboots","Gives 2 Damage for every extra Movespeed",["Off","active"],55,3,50,5,-200,400],
+[57,0,"Block Efficiacy","Shields have X% extra defense",[0,1,4,8,13,20],0,0,0,0,0,200],
+[58,57,"Rooted Guard","Blocking an attack regenerates X health",[0,1,2,5],0,0,0,0,0,300],
+[59,58,"Hex Parry","Successfully blocking an attack will empower your next Arrow or Blade spell by X%",[0,15,35,50],0,0,0,0,100,300],
+[60,59,"Bulwark Leap","Casting a Time or Physical spell will double your magic shield, capping at 200",["Off","active"],59,3,57,5,100,400],
+[61,58,"Royal Shield","Reduces the cooldown of Defense spells by X%",[0,10,20,35],0,0,0,0,-100,300],
+[62,61,"Deflect","Blocking with a magic shield reflects 15% of the damage taken as true damage",["Off","active"],61,3,57,5,-100,400],
+[63,62,"Monster Candy","Taunt lasts 100% longer, Conjure and Defense spells are 50% cheaper. Lose 99 Damage.",["Off","active"],0,0,0,0,0,400],
+[64,0,"Well Protected","Heavy Armor has X extra health",[0,1,3,6,10,15],0,0,0,0,100,200],
+[65,64,"Heavy Metal","Heavy Armor that weighs more than 100oz has 1 Ability extra",[0,100,75,35],0,0,0,0,200,200],
+[66,65,"Magic Steel","Casting a Time or Heal spell will give you a shield equal to X% of your total Armor, capping at 100",[0,50,100,150],0,0,0,0,200,300],
+[67,66,"Blessed Plate","Gain 15 Mana and 1 Magic for every equipped Heavy Armor",["Off","active"],66,3,64,5,200,400],
+[68,65,"Carry Your Might","Gain 1 Armor for every 100 Max Capacity, capping at X",[0,2,4,8],0,0,0,0,300,300],
+[69,68,"Juggernaut","Removes negative effects from Heavy Armor. Gain 5% Ability for each equipped Heavy Armor.",["Off","active"],68,3,64,5,300,400],
+[70,69,"Endowed in Steel","Using both your hands gives you +10% lifesteal, +23 Damage, +13 Ability and +7 Attack Speed",["Off","monk"],0,0,0,0,400,400],
         ];
 // --- Stat Table Logic ---
 const statList = [
@@ -833,7 +843,7 @@ function updateStatTable() {
     availablePoints = totalStatPoints - usedPoints;
     // Update stat counter cell
     document.querySelector('.stat-counter').innerHTML =
-        `<div style='width:100%;text-align:center;'>Available: <span id='available-points'>${availablePoints}</span><br>Total: <span id='total-points'>${totalStatPoints}</span></div>`;
+        `<div style='width:100%;text-align:center;'>Available: <span id='available-points'>${availablePoints}</span>/<span id='total-points'>${totalStatPoints}</span></div>`;
     // Build stat table (manual rows for each stat)
     let html = `<div class=\"stat-table-outer\">`;
     html += `<div class=\"stat-container\">
@@ -1069,7 +1079,10 @@ function buildStatRow(stat, baseValue, currentClass) {
         updateStatTable();
     };
 })();
-window.addEventListener('DOMContentLoaded', updateStatTable);
+window.addEventListener('DOMContentLoaded', function() {
+    updateStatTable();
+    renderMiniTraitTree();
+});
 function addPoint(stat) {
     const level = selectedLevel;
     if (availablePoints > 0 && addedPoints[stat] < level) {
@@ -1109,77 +1122,180 @@ function renderTraitTree() {
     traitsList.id = 'traits-list';
     traitsPanel.appendChild(traitsList);
     traitTreeUI.appendChild(traitsPanel);
-    // First pass: create trait divs
-    traits.forEach(trait => {
-        const traitDiv = document.createElement('div');
-        traitDiv.setAttribute('data-trait-id', trait[0]);
-        traitDiv.classList.add('trait');
-        const locationMultiplierX = 1.2;
-        const locationMultiplierY = 1.5;
-        const centerSpot = [550, 450];
-        if (trait[0] === 0) {
-            traitDiv.style.position = 'absolute';
-            traitDiv.style.left = `${(centerSpot[0] + trait[9])*locationMultiplierX}px`;
-            traitDiv.style.top = `${(centerSpot[1] + trait[10])*locationMultiplierY}px`;
-            traitDiv.style.width = "130px";
-            traitDiv.style.height = "130px";
-            traitDiv.classList.add('centerImage');
-            traitDiv.innerHTML = `<img class="wizardMan" src="CommunityIcon.png">`;
-            traitDiv.style.background = "transparent";
-            traitDiv.style.textAlign = "center";
-            traitDiv.style.verticalAlign = "middle";
-            traitDiv.style.alignContent = "center";
-            traitDiv.style.marginTop="-5px";
-            traitDiv.style.border = "0px solid black";
-            traitsList.appendChild(traitDiv);
-        } else {
-            const traitTitle = document.createElement('div');
-            traitTitle.classList.add('trait-title');
-            traitTitle.textContent = trait[2];
-            const traitDescription = document.createElement('div');
-            traitDescription.classList.add('trait-description');
-            traitDescription.textContent = trait[3];
-            traitDiv.appendChild(traitTitle);
-            selectedTraits[trait[0]] = 0;
-            traitDiv.appendChild(traitDescription);
-            const traitStages = document.createElement('div');
-            traitStages.classList.add('trait-stages');
-            trait[4].forEach(stage => {
-                const button = document.createElement('button');
-                button.textContent = stage;
-                button.style.pointerEvents = 'none';
-                if (stage == 0 || stage == "0%" || stage === "0" || stage === "Off") {
-                    button.classList.add('active', 'first-stage');
-                    selectedTraits[trait[0]] = stage;
-                }
-                traitStages.appendChild(button);
-            });
-            traitDiv.appendChild(traitStages);
-            traitDiv.addEventListener('click', function() {
-                increaseTraitStage(trait[0], traitStages);
-            });
-            traitDiv.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                decreaseTraitStage(trait[0], traitStages);
-            });
-            traitDiv.style.position = 'absolute';
-            traitDiv.style.left = `${(centerSpot[0] + trait[9])*locationMultiplierX}px`;
-            traitDiv.style.top = `${(centerSpot[1] + trait[10])*locationMultiplierY}px`;
-            traitsList.appendChild(traitDiv);
-        }
-    });
-    // Second pass: draw connectors
+    // Draw connectors first, as first children of traitsPanel (before traitsList)
+    const connectorSvgs = [];
     traits.forEach(trait => {
         if (trait[1] > -1) {
             const parentTrait = traits.find(t => t[0] === trait[1]);
             if (parentTrait) {
-                const locationMultiplierX = 1.2;
-                const locationMultiplierY = 1.5;
-                const centerSpot = [550, 450];
-                const traitX = (centerSpot[0] + trait[9]) * locationMultiplierX + 50;
-                const traitY = (centerSpot[1] + trait[10]) * locationMultiplierY + 30;
-                const parentX = (centerSpot[0] + parentTrait[9]) * locationMultiplierX + 50;
-                const parentY = (centerSpot[1] + parentTrait[10]) * locationMultiplierY + 30;
+                const locationMultiplierX = 0.35;
+                const locationMultiplierY = 0.35;
+                const centerSpot = [500, 450];
+                const traitX = (centerSpot[0] + trait[9]) * locationMultiplierX + 12;
+                const traitY = (centerSpot[1] + trait[10]) * locationMultiplierY + 13;
+                const parentX = (centerSpot[0] + parentTrait[9]) * locationMultiplierX + 12;
+                const parentY = (centerSpot[1] + parentTrait[10]) * locationMultiplierY + 13;
+                let differenceBetweenX = traitX - parentX;
+                let differenceBetweenY = traitY - parentY;
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                let startX = 0;
+                               let startY = 0;
+                if(differenceBetweenX < 0){ startX = Math.abs(differenceBetweenX) * 2; }
+                if(differenceBetweenY < 0){ startY = Math.abs(differenceBetweenY) * 2; }
+                line.setAttribute("x1", startX);
+                line.setAttribute("y1", startY);
+                line.setAttribute("x2", Math.abs(differenceBetweenX) + 3);
+                line.setAttribute("y2", Math.abs(differenceBetweenY) + 3);
+                line.setAttribute('stroke', '#444');
+                line.setAttribute('stroke-width', '2');
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.style.position = 'absolute';
+                svg.style.left = (traitX-Math.abs(differenceBetweenX))+ 'px';
+                svg.style.top = (traitY-Math.abs(differenceBetweenY))+ 'px';
+                svg.style.width = (2*Math.abs(differenceBetweenX)+3)+ 'px';
+                svg.style.height = (2*Math.abs(differenceBetweenY)+3)+ 'px';
+                svg.appendChild(line);
+                connectorSvgs.push(svg);
+            }
+        }
+    });
+    // Insert connectors before traitsList so they are underneath
+    connectorSvgs.forEach(svg => traitsPanel.insertBefore(svg, traitsList));
+    // Now create trait divs (compact, only ID)
+    traits.forEach(trait => {
+        const traitDiv = document.createElement('div');
+        traitDiv.setAttribute('data-trait-id', trait[0]);
+        traitDiv.classList.add('trait');
+        const locationMultiplierX = 0.35;
+        const locationMultiplierY = 0.35;
+        const centerSpot = [500, 450];
+        traitDiv.style.position = 'absolute';
+        traitDiv.style.left = `${(centerSpot[0] + trait[9])*locationMultiplierX}px`;
+        traitDiv.style.top = `${(centerSpot[1] + trait[10])*locationMultiplierY}px`;
+        // Add icon image
+        const iconImg = document.createElement('img');
+        iconImg.src = `Traits/${trait[0]}.png`;
+        iconImg.alt = '';
+        iconImg.style.width = '23px';
+        iconImg.style.height = '23px';
+        iconImg.style.display = 'block';
+        iconImg.style.boxSizing = 'border-box';
+        // Determine if trait is active
+        const traitId = trait[0];
+        if (typeof selectedTraits !== 'object') window.selectedTraits = {};
+        if (selectedTraits[traitId] === undefined) selectedTraits[traitId] = trait[4][0];
+        function getStageIdx() {
+            return trait[4].findIndex(s => s == selectedTraits[traitId]);
+        }
+        const isActive = getStageIdx() > 0 && selectedTraits[traitId] !== 'Off' && selectedTraits[traitId] !== 0 && selectedTraits[traitId] !== '0';
+        if (isActive) {
+            iconImg.style.filter = 'none';
+            iconImg.style.border = '1px solid #fff';
+        } else {
+            iconImg.style.filter = 'grayscale(1) brightness(0.7)';
+            iconImg.style.border = '1px solid #000';
+        }
+        traitDiv.appendChild(iconImg);
+        // Add tiny-stages bar
+        const tinyStages = document.createElement('div');
+        tinyStages.className = 'tiny-stages';
+        tinyStages.style.width = '23px';
+        tinyStages.style.height = '4px';
+        tinyStages.style.display = 'flex';
+        tinyStages.style.gap = '3px';
+        tinyStages.style.flexDirection = 'row';
+        tinyStages.style.background = '#111';
+        tinyStages.style.marginTop = '0px';
+        tinyStages.style.border = 'none';
+        tinyStages.style.justifyContent = 'space-between';
+        const stages = trait[4].filter(s => s !== 0 && s !== "0" && s !== "0%" && s !== "Off");
+        stages.forEach((stage, idx) => {
+            const col = document.createElement('div');
+            col.style.flex = '1 1 0';
+            col.style.height = '100%';
+            col.style.background = (getStageIdx() > idx) ? '#eaff8c' : 'transparent';
+            col.style.transition = 'background 0.2s';
+            tinyStages.appendChild(col);
+        });
+        traitDiv.appendChild(tinyStages);
+        // Click logic: increment stage if allowed
+        traitDiv.onclick = function(e) {
+            e.stopPropagation();
+            const currentIdx = getStageIdx();
+            if (currentIdx < trait[4].length - 1) {
+                const reqCheck = checkTraitRequirements(traitId, currentIdx + 1);
+                if (!reqCheck.success) {
+                    highlightFailedRequirement(reqCheck.failedTraitId);
+                    return;
+                }
+                selectedTraits[traitId] = trait[4][currentIdx + 1];
+                renderMiniTraitTree();
+            }
+        };
+        // Right-click: decrement stage if allowed
+        traitDiv.oncontextmenu = function(e) {
+            e.preventDefault();
+            const currentIdx = getStageIdx();
+            if (currentIdx > 0) {
+                let canSubtract = true;
+                let blockingTraits = [];
+                traits.forEach(childTrait => {
+                    if ((childTrait[1] === traitId || childTrait[5] === traitId || childTrait[7] === traitId)) {
+                        let simulatedStages = { ...selectedTraits };
+                        simulatedStages[traitId] = trait[4][currentIdx - 1];
+                        let childStageIdx = childTrait[4].findIndex(s => s == selectedTraits[childTrait[0]]);
+                        if (childStageIdx > 0) {
+                            for (let s = 1; s <= childStageIdx; s++) {
+                                let reqCheck = checkTraitRequirementsSim(childTrait[0], s, simulatedStages);
+                                if (!reqCheck.success) {
+                                    canSubtract = false;
+                                    blockingTraits.push(childTrait[0]);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
+                if (!canSubtract) {
+                    blockingTraits.forEach(highlightFailedRequirement);
+                    return;
+                }
+                selectedTraits[traitId] = trait[4][currentIdx - 1];
+                renderMiniTraitTree();
+            }
+        };
+        // Make sure traitDiv uses display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+        traitDiv.style.width = '23px';
+        traitDiv.style.height = '29px'; // 23px for icon + 4px for bar + margin
+        traitDiv.style.display = 'flex';
+        traitDiv.style.flexDirection = 'column';
+        traitDiv.style.alignItems = 'center';
+        traitDiv.style.justifyContent = 'flex-start';
+        container.appendChild(traitDiv);
+    });
+    panel.appendChild(container);
+}
+function renderMiniTraitTree() {
+    const panel = document.getElementById('traits-panel-mini');
+    if (!panel) return;
+    panel.innerHTML = '';
+    const locationMultiplierX = 0.35;
+    const locationMultiplierY = 0.35;
+    const centerSpot = [500, 450];
+    const container = document.createElement('div');
+    container.style.position = 'relative';
+    container.style.width = '100%';
+    container.style.height = '100%';
+    // Draw connectors first
+    const connectorSvgs = [];
+    traits.forEach(trait => {
+        if (trait[1] > -1) {
+            const parentTrait = traits.find(t => t[0] === trait[1]);
+            if (parentTrait) {
+                const traitX = (centerSpot[0] + trait[9]) * locationMultiplierX + 12;
+                const traitY = (centerSpot[1] + trait[10]) * locationMultiplierY + 13;
+                const parentX = (centerSpot[0] + parentTrait[9]) * locationMultiplierX + 12;
+                const parentY = (centerSpot[1] + parentTrait[10]) * locationMultiplierY + 13;
                 let differenceBetweenX = traitX - parentX;
                 let differenceBetweenY = traitY - parentY;
                 const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -1191,23 +1307,140 @@ function renderTraitTree() {
                 line.setAttribute("y1", startY);
                 line.setAttribute("x2", Math.abs(differenceBetweenX) + 3);
                 line.setAttribute("y2", Math.abs(differenceBetweenY) + 3);
-                line.classList.add('connector');
+                line.setAttribute('stroke', '#444');
+                line.setAttribute('stroke-width', '2');
                 const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-                svg.classList.add('connector');
                 svg.style.position = 'absolute';
-                svg.style.left = traitX-Math.abs(differenceBetweenX)+'px';
-                svg.style.top = traitY-Math.abs(differenceBetweenY)+'px';
-                svg.style.width = 2*Math.abs(differenceBetweenX)+3+'px';
-                svg.style.height = 2*Math.abs(differenceBetweenY)+3+'px';
+                svg.style.left = (traitX-Math.abs(differenceBetweenX))+ 'px';
+                svg.style.top = (traitY-Math.abs(differenceBetweenY))+ 'px';
+                svg.style.width = (2*Math.abs(differenceBetweenX)+3)+ 'px';
+                svg.style.height = (2*Math.abs(differenceBetweenY)+3)+ 'px';
                 svg.appendChild(line);
-                traitsPanel.appendChild(svg);
+                connectorSvgs.push(svg);
             }
         }
     });
+    connectorSvgs.forEach(svg => container.appendChild(svg));
+    // Draw trait nodes
+    traits.forEach(trait => {
+        const traitDiv = document.createElement('div');
+        traitDiv.setAttribute('data-trait-id', trait[0]);
+        traitDiv.classList.add('trait');
+        traitDiv.style.position = 'absolute';
+        traitDiv.style.left = `${(centerSpot[0] + trait[9])*locationMultiplierX}px`;
+        traitDiv.style.top = `${(centerSpot[1] + trait[10])*locationMultiplierY}px`;
+        // Add icon image
+        const iconImg = document.createElement('img');
+        iconImg.src = `Traits/${trait[0]}.png`;
+        iconImg.alt = '';
+        iconImg.style.width = '23px';
+        iconImg.style.height = '23px';
+        iconImg.style.display = 'block';
+        iconImg.style.boxSizing = 'border-box';
+        const traitId = trait[0];
+        if (typeof selectedTraits !== 'object') window.selectedTraits = {};
+        if (selectedTraits[traitId] === undefined) selectedTraits[traitId] = trait[4][0];
+        function getStageIdx() {
+            return trait[4].findIndex(s => s == selectedTraits[traitId]);
+        }
+        const isActive = getStageIdx() > 0 && selectedTraits[traitId] !== 'Off' && selectedTraits[traitId] !== 0 && selectedTraits[traitId] !== '0';
+        if (isActive) {
+            iconImg.style.filter = 'none';
+            iconImg.style.border = '1px solid #fff';
+        } else {
+            iconImg.style.filter = 'grayscale(1) brightness(0.7)';
+            iconImg.style.border = '1px solid #000';
+        }
+        traitDiv.appendChild(iconImg);
+        // Add tiny-stages bar
+        const tinyStages = document.createElement('div');
+        tinyStages.className = 'tiny-stages';
+        tinyStages.style.width = '23px';
+        tinyStages.style.height = '4px';
+        tinyStages.style.display = 'flex';
+        tinyStages.style.flexDirection = 'row';
+        tinyStages.style.background = '#111';
+        tinyStages.style.marginTop = '0px';
+        tinyStages.style.border = 'none';
+        tinyStages.style.justifyContent = 'space-between';
+        const stages = trait[4].filter(s => s !== 0 && s !== "0" && s !== "0%" && s !== "Off");
+        stages.forEach((stage, idx) => {
+            const col = document.createElement('div');
+            col.style.flex = '1 1 0';
+            col.style.height = '100%';
+            col.style.background = (getStageIdx() > idx) ? '#eaff8c' : 'transparent';
+            col.style.transition = 'background 0.2s';
+            tinyStages.appendChild(col);
+        });
+        traitDiv.appendChild(tinyStages);
+        // Click logic: increment stage if allowed
+        traitDiv.onclick = function(e) {
+            e.stopPropagation();
+            const currentIdx = getStageIdx();
+            if (currentIdx < trait[4].length - 1) {
+                const reqCheck = checkTraitRequirements(traitId, currentIdx + 1);
+                if (!reqCheck.success) {
+                    highlightFailedRequirement(reqCheck.failedTraitId);
+                    return;
+                }
+                selectedTraits[traitId] = trait[4][currentIdx + 1];
+                renderMiniTraitTree();
+            }
+        };
+        // Right-click: decrement stage if allowed
+        traitDiv.oncontextmenu = function(e) {
+            e.preventDefault();
+            const currentIdx = getStageIdx();
+            if (currentIdx > 0) {
+                let canSubtract = true;
+                let blockingTraits = [];
+                traits.forEach(childTrait => {
+                    if ((childTrait[1] === traitId || childTrait[5] === traitId || childTrait[7] === traitId)) {
+                        let simulatedStages = { ...selectedTraits };
+                        simulatedStages[traitId] = trait[4][currentIdx - 1];
+                        let childStageIdx = childTrait[4].findIndex(s => s == selectedTraits[childTrait[0]]);
+                        if (childStageIdx > 0) {
+                            for (let s = 1; s <= childStageIdx; s++) {
+                                let reqCheck = checkTraitRequirementsSim(childTrait[0], s, simulatedStages);
+                                if (!reqCheck.success) {
+                                    canSubtract = false;
+                                    blockingTraits.push(childTrait[0]);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
+                if (!canSubtract) {
+                    blockingTraits.forEach(highlightFailedRequirement);
+                    return;
+                }
+                selectedTraits[traitId] = trait[4][currentIdx - 1];
+                renderMiniTraitTree();
+            }
+        };
+        // Make sure traitDiv uses display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+        traitDiv.style.width = '23px';
+        traitDiv.style.height = '29px'; // 23px for icon + 4px for bar + margin
+        traitDiv.style.display = 'flex';
+        traitDiv.style.flexDirection = 'column';
+        traitDiv.style.alignItems = 'center';
+        traitDiv.style.justifyContent = 'flex-start';
+        container.appendChild(traitDiv);
+    });
+    panel.appendChild(container);
 }
+
+function getStageIndex(traitId) {
+    const trait = traits.find(t => t[0] == traitId);
+    if (!trait) return 0;
+    const currentValue = selectedTraits[traitId];
+    return trait[4].findIndex(stage => stage == currentValue);
+}
+
 function checkTraitRequirements(traitId, targetStage) {
     const trait = traits.find(t => t[0] == traitId);
-    if (!trait) return { success: false };
+    if (!trait) return false;
     let requirementsMet = true;
     let failedTrait = null;
     // Check first requirement
@@ -1248,137 +1481,50 @@ function checkTraitRequirements(traitId, targetStage) {
         failedTraitId: failedTrait
     };
 }
-function highlightFailedRequirement(traitId) {
-    const traitDiv = document.querySelector(`.trait[data-trait-id="${traitId}"]`);
-    if (traitDiv) {
-        traitDiv.classList.add('requirement-error');
-        setTimeout(() => {
-            traitDiv.classList.remove('requirement-error');
-        }, 1000);
-    }
-}
-function increaseTraitStage(traitId, stagesElement) {
-    if (availableTraitPoints <= 0) return;
+
+function checkTraitRequirementsSim(traitId, targetStage, simulatedStages) {
     const trait = traits.find(t => t[0] == traitId);
-    if (!trait) return;
-    const currentStage = getStageIndex(traitId);
-    if (currentStage >= trait[4].length - 1) return;
-    // REQUIREMENT CHECK
-    const requirementCheck = checkTraitRequirements(traitId, currentStage + 1);
-    if (!requirementCheck.success) {
-        highlightFailedRequirement(requirementCheck.failedTraitId);
-        return;
-    }
-    const newStage = trait[4][currentStage + 1];
-    selectedTraits[traitId] = newStage;
-    if(stagesElement == ""){
-        stagesElement = document.querySelector(`.trait[data-trait-id="${traitId}"] .trait-stages`);
-    }
-    updateStageButtons(stagesElement, currentStage + 1);
-    const traitDiv = document.querySelector(`.trait[data-trait-id="${traitId}"]`);
-    if (currentStage + 1 > 0) {
-        traitDiv.classList.add('active');
-        traitDiv.offsetHeight;
-    } else {
-        traitDiv.classList.remove('active');
-    }
-    availableTraitPoints--;
-    if(availableTraitPoints <= 0){ availableTraitPoints = 0; }
-    document.getElementById('available-trait-points').textContent = availableTraitPoints;
-}
-function findDependentTraits(traitId, currentStage) {
-    let dependentTraits = [];
-    traits.forEach(trait => {
-        // Check if this trait has the given traitId as a requirement
-        if ((trait[5] === traitId && getStageIndex(trait[0]) > 0) ||
-            (trait[7] === traitId && getStageIndex(trait[0]) > 0) ||
-            (trait[1] === traitId && getStageIndex(trait[0]) > 0)) {
-            dependentTraits.push(trait[0]);
-        }
-    });
-    return dependentTraits;
-}
-function decreaseTraitStage(traitId, stagesElement) {
-    const trait = traits.find(t => t[0] == traitId);
-    if (!trait) return;
-    const currentStage = getStageIndex(traitId);
-    if (currentStage <= 0) return;
-    // Check if any child traits would become invalid after subtraction
-    let blockingTraits = [];
-    traits.forEach(child => {
-        // Only check traits that have this as a parent or requirement
-        if ((child[1] === traitId || child[5] === traitId || child[7] === traitId) && getStageIndex(child[0]) > 0) {
-            // Simulate the new stage for this trait
-            let simulatedStage = currentStage - 1;
-            // Check requirements for the child as if this trait was at simulatedStage
-            let reqCheck = checkTraitRequirements(child[0], getStageIndex(child[0]));
-            // Temporarily override getStageIndex for this trait
-            const origGetStageIndex = window.getStageIndex;
-            window.getStageIndex = function(id) {
-                if (id == traitId) return simulatedStage;
-                return origGetStageIndex(id);
-            };
-            let wouldFail = !checkTraitRequirements(child[0], getStageIndex(child[0])).success;
-            window.getStageIndex = origGetStageIndex;
-            if (wouldFail) blockingTraits.push(child[0]);
-        }
-    });
-    if (blockingTraits.length > 0) {
-        blockingTraits.forEach(highlightFailedRequirement);
-        return;
-    }
-    const newStage = trait[4][currentStage - 1];
-    selectedTraits[traitId] = newStage;
-    updateStageButtons(stagesElement, currentStage - 1);
-    const traitDiv = document.querySelector(`.trait[data-trait-id="${traitId}"]`);
-    if (currentStage - 1 > 0) {
-        traitDiv.classList.add('active');
-    } else {
-        traitDiv.classList.remove('active');
-    }
-    availableTraitPoints++;
-    document.getElementById('available-trait-points').textContent = availableTraitPoints;
-}
-function getStageIndex(traitId) {
-    const trait = traits.find(t => t[0] == traitId);
-    if (!trait) return 0;
-    const currentValue = selectedTraits[traitId];
-    return trait[4].findIndex(stage => stage == currentValue);
-}
-function updateStageButtons(stagesElement, activeIndex) {
-    const buttons = stagesElement.querySelectorAll('button');
-    buttons.forEach((button, index) => {
-        button.classList.remove('active');
-        if (index === activeIndex) {
-            button.classList.add('active');
-            if (index === 0) {
-                button.classList.add('first-stage');
+    if (!trait) return { success: false };
+    let requirementsMet = true;
+    let failedTrait = null;
+    // Check first requirement
+    if (trait[5] !== 0) {
+        const req1 = traits.find(t => t[0] == trait[5]);
+        if (req1) {
+            const req1Stage = req1[4].findIndex(stage => stage == simulatedStages[req1[0]]);
+            if (req1Stage < trait[6]) {
+                requirementsMet = false;
+                failedTrait = req1[0];
             }
         }
-    });
-}
-// --- Hook up trait tree rendering to toggle ---
-window.addEventListener('DOMContentLoaded', function() {
-    // Set trait points based on level (example: 1 per 2 levels)
-    const levelInput = document.getElementById('level-input');
-    function updateTraitPoints() {
-        const level = parseInt(levelInput.value) || 1;
-        availableTraitPoints = Math.floor(level / 2);
-        if(document.getElementById('trait-tree-ui').style.display !== 'none') {
-            renderTraitTree();
+    }
+    // Check second requirement
+    if (requirementsMet && trait[7] !== 0) {
+        const req2 = traits.find(t => t[0] == trait[7]);
+        if (req2) {
+            const req2Stage = req2[4].findIndex(stage => stage == simulatedStages[req2[0]]);
+            if (req2Stage < trait[8]) {
+                requirementsMet = false;
+                failedTrait = req2[0];
+            }
         }
     }
-    levelInput.addEventListener('input', updateTraitPoints);
-    // Render trait tree when toggled on
-    const traitCounter = document.querySelector('.trait-counter');
-    traitCounter.addEventListener('click', function() {
-        if(document.getElementById('trait-tree-ui').style.display !== 'none') {
-            renderTraitTree();
+    // Check parent trait stage
+    if (requirementsMet && trait[1] !== 0) {
+        const parentTrait = traits.find(t => t[0] == trait[1]);
+        if (parentTrait) {
+            const parentStage = parentTrait[4].findIndex(stage => stage == simulatedStages[parentTrait[0]]);
+            if (parentStage < targetStage) {
+                requirementsMet = false;
+                failedTrait = parentTrait[0];
+            }
         }
-    });
-});
-</script>
-<script>
+    }
+    return {
+        success: requirementsMet,
+        failedTraitId: failedTrait
+    };
+}
 // --- Equipment grid interactivity and item picker ---
 let selectedEquipSlot = null;
 function setupEquipmentGrid() {
@@ -1575,7 +1721,7 @@ function populateItemPicker(slotType) {
                     // Re-attach equipment grid listeners if needed
                     setupEquipmentGrid();
                 }
-                       };
+            };
             grid.appendChild(selectionItem);
         }
     });
@@ -1609,6 +1755,17 @@ window.addEventListener('DOMContentLoaded', function() {
         traitCounter.addEventListener('click', toggleTraitTreeView);
     }
 });
+</script>
+<script>
+function highlightFailedRequirement(traitId) {
+    const traitDiv = document.querySelector(`.trait[data-trait-id="${traitId}"]`);
+    if (traitDiv) {
+        traitDiv.classList.add('requirement-error');
+        setTimeout(() => {
+            traitDiv.classList.remove('requirement-error');
+        }, 1000);
+    }
+}
 </script>
 </body>
 </html>
