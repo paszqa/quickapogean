@@ -25,14 +25,14 @@
         }
         .planner-upper {
             width: 100%;
-            height: 50%;
+            height: 55%;
             display: flex;
             flex-direction: row;
             border-bottom: 1px solid #000;
         }
         .planner-lower {
             width: 100%;
-            height: 50%;
+            height: 44%;
             border-top: 1px solid #000;
             display: flex;
             align-items: stretch;
@@ -343,6 +343,11 @@
         }
         .trait-stages button.first-stage{
             display: none;
+        }
+        .trait.requirement-error {
+            border: 2px solid #ff3333 !important;
+            box-shadow: 0 0 8px 2px #ff3333;
+            transition: border 0.2s, box-shadow 0.2s;
         }
     </style>
 </head>
@@ -1200,13 +1205,70 @@ function renderTraitTree() {
         }
     });
 }
+function checkTraitRequirements(traitId, targetStage) {
+    const trait = traits.find(t => t[0] == traitId);
+    if (!trait) return { success: false };
+    let requirementsMet = true;
+    let failedTrait = null;
+    // Check first requirement
+    if (trait[5] !== 0) {
+        const req1 = traits.find(t => t[0] == trait[5]);
+        if (req1) {
+            const req1Stage = getStageIndex(req1[0]);
+            if (req1Stage < trait[6]) {
+                requirementsMet = false;
+                failedTrait = req1[0];
+            }
+        }
+    }
+    // Check second requirement
+    if (requirementsMet && trait[7] !== 0) {
+        const req2 = traits.find(t => t[0] == trait[7]);
+        if (req2) {
+            const req2Stage = getStageIndex(req2[0]);
+            if (req2Stage < trait[8]) {
+                requirementsMet = false;
+                failedTrait = req2[0];
+            }
+        }
+    }
+    // Check parent trait stage
+    if (requirementsMet && trait[1] !== 0) {
+        const parentTrait = traits.find(t => t[0] == trait[1]);
+        if (parentTrait) {
+            const parentStage = getStageIndex(parentTrait[0]);
+            if (parentStage < targetStage) {
+                requirementsMet = false;
+                failedTrait = parentTrait[0];
+            }
+        }
+    }
+    return {
+        success: requirementsMet,
+        failedTraitId: failedTrait
+    };
+}
+function highlightFailedRequirement(traitId) {
+    const traitDiv = document.querySelector(`.trait[data-trait-id="${traitId}"]`);
+    if (traitDiv) {
+        traitDiv.classList.add('requirement-error');
+        setTimeout(() => {
+            traitDiv.classList.remove('requirement-error');
+        }, 1000);
+    }
+}
 function increaseTraitStage(traitId, stagesElement) {
     if (availableTraitPoints <= 0) return;
     const trait = traits.find(t => t[0] == traitId);
     if (!trait) return;
     const currentStage = getStageIndex(traitId);
     if (currentStage >= trait[4].length - 1) return;
-    // No requirements check for now
+    // REQUIREMENT CHECK
+    const requirementCheck = checkTraitRequirements(traitId, currentStage + 1);
+    if (!requirementCheck.success) {
+        highlightFailedRequirement(requirementCheck.failedTraitId);
+        return;
+    }
     const newStage = trait[4][currentStage + 1];
     selectedTraits[traitId] = newStage;
     if(stagesElement == ""){
@@ -1224,12 +1286,47 @@ function increaseTraitStage(traitId, stagesElement) {
     if(availableTraitPoints <= 0){ availableTraitPoints = 0; }
     document.getElementById('available-trait-points').textContent = availableTraitPoints;
 }
+function findDependentTraits(traitId, currentStage) {
+    let dependentTraits = [];
+    traits.forEach(trait => {
+        // Check if this trait has the given traitId as a requirement
+        if ((trait[5] === traitId && getStageIndex(trait[0]) > 0) ||
+            (trait[7] === traitId && getStageIndex(trait[0]) > 0) ||
+            (trait[1] === traitId && getStageIndex(trait[0]) > 0)) {
+            dependentTraits.push(trait[0]);
+        }
+    });
+    return dependentTraits;
+}
 function decreaseTraitStage(traitId, stagesElement) {
     const trait = traits.find(t => t[0] == traitId);
     if (!trait) return;
     const currentStage = getStageIndex(traitId);
     if (currentStage <= 0) return;
-    // No dependency check for now
+    // Check if any child traits would become invalid after subtraction
+    let blockingTraits = [];
+    traits.forEach(child => {
+        // Only check traits that have this as a parent or requirement
+        if ((child[1] === traitId || child[5] === traitId || child[7] === traitId) && getStageIndex(child[0]) > 0) {
+            // Simulate the new stage for this trait
+            let simulatedStage = currentStage - 1;
+            // Check requirements for the child as if this trait was at simulatedStage
+            let reqCheck = checkTraitRequirements(child[0], getStageIndex(child[0]));
+            // Temporarily override getStageIndex for this trait
+            const origGetStageIndex = window.getStageIndex;
+            window.getStageIndex = function(id) {
+                if (id == traitId) return simulatedStage;
+                return origGetStageIndex(id);
+            };
+            let wouldFail = !checkTraitRequirements(child[0], getStageIndex(child[0])).success;
+            window.getStageIndex = origGetStageIndex;
+            if (wouldFail) blockingTraits.push(child[0]);
+        }
+    });
+    if (blockingTraits.length > 0) {
+        blockingTraits.forEach(highlightFailedRequirement);
+        return;
+    }
     const newStage = trait[4][currentStage - 1];
     selectedTraits[traitId] = newStage;
     updateStageButtons(stagesElement, currentStage - 1);
