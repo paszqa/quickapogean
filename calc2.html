@@ -83,9 +83,9 @@
         .upper-col2-row1-desc {
             width: 44%;
             height: 100%;
-            display: flex;
             align-items: center;
             justify-content: center;
+            text-align: center;
         }
         .upper-col2-row2 {
             width: 100%;
@@ -95,12 +95,13 @@
             justify-content: center;
         }
         .upper-col3 {
-            width: 35%;
-            height: 100%;
-            display: flex;
+            width: 350px;
+            height: 400px;
+            display: block;
             align-items: center;
             justify-content: center;
             border-left: 1px solid #000;
+            overflow: scroll;
         }
         /* Lower segment */
         .stats-table-container {
@@ -164,6 +165,7 @@
             grid-template-columns: 120px 100px 50px 40px 40px 40px 140px 100px 140px 100px 140px 100px ;
             gap: 0px;
             width: 1140px;
+            height: 20px;
             margin-bottom: 0px;
             border-bottom: 1px solid #333;
             margin-top: 2px;
@@ -193,22 +195,23 @@
             justify-content: center;
         }
         .selected-equip-slot {
-            outline: 2px solid #eaff8c;
+            outline: 0px solid #eaff8c;
         }
         .selection-grid {
             display: grid;
-            grid-template-columns: repeat(4, 48px);
+            grid-template-columns: repeat(6, 48px);
             gap: 6px;
             margin: 10px;
         }
         .selection-item {
             width: 48px;
             height: 48px;
-            border: 1px solid #aaa;
+            border: 2px solid rgb(54,54,54);
+            border-radius: 4px;
+            background-color: rgb(36, 0, 0);
             display: flex;
             align-items: center;
             justify-content: center;
-            background: #222;
             cursor: pointer;
         }
         .selection-item img {
@@ -363,6 +366,82 @@
         .tiny-stages div {
             margin-right: 1px;
         }
+        /*-- description of trait -- */
+        
+        .active-stage-desc {
+            background: transparent;
+            display: inline-flex;
+            text-align: center;
+            color: #eaff8c;
+            display: inline-block;
+            min-width: 20px;
+            text-shadow: 2px 2px 2px #0000008f;
+        }
+        .inactive-stage-desc {
+            background: transparent;
+            display: inline-flex;
+            text-align: center;
+            color: #666666;
+            display: inline-block;
+            min-width: 20px;
+            text-shadow: 2px 2px 2px #0000008f;
+        }
+        /*Rarity for images*/
+        img.uncommon {
+            filter: drop-shadow(0px 0px 5px #23ff2e);
+        }
+        img.rare {
+            filter: drop-shadow(0px 0px 5px #00ccff);
+        }
+        img.epic {
+            filter: drop-shadow(0px 0px 5px #f712eb)
+        }
+        img.legendary {
+            filter: drop-shadow(0px 0px 5px #ffee01)
+        }
+        /* item size fix*/
+        
+        .item-slot img.size-32, .selection-item img.size-32 {
+            width: 48px;
+            height: 48px;
+        }
+        .item-slot img.size-16, .selection-item img.size-16 {
+            width: 24px;
+            height: 24px;
+        }
+        button {
+            background-color: rgb(61, 204, 69);
+            color: black;
+            transition: 0.6s;
+        }
+        button.stats{
+            height: 14px;
+            width: 14px;
+            background: transparent;
+            border: none;
+        }
+        button.stats img{
+            width: 16px;
+            height: 16px;
+        }
+        /*change image on hover*/
+        img.plus{
+            content: url("Icons/plus.png");
+        }
+        img.plus:hover{
+            content: url("Icons/plus_hover.png");
+        }
+        img.minus{
+            content: url("Icons/minus.png");
+        }
+        img.minus:hover{
+            content: url("Icons/minus_hover.png");
+        }
+        /* equip size invalid */
+        
+        .item-slot.invalid {
+            border-color: red;
+        }
     </style>
 </head>
 <body>
@@ -402,7 +481,7 @@
                                 <div class="item-slot" data-slot="hand"></div>
                                 <div class="item-slot" data-slot="ring"></div>
                                 <div class="item-slot" data-slot="legs"></div>
-                                <div class="item-slot" data-slot="bagslot"></div>
+                                <div class="item-slot" data-slot="ammoslot"></div>
                                 <div class="item-slot-x" data-slot="NONE"></div>
                                 <div class="item-slot" data-slot="boots"></div>
                             </div>
@@ -749,9 +828,9 @@ const pointValues = {
     Mana: 5,
     Magic: 1,
     Ability: 1,
-    "HP Regen": 0.2,
-    "MP Regen": 0.2,
-    Capacity: 10
+    "HP Regen": 1,
+    "MP Regen": 1,
+    Capacity: 25
 };
 // Global stat data structure
 const statData = {
@@ -786,6 +865,21 @@ const baseValues = {
     Defense: 0,
     Capacity: 225
 };
+ function SetImageSize(img) {
+                const image = new Image();
+                image.src = img.src;
+                image.onload = function() {
+                    if (image.width === 32 && image.height === 32) {
+                        img.classList.add('size-32');
+                        img.classList.remove('size-16');
+                    } else if (image.width === 16 && image.height === 16) {
+                        img.classList.add('size-16');
+                        img.classList.remove('size-32');
+                    } else {
+                        img.classList.remove('size-32', 'size-16');
+                    }
+                };
+            }
 
 function updateStatData() {
     // Update statBonus from allocated points
@@ -901,8 +995,8 @@ function buildStatRow(stat, baseValue, currentClass) {
     classMult = classMultipliers[currentClass][stat] || 1;
     multiplier = (classMult * 100).toFixed(0)+"%";
     pointVal = pointValues[stat] || 0;
-    statCalc = `${baseValue}`;
-    if (canAllocate && added > 0) statCalc += ` + [(${added} x ${pointVal}) x ${multiplier}]`;
+    //statCalc = `${baseValue}`;
+    if (canAllocate && added > 0) statCalc += `(${added} x ${pointVal}) x ${multiplier}`;
     
     if (canAllocate) statBonus += added * pointVal;
     statBonus = (statBonus * classMult).toFixed(2);
@@ -911,10 +1005,10 @@ function buildStatRow(stat, baseValue, currentClass) {
     itemSlots.forEach(slot => {
         const img = slot.querySelector('img');
         if (img && img.alt) {
-            console.log(`Processing item: ${img.alt}`);
+            //console.log(`Processing item: ${img.alt}`);
             const itemName = img.alt.split(';')[0];
             const itemRarity = img.alt.split(';')[1] || '';
-            console.log(`Item name: ${itemName}, Rarity: ${itemRarity}`);
+            //console.log(`Item name: ${itemName}, Rarity: ${itemRarity}`);
             //find using item's name and rarity [1]
             const item = items.find(i => i[0] === itemName && i[20] === itemRarity);
             if (item) {
@@ -1040,7 +1134,7 @@ function buildStatRow(stat, baseValue, currentClass) {
                         break;
                 }
                 
-                console.log(`Found item: ${item[0]} with rarity ${itemRarity}`);
+                //console.log(`Found item: ${item[0]} with rarity ${itemRarity}`);
                 const itemStat = item[stat.toLowerCase().replace(' ', '')];
                 if (itemStat && !isNaN(itemStat)) {
                     itemBonus += itemStat * classMult;
@@ -1053,20 +1147,96 @@ function buildStatRow(stat, baseValue, currentClass) {
     if (itemCalc != ''){
         itemCalc =  `[(`+itemCalc+`) x ${multiplier}]`;
     }
+    //----- Traits calculation-----
+    //check the stage of Trait ID 15, Blade Training
+    traitBonus = 0;
+    let traitCalc = '';
+    console.log("TEST: "+selectedTraits[15]);
+    //15 - Blade Training
+    if (parseInt(selectedTraits[15]) > 0) {
+        if(stat === "Damage"){
+            let traitStage = parseInt(selectedTraits[15]);
+            console.log("Blade Training is selected with level: " + selectedTraits[15]);
+            //check if item in left hand type == sword
+            let damageOfItem = 0;
+            //data-slot = 'hand'
+            const itemInHand = document.querySelectorAll('.item-slot[data-slot="hand"] img');
+            if (itemInHand[0]) {
+                let item;
+                if(itemInHand[0].alt) {
+                    const [name, rarity] = itemInHand[0].alt.split(';');
+                    item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                    //if(item) console.log("Found item in left hand: " + item[0]+ " with rarity: " + rarity+ " and damage: " + item[5]);
+                }                
+                if(!item) return; //if not found item
+                damageOfItem = item[5] || 0;
+                typeOfItem = item[2] || '';
+                if(typeOfItem == 'sword'){
+                    traitBonus += Math.max(1,damageOfItem * (traitStage / 100));
+                    traitCalc += ` + Max(1, (${damageOfItem} x (${traitStage}%))`;
+                }
+            }
+            if(itemInHand.length > 1){
+                if(itemInHand[1]) {
+                    let item;
+                    if(itemInHand[1].alt) {
+                        const [name, rarity] = itemInHand[1].alt.split(';');
+                        item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                        //if(item) console.log("Found item in left hand: " + item[0]+ " with rarity: " + rarity+ " and damage: " + item[5]);
+                    }                
+                    if(!item) return; //if not found item
+                    damageOfItem = item[5] || 0;
+                    typeOfItem = item[2] || '';
+                    if(typeOfItem == 'sword'){
+                        traitBonus += Math.max(1,damageOfItem * (traitStage / 100));
+                        traitCalc += ` + Max(1, (${damageOfItem} x (${traitStage}%))`;
+                    }
+                }
+            }
+        }
+    }
+    itemBonus *= classMult;
+    //16 - Hand Finesse - Gain 1 Attackspeed for each X Ability you have capping at 5
+    if (parseInt(selectedTraits[16]) > 0) {
+        console.log("Stat: " + stat);
+        if(stat === "Attack Speed"){
+            let traitStage = parseInt(selectedTraits[16]);
+            console.log("Hand Finesse is selected with level: " + selectedTraits[16]);
+            //get total Ability from stats and from items
+            console.log(statData);
+            let totalAbility = statData["Ability"].statBonus + statData["Ability"].itemBonus;
+            console.log("Stat bonus: " + statData["Ability"].statBonus + " Item Bonus: " + statData["Ability"].itemBonus + " Total Ability: " + totalAbility);
+            //divide Ability by traitStage
+            let abilityToAdd = Math.floor(totalAbility / traitStage);
+            //cap at 5
+            abilityToAdd = Math.min(abilityToAdd, 5);
+            traitBonus += abilityToAdd;
+            traitCalc += ` + Min(floor(${totalAbility} / ${traitStage}), 5)`;
+            //check if item in left hand type == sword
+        }
+    }
+    //-----------------------------
+
+    statData[stat].statBonus = parseInt(statBonus);
+    statData[stat].itemBonus = parseInt(itemBonus);
+    statData[stat].traitBonus = traitBonus;
+    //-----------------------------
     return `<div class=\"stat-container\">
         <div>${stat}</div>
         <div>${multiplier}</div>
         <div>${baseValue}</div>
-        <div>${canAllocate && added > 0 ? `<button onclick='subtractPoint(\"${stat}\")'>-</button>` : ''}</div>
-        <div>${canAllocate && (availablePoints > 0 && added < selectedLevel) ? `<button onclick='addPoint(\"${stat}\")'>+</button>` : ''}</div>
+        <div>${canAllocate && added > 0 ? `<button class="stats" onclick='subtractPoint(\"${stat}\")'><img class="minus" src="Icons/minus.png"></button>` : ''}</div>
+        <div>${canAllocate && (availablePoints > 0 && added < selectedLevel) ? `<button class="stats" onclick='addPoint(\"${stat}\")'><img class="plus" src="Icons/plus.png"></button>` : ''}</div>
         <div>${added}</div>
         <div>${statCalc}</div>
         <div>${statBonus}</div>
         <div>${itemCalc}</div>
-        <div>${itemBonus * classMult}</div>
-        <div style='min-width:120px;'>-</div>
-        <div style='min-width:120px;'>-</div>
+        <div>${itemBonus}</div>
+        <div style='min-width:120px;'>${traitCalc}</div>
+        <div style='min-width:120px;'>${traitBonus.toFixed(1)}</div>
     </div>`;
+
+    // Recalculate final value
 }
 // Hook stat table update to level and class selection
 (function() {
@@ -1227,15 +1397,14 @@ function renderTraitTree() {
                     highlightFailedRequirement(reqCheck.failedTraitId);
                     return;
                 }
-                // --- ADDITIONAL CHECK FOR TRAIT POINTS ---
                 if (getRemainingTraitPoints() > 0) {
                     selectedTraits[traitId] = trait[4][currentIdx + 1];
                     renderMiniTraitTree();
                     updateStatTable();
+                    if (typeof updateHandSlotColors === 'function') updateHandSlotColors();
                 }
             }
         };
-        // Right-click: decrement stage if allowed
         traitDiv.oncontextmenu = function(e) {
             e.preventDefault();
             const currentIdx = getStageIdx();
@@ -1266,7 +1435,15 @@ function renderTraitTree() {
                 selectedTraits[traitId] = trait[4][currentIdx - 1];
                 renderMiniTraitTree();
                 updateStatTable();
+                if (typeof updateHandSlotColors === 'function') updateHandSlotColors();
             }
+        };
+        // Hover logic: show trait description
+        traitDiv.onmouseover = function() {
+            showTraitDescription(trait);
+        };
+        traitDiv.onmouseout = function() {
+            clearTraitDescription();
         };
         // Make sure traitDiv uses display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
         traitDiv.style.width = '23px';
@@ -1389,11 +1566,11 @@ function renderMiniTraitTree() {
                     highlightFailedRequirement(reqCheck.failedTraitId);
                     return;
                 }
-                // --- ADDITIONAL CHECK FOR TRAIT POINTS ---
                 if (getRemainingTraitPoints() > 0) {
                     selectedTraits[traitId] = trait[4][currentIdx + 1];
                     renderMiniTraitTree();
                     updateStatTable();
+                    if (typeof updateHandSlotColors === 'function') updateHandSlotColors();
                 }
             }
         };
@@ -1428,7 +1605,15 @@ function renderMiniTraitTree() {
                 selectedTraits[traitId] = trait[4][currentIdx - 1];
                 renderMiniTraitTree();
                 updateStatTable();
+                if (typeof updateHandSlotColors === 'function') updateHandSlotColors();
             }
+        };
+        // Hover logic: show trait description
+        traitDiv.onmouseover = function() {
+            showTraitDescription(trait);
+        };
+        traitDiv.onmouseout = function() {
+            clearTraitDescription();
         };
         // Make sure traitDiv uses display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
         traitDiv.style.width = '23px';
@@ -1551,6 +1736,8 @@ function setupEquipmentGrid() {
     });
     patchSimpleItemHover();
 }
+
+
 function populateItemPicker(slotType) {
     const picker = document.querySelector('.upper-col3');
     picker.innerHTML = '';
@@ -1565,6 +1752,10 @@ function populateItemPicker(slotType) {
             const rarity = item[item.length-1] || '';
             img.src = `Items/${item[item.length-2]}`;
             img.alt = `${item[0]};${rarity}`;
+            SetImageSize(img);
+            if(rarity){
+                img.classList.add(rarity);
+            }
             selectionItem.appendChild(img);
             selectionItem.onclick = function() {
                 if(selectedEquipSlot) {
@@ -1576,11 +1767,16 @@ function populateItemPicker(slotType) {
                     slotImg.src = `Items/${item[item.length-2]}`;
                     slotImg.alt = `${item[0]};${rarity}`;
                     slotImg.style.display = 'block';
+                    SetImageSize(slotImg);
+                    if(rarity){
+                        slotImg.classList.add(rarity);
+                    }
                     // Debug log for troubleshooting
                     console.log("Chosen item:", item[0]);
                     updateDebug();
                     // Re-attach equipment grid listeners if needed
                     setupEquipmentGrid();
+                    updateHandSlotColors();
                 }
             };
             grid.appendChild(selectionItem);
@@ -1616,17 +1812,48 @@ function patchSimpleItemHover() {
         sel.onmouseout = clearItemName;
     });
 }
-// Ensure equipment grid is set up after DOMContentLoaded
+// Patch right-click to clear item slot
+function patchItemSlotRightClick() {
+    document.querySelectorAll('.item-slot').forEach(slot => {
+        slot.oncontextmenu = function(e) {
+            e.preventDefault();
+            slot.innerHTML = '';
+            if (typeof updateStatTable === 'function') updateStatTable();
+            if (typeof updateHandSlotColors === 'function') updateHandSlotColors();
+            if (typeof clearItemName === 'function') clearItemName();
+        };
+    });
+}
 window.addEventListener('DOMContentLoaded', function() {
     setupEquipmentGrid();
+    patchItemSlotRightClick();
 });
 </script>
 <script>
-function showItemName(item) {
+function showItemName(item) { //Show item description
     const descCell = document.querySelector('.upper-col2-row1-desc');
     if (!descCell || !item) return;
     // Build description
-    let html = `${item[0]}<br>`;
+    const rarity = item[item.length-1] || '';
+    let titleColor = '#fff';
+    switch(rarity) {
+        case 'common':
+            titleColor = '#fff';
+            break;
+        case 'uncommon':
+            titleColor = '#23ff2e';
+            break;
+        case 'rare':
+            titleColor = '#00ccff';
+            break;
+        case 'epic':
+            titleColor = '#f712eb';
+            break;
+        case 'legendary':
+            titleColor = '#ffee01';
+            break;
+    }
+    let html = `<span style="font-weight: bold; color: ${titleColor}">${item[0]}</span><br>`;
     if(item[16]) html += `${item[16]}<br>`;
     if(item[2]) html += `Type: ${item[2]}<br>`;
     // List of stat fields to check and display
@@ -1646,46 +1873,53 @@ function showItemName(item) {
     statFields.forEach(f => {
         const val = item[f.idx];
         if(val && !isNaN(val) && Number(val) !== 0) {
-            html += `${f.label}: ${val}<br>`;
+            let valueColor = '#fff';
+            if(val < 0){
+                valueColor = '#ff0000'; // Negative values in red
+            } else if(val > 0){
+                valueColor = '#00ff00'; // Positive values in green
+            } else {
+                valueColor = '#faf'; // Default color for zero or neutral values
+            }
+            html += `${f.label}: <span style="color: ${valueColor}">${val}</span><br>`;
         }
     });
     if(item[3] && !isNaN(item[3])) {
         html += `It weighs ${(item[3]/10).toFixed(2)} oz.<br>`;
     }
     // Show rarity if present
-    const rarity = item[item.length-1] || '';
-    if(rarity) html += `[${rarity}]`;
+    if(rarity) html += `<span style="color: ${titleColor}">[${rarity}]</span>`;
     descCell.innerHTML = html;
 }
 function clearItemName() {
     const descCell = document.querySelector('.upper-col2-row1-desc');
     if (descCell) descCell.innerHTML = 'Description';
 }
-function patchSimpleItemHover() {
-    // Equipment grid
-    document.querySelectorAll('.item-slot').forEach(slot => {
-        slot.onmouseover = function() {
-            const img = slot.querySelector('img');
-            if(img && img.alt) {
-                const [name, rarity] = img.alt.split(';');
-                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
-                if(item) showItemName(item);
+function showTraitDescription(trait) {
+    const descCell = document.querySelector('.upper-col2-row1-desc');
+    if (!descCell || !trait) return;
+    let html = `<div style="text-align: center;">${trait[2]}<br>${trait[3]}<br><br>`;
+    if (trait[4] && trait[4].length > 1) {
+        let currentStage = 0;
+        trait[4].forEach((stage, idx) => {
+            //if (stage !== 0 && stage !== '0' && stage !== '0%' && stage !== 'Off') {
+            //Check what stage of this trait is selected
+            currentStage = selectedTraits[trait[0]];
+            if (currentStage === stage) {
+                html += `<div class="active-stage-desc">${stage}</div> `;
+            } else {
+                html += `<div class="inactive-stage-desc">${stage}</div> `;
             }
-        };
-        slot.onmouseout = clearItemName;
-    });
-    // Item picker
-    document.querySelectorAll('.selection-item').forEach(sel => {
-        sel.onmouseover = function() {
-            const img = sel.querySelector('img');
-            if(img && img.alt) {
-                const [name, rarity] = img.alt.split(';');
-                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
-                if(item) showItemName(item);
-            }
-        };
-        sel.onmouseout = clearItemName;
-    });
+            //    html += `<span style='color:#eaff8c'>${stage}</span> `;
+            //}
+        });
+    }
+    html += `</div>`;
+    descCell.innerHTML = html;
+}
+function clearTraitDescription() {
+    const descCell = document.querySelector('.upper-col2-row1-desc');
+    if (descCell) descCell.innerHTML = 'Description';
 }
 // Call patchSimpleItemHover after populating equipment grid and item picker
 function setupEquipmentGrid() {
@@ -1697,6 +1931,7 @@ function setupEquipmentGrid() {
             slot.classList.add('selected-equip-slot');
             console.log("Selected slot:", slot.getAttribute('data-slot'));
             populateItemPicker(slot.getAttribute('data-slot'));
+            updateHandSlotColors();
         };
     });
     patchSimpleItemHover();
@@ -1715,6 +1950,10 @@ function populateItemPicker(slotType) {
             const rarity = item[item.length-1] || '';
             img.src = `Items/${item[item.length-2]}`;
             img.alt = `${item[0]};${rarity}`;
+            SetImageSize(img);
+            if(rarity){
+                img.classList.add(rarity);
+            }
             selectionItem.appendChild(img);
             selectionItem.onclick = function() {
                 if(selectedEquipSlot) {
@@ -1726,11 +1965,16 @@ function populateItemPicker(slotType) {
                     slotImg.src = `Items/${item[item.length-2]}`;
                     slotImg.alt = `${item[0]};${rarity}`;
                     slotImg.style.display = 'block';
+                    SetImageSize(slotImg);
+                    if(rarity){
+                        slotImg.classList.add(rarity);
+                    }
                     // Debug log for troubleshooting
                     console.log("Chosen item:", item[0]);
                     updateDebug();
                     // Re-attach equipment grid listeners if needed
                     setupEquipmentGrid();
+                    updateHandSlotColors();
                 }
             };
             grid.appendChild(selectionItem);
@@ -1777,6 +2021,7 @@ function highlightFailedRequirement(traitId) {
         }, 1000);
     }
 }
+
 </script>
 <script>
 function getAvailableTraitPoints(level) {
@@ -1797,5 +2042,36 @@ function getRemainingTraitPoints() {
     return getAvailableTraitPoints(selectedLevel) - getUsedTraitPoints();
 }
 </script>
-</body>
-</html>
+<script>
+function updateHandSlotColors() {
+    // Find all hand slots (assume first and second .item-slot[data-slot="hand"])
+    const handSlots = document.querySelectorAll('.item-slot[data-slot="hand"]');
+    if (handSlots.length < 2) return;
+    const leftHandSlot = handSlots[0];
+    const rightHandSlot = handSlots[1];
+    const leftHandImg = leftHandSlot.querySelector('img');
+    const rightHandImg = rightHandSlot.querySelector('img');
+    const leftHandItem = leftHandImg ? items.find(i => i[0] === leftHandImg.alt.split(";")[0]) : null;
+    const rightHandItem = rightHandImg ? items.find(i => i[0] === rightHandImg.alt.split(";")[0]) : null;
+    let leftHandSize = leftHandItem ? leftHandItem[15] || 0 : 0;
+    let rightHandSize = rightHandItem ? rightHandItem[15] || 0 : 0;
+    console.log(leftHandSize+" + " + rightHandSize+ " = " + (leftHandSize + rightHandSize));
+    // Trait 20: Dual-wielding
+    const dualWieldingTrait = selectedTraits["20"];
+    let dualWieldingActive = false;
+    if (dualWieldingTrait && dualWieldingTrait !== 0 && dualWieldingTrait !== "0" && dualWieldingTrait !== "Off") {
+        dualWieldingActive = true;
+        // If size 6, treat as 5
+        if (leftHandSize == 6) leftHandSize = 5;
+        if (rightHandSize == 6) rightHandSize = 5;
+    }
+    const totalSize = leftHandSize + rightHandSize;
+    if (totalSize > 10) {
+        leftHandSlot.classList.add('invalid');
+        rightHandSlot.classList.add('invalid');
+    } else {
+        leftHandSlot.classList.remove('invalid');
+        rightHandSlot.classList.remove('invalid');
+    }
+}
+</script>
