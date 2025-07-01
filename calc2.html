@@ -25,38 +25,55 @@
         }
         .planner-upper {
             width: 100%;
-            height: 500px;
+            height: 400px;
             display: flex;
             flex-direction: row;
-            border-bottom: 1px solid #000;
+            border-bottom: 0px solid #000;
         }
         .planner-lower {
             width: 100%;
             height: 400px;
-            border-top: 1px solid #000;
+            border-top: 0px solid #000;
             align-items: stretch;
             justify-content: stretch;
         }
         /* Upper columns */
         .upper-col1 {
             width: 350px;
-            border-right: 1px solid #000;
+            border-right: 0px solid #000;
         }
         .upper-col1-segment {
             width: 100%;
-            border-bottom: 1px solid #000;
+            border-bottom: 0px solid #000;
             align-items: center;
             justify-content: center;
             font-size: 1em;
         }
-        .class-choice { height: 100px; }
-        .level-choice { height: 50px }
-        .stat-counter { height: 50px; }
-        .trait-counter { height: 400px; border-bottom: none; }
+        .class-choice {
+            height: 80px;
+        }
+        .level-choice { 
+            height: 100px; 
+            width: 100px;
+        }
+        .stat-counter { 
+            height: 100px; 
+            width: 300px;
+            display: flex;
+        }
+        .trait-counter { 
+            height: 400px; 
+            border-bottom: none; 
+            width: 100px;
+        }
+        .points-row{
+            width: 300px;
+            display: flex;
+        }
         .upper-dynamic-cell {
             width: 80%;
             height: 100%;
-            border-left: 1px solid #000;
+            border-left: 0px solid #000;
             display: flex;
         }
         .upper-col2 {
@@ -64,18 +81,22 @@
             height: 100%;
             display: flex;
             flex-direction: column;
-            border-right: 1px solid #000;
+            border-right: 0px solid #000;
+        }
+        .upper-col2-stat-segment {
+            display: flex;
+            width: 400px;
         }
         .upper-col2-row1 {
             width: 100%;
             height: 69%;
             display: flex;
-            border-bottom: 1px solid #000;
+            border-bottom: 0px solid #000;
         }
         .upper-col2-row1-equip {
             width: 55%;
             height: 100%;
-            border-right: 1px solid #000;
+            border-right: 0px solid #000;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -100,7 +121,7 @@
             display: block;
             align-items: center;
             justify-content: center;
-            border-left: 1px solid #000;
+            border-left: 0px solid #000;
             overflow: scroll;
         }
         /* Lower segment */
@@ -109,7 +130,7 @@
             display: flex;
             align-items: center;
             justify-content: left;
-            border: 1px solid #000;
+            border: 0px solid #000;
         }
         .class-choice-row {
             display: flex;
@@ -242,6 +263,18 @@
             width: 64px;
             height: 64px;
             margin-bottom: 5px;
+        }
+        .class-choice-img{
+            border: 3px solid #000000;
+            filter: grayscale(100%);
+            box-shadow: 0 0 12px 3px #000000, 0 0 2px 1px rgb(0, 0, 0);
+        }
+        .class-choice-img.selected {
+            border: 3px solid #fff;
+            box-shadow: 0 0 12px 3px #fff, 0 0 2px 1px #ffe;
+            filter: grayscale(0%);
+            /*add transition:*/;
+            transition: filter 0.3s, box-shadow 0.3s;
         }
         /* --- TRAIT TREE STYLES (ported from calc.html) --- */
         .traits-panel {
@@ -456,20 +489,27 @@
                     <img src="mage.png" alt="Mage" class="class-choice-img" data-class="Mage" style="width:48px;height:72px;cursor:pointer;">
                 </div>
             </div>
-            <div class="upper-col1-segment level-choice" style="display: flex; align-items:center;justify-content:center;">
-                <span style="color:#fff;margin-right:8px;">Level:</span>
-                <input class="levelnumber" type="number" id="level-input" min="1" max="100" value="1" style="width:60px;height:32px;font-size:1em;">
-            </div>
-            <div class="upper-col1-segment stat-counter" style="align-items:center;justify-content:center;">
-                <span style="color:#fff;">Stat Points <span id="available-points">0</span>/<span id="total-points">0</span></span>
-            </div>
-            <div class="upper-col1-segment traits-panel-col" style="align-items:center;justify-content:center;padding:0;">
-                <div id="traits-panel-mini" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"></div>
-            </div>
+
+                        <div class="upper-col1-segment traits-panel-col" style="align-items:center;justify-content:center;padding:0;">
+                            <div id="traits-panel-mini" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"></div>
+                        </div>
         </div>
         <div class="upper-dynamic-cell">
             <div id="planner-ui" style="width: 100%; height: 100%; display: flex; flex-direction: row;">
                 <div class="upper-col2">
+
+
+                    <div class="points-row">
+                        <div class="upper-col2-stat-segment level-choice" style="display: flex; align-items:center;justify-content:center;">
+                            <span style="color:#fff;margin-right:8px;">Level:</span>
+                            <input class="levelnumber" type="number" id="level-input" min="1" max="100" value="1" style="width:60px;height:32px;font-size:1em;">
+                        </div>
+                        <div class="upper-col2-stat-segment stat-counter" style="align-items:center;justify-content:center;">
+                            <span style="color:#fff;">Stat Points <span id="available-points">0</span>/<span id="total-points">0</span></span>
+                        </div>
+                    </div>
+
+
                     <div class="upper-col2-row1">
                         <div class="upper-col2-row1-equip">
                             <div class="item-grid">
@@ -486,11 +526,10 @@
                                 <div class="item-slot" data-slot="boots"></div>
                             </div>
                         </div>
-                        <div class="upper-col2-row1-desc">Description</div>
+                        <div class="upper-col2-row1-desc"></div>
                     </div>
-                    <div class="upper-col2-row2">Big Cell</div>
                 </div>
-                <div class="upper-col3">Item Picker</div>
+                <div class="upper-col3"></div>
             </div>
             <div id="trait-tree-ui" style="width: 100%; height: 100%; display: none; align-items: center; justify-content: center; font-size: 2em;">
                 Trait tree
@@ -499,7 +538,7 @@
     </div>
     <div class="planner-lower">
         <div class="stats-table-container" id="stats-table-container">
-            <!-- Stats table will be generated here by JS -->asdasd
+            <!-- Stats table will be generated here by JS -->
         </div>
     </div>
 </div>
@@ -931,8 +970,10 @@ function updateStatTable() {
     availablePoints = totalStatPoints - usedPoints;
     // Stat and trait counter
     document.querySelector('.stat-counter').innerHTML =
-        `<div style='width:100%;text-align:center;'>
+        `<div style='width:50%;text-align:center;'>
             Stat Points: <span id='available-points'>${availablePoints}</span>/<span id='total-points'>${totalStatPoints}</span><br>
+            </div>
+            <div style='width:50%;text-align:center;'>
             Trait Points: <span id='available-trait-points'>${getRemainingTraitPoints()}</span>/<span id='total-trait-points'>${getAvailableTraitPoints(level)}</span>
         </div>`;
     // Build stat table (manual rows for each stat)
@@ -1010,7 +1051,7 @@ function buildStatRow(stat, baseValue, currentClass) {
             const itemRarity = img.alt.split(';')[1] || '';
             //console.log(`Item name: ${itemName}, Rarity: ${itemRarity}`);
             //find using item's name and rarity [1]
-            const item = items.find(i => i[0] === itemName && i[20] === itemRarity);
+            const item = items.find(i => i[0] === itemName && i[i.length-1] === itemRarity);
             if (item) {
                 //name	 slot	 type	 weight	 range	 DMG	 hp	 mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??	 eqSize	HP reg	MP reg	 description 	rarity
 
@@ -1732,6 +1773,7 @@ function setupEquipmentGrid() {
             slot.classList.add('selected-equip-slot');
             console.log("Selected slot:", slot.getAttribute('data-slot'));
             populateItemPicker(slot.getAttribute('data-slot'));
+            updateHandSlotColors();
         };
     });
     patchSimpleItemHover();
