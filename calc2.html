@@ -24,7 +24,7 @@
             flex-direction: column;
         }
         .planner-upper {
-            width: 100%;
+            width: 1250px;
             height: 400px;
             display: flex;
             flex-direction: row;
@@ -32,14 +32,14 @@
         }
         .planner-lower {
             width: 100%;
-            height: 400px;
+            height: 600px;
             border-top: 0px solid #000;
             align-items: stretch;
             justify-content: stretch;
         }
         /* Upper columns */
         .upper-col1 {
-            width: 350px;
+            width: 340px;
             border-right: 0px solid #000;
         }
         .upper-col1-segment {
@@ -54,7 +54,7 @@
         }
         .level-choice { 
             height: 100px; 
-            width: 100px;
+            width: 80px;
         }
         .stat-counter { 
             height: 100px; 
@@ -67,17 +67,24 @@
             width: 100px;
         }
         .points-row{
-            width: 300px;
+            width: 400px;
             display: flex;
         }
+        .points-box{
+            width: 70px;
+            text-align: center;
+            border: 2px solid #303030;
+            background: rgba(0, 0, 0, 0.24);
+            margin-left: 27px;
+        }
         .upper-dynamic-cell {
-            width: 80%;
+            width: 910px;
             height: 100%;
             border-left: 0px solid #000;
             display: flex;
         }
         .upper-col2 {
-            width: 30%;
+            width: 400px;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -85,28 +92,33 @@
         }
         .upper-col2-stat-segment {
             display: flex;
-            width: 400px;
+            width: 200px;
         }
+
         .upper-col2-row1 {
-            width: 100%;
-            height: 69%;
+            width: 400px;
+            height: 276px;
             display: flex;
             border-bottom: 0px solid #000;
         }
+
         .upper-col2-row1-equip {
-            width: 55%;
+            width: 230px;
             height: 100%;
             border-right: 0px solid #000;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: left;
         }
         .upper-col2-row1-desc {
-            width: 44%;
-            height: 100%;
+            width: 170px;
+            height: 250px;
+            padding-top: 10px;
             align-items: center;
             justify-content: center;
             text-align: center;
+            border: 2px solid #303030;
+            background: rgba(0, 0, 0, 0.24);
         }
         .upper-col2-row2 {
             width: 100%;
@@ -117,11 +129,13 @@
         }
         .upper-col3 {
             width: 350px;
-            height: 400px;
+            height: 360px;
             display: block;
             align-items: center;
             justify-content: center;
-            border-left: 0px solid #000;
+            border: 2px solid #303030;
+            background: rgba(0, 0, 0, 0.24);
+            margin: 20px;
             overflow: scroll;
         }
         /* Lower segment */
@@ -183,13 +197,23 @@
         }
         .stat-container {
             display: grid;
-            grid-template-columns: 120px 100px 50px 40px 40px 40px 140px 100px 140px 100px 140px 100px ;
+            grid-template-columns: 120px 50px 50px 20px 20px 35px 60px 50px 140px 100px 210px 100px 100px;
             gap: 0px;
             width: 1140px;
-            height: 20px;
+            height: 17px;
             margin-bottom: 0px;
             border-bottom: 1px solid #333;
             margin-top: 2px;
+            font-size: 0.9em;
+        }
+        .stat-container:hover{
+            background-color: rgb(46, 37, 0);
+        }
+        .stat-container.wide:hover{
+            background-color: transparent;
+        }
+        .stat-container.wide {
+            height: 40px;
         }
         .stat-container > div {
             padding: 1px;
@@ -201,19 +225,23 @@
             grid-template-columns: repeat(3, 48px);
             grid-template-rows: repeat(4, 48px);
             gap: 5px;
-            margin-left: 20px;
+            margin-left: 0px;
         }
         .item-slot {
             width: 48px;
             height: 48px;
+            margin-left: 30px;
             border: 2px solid rgb(54, 54, 54);
             border-radius: 4px;
-            background-color: rgb(36, 0, 0);
+            background-color: rgb(17, 17, 17);
             cursor: pointer;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+        .item-slot:hover{
+            background-color: rgb(46, 37, 0);
         }
         .selected-equip-slot {
             outline: 0px solid #eaff8c;
@@ -229,11 +257,14 @@
             height: 48px;
             border: 2px solid rgb(54,54,54);
             border-radius: 4px;
-            background-color: rgb(36, 0, 0);
+            background-color: rgb(17, 17, 17);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+        }
+        .selection-item:hover {
+            background-color: rgb(46, 37, 0);
         }
         .selection-item img {
             width: 40px;
@@ -448,14 +479,17 @@
             transition: 0.6s;
         }
         button.stats{
-            height: 14px;
-            width: 14px;
+            height: 12px;
+            width: 12x;
             background: transparent;
             border: none;
         }
         button.stats img{
-            width: 16px;
-            height: 16px;
+            width: 13px;
+            height: 13px;
+            border: 1px solid #fff;
+            border-radius: 3px;
+            margin-top: -2px;
         }
         /*change image on hover*/
         img.plus{
@@ -603,10 +637,10 @@
 ["Brigandine Legs","legs","lightlegs",304,,,18,,1,,6,,,,,,,,"","BrigandineLegs.png","uncommon"],
 ["Brigandine Legs","legs","lightlegs",228,,,21,,3,,8,,,,,,,,"","BrigandineLegs.png","epic"],
 ["Brigandine Vest","chest","lightchest",580,,,20,,2,,8,,,,,,,,"","BrigandineVest.png",""],
-["Broadsword","hand","sword",750,2,28,,,,,,7,,-2,,8,,,"","Broadsword.png",""],
-["Broadsword","hand","sword",750,2,33,,,,,,7,,-2,,8,,,"","Broadsword.png","uncommon"],
-["Broadsword","hand","sword",750,2,36,,,,,,8,,-1,,8,,,"","Broadsword.png","rare"],
-["Broadsword","hand","sword",750,2,39,,,,,,9,,,,8,,,"","Broadsword.png","epic"],
+["Broadsword","hand","largesword",750,2,28,,,,,,7,,-2,,8,,,"","Broadsword.png",""],
+["Broadsword","hand","largesword",750,2,33,,,,,,7,,-2,,8,,,"","Broadsword.png","uncommon"],
+["Broadsword","hand","largesword",750,2,36,,,,,,8,,-1,,8,,,"","Broadsword.png","rare"],
+["Broadsword","hand","largesword",750,2,39,,,,,,9,,,,8,,,"","Broadsword.png","epic"],
 ["Brown Backpack","bagslot","container",160,,,,,,,,,,,,,,,"","BrownBackpack.png",""],
 ["Buckler","hand","lightshield",160,,,,,,,,10,,,,3,,,"","Buckler.png",""],
 ["Buckler","hand","lightshield",128,,,,,,,,12,,,,3,,,"","Buckler.png","uncommon"],
@@ -822,29 +856,29 @@ const traits = [
 [49,48,"Tunnelvision","Gain 10 Attackspeed, but you can no longer move while targeting an enemy.",["Off","active"],0,0,0,0,400,300],
 [50,0,"Cozy and Useful","Light Armor has X extra mana",[0,1,3,6,10,15],0,0,0,0,-100,200],
 [51,50,"Lightfoot","Converts X Free Capacity into 1 Movespeed capping at 3",[0,35,25,10],0,0,0,0,-200,200],
-[52,51,"Dress Wizardly","Gear that weighs less than X oz gives you +1 Magic",[0,10,20,35],0,0,0,0,-300,300],
-[53,52,"Clothes of the Damned","Removes negative effects from light armor and gain 5% Magic for each equipped Light Armor.",["Off","active"],52,3,50,5,-300,400],
+[52,51,"Dress Wizardly","Light Armor that weighs less than X oz gives you +1 Magic",[0,10,20,35],0,0,0,0,-300,300],
+[53,52,"Clothes of the Damned","Removes negative effects from Light Armor and gain 5% Magic for each equipped Light Armor.",["Off","active"],52,3,50,5,-300,400],
 [54,53,"Darkness Embrace","Death spells are 10 times cheaper. Heal, Light and Holy spells are 10 times more expensive.",["Off","active"],0,0,0,0,-400,400],
 [55,51,"Breeze in your hair","Not wearing a helmet gives you +X Movespeed",[0,1,2,3],0,0,0,0,-200,300],
-[56,55,"Battleboots","Gives 2 Damage for every extra Movespeed",["Off","active"],55,3,50,5,-200,400],
+[56,55,"Battle Boots","Gives 2 Damage for every extra Movespeed",["Off","active"],55,3,50,5,-200,400],
 [57,0,"Block Efficiacy","Shields have X% extra defense",[0,1,4,8,13,20],0,0,0,0,0,200],
 [58,57,"Rooted Guard","Blocking an attack regenerates X health",[0,1,2,5],0,0,0,0,0,300],
 [59,58,"Hex Parry","Successfully blocking an attack will empower your next Arrow or Blade spell by X%",[0,15,35,50],0,0,0,0,100,300],
-[60,59,"Bulwark Leap","Casting a Time or Physical spell will double your magic shield, capping at 200",["Off","active"],59,3,57,5,100,400],
+[60,59,"Bulwark Leap","While holding a shield, casting a Time or Physical spell will double your Magic Shield, capping at 200",["Off","active"],59,3,57,5,100,400],
 [61,58,"Royal Shield","Reduces the cooldown of Defense spells by X%",[0,10,20,35],0,0,0,0,-100,300],
-[62,61,"Deflect","Blocking with a magic shield reflects 15% of the damage taken as true damage",["Off","active"],61,3,57,5,-100,400],
+[62,61,"Deflect","Blocking with a Magic Shield reflects 15% of the damage taken as True Damage",["Off","active"],61,3,57,5,-100,400],
 [63,62,"Monster Candy","Taunt lasts 100% longer, Conjure and Defense spells are 50% cheaper. Lose 99 Damage.",["Off","active"],0,0,0,0,0,400],
 [64,0,"Well Protected","Heavy Armor has X extra health",[0,1,3,6,10,15],0,0,0,0,100,200],
-[65,64,"Heavy Metal","Heavy Armor that weighs more than 100oz has 1 Ability extra",[0,100,75,35],0,0,0,0,200,200],
-[66,65,"Magic Steel","Casting a Time or Heal spell will give you a shield equal to X% of your total Armor, capping at 100",[0,50,100,150],0,0,0,0,200,300],
-[67,66,"Blessed Plate","Gain 15 Mana and 1 Magic for every equipped Heavy Armor",["Off","active"],66,3,64,5,200,400],
+[65,64,"Heavy Metal","Heavy Armor that weighs more than X oz. has 1 Ability extra",[0,100,75,35],0,0,0,0,200,200],
+[66,65,"Magic Steel","Casting a Time or Heal spell gives you a Magic Shield equal to X% of your Armor, capping at 100",[0,50,100,150],0,0,0,0,200,300],
+[67,66,"Blessed Plate","Heavy Armor has 1 Magic and 25 Mana extra",["Off","active"],66,3,64,5,200,400],
 [68,65,"Carry Your Might","Gain 1 Armor for every 100 Max Capacity, capping at X",[0,2,4,8],0,0,0,0,300,300],
 [69,68,"Juggernaut","Removes negative effects from Heavy Armor. Gain 5% Ability for each equipped Heavy Armor.",["Off","active"],68,3,64,5,300,400],
 [70,69,"Endowed in Steel","Using both your hands gives you +10% lifesteal, +23 Damage, +13 Ability and +7 Attack Speed",["Off","monk"],0,0,0,0,400,400],
         ];
 // --- Stat Table Logic ---
 const statList = [
-    "Health", "Mana", "Magic", "Damage", "Movespeed", "Ability", "Attack Speed", "HP Regen", "MP Regen", "Range", "Armor", "Defense", "Capacity"
+    "Health", "Mana", "Magic", "Damage", "Min Damage", "Max Damage", "Average Damage Per Hit", "Bow Damage", "True Damage","Min True Damage", "Max True Damage", "Average True Damage Per Hit", "DPS", "Movespeed", "Ability", "Attack Speed", "HP Regen", "MP Regen", "Range", "Armor", "Defense", "Capacity"
 ];
 let addedPoints = {};
 statList.forEach(stat => addedPoints[stat] = 0);
@@ -856,10 +890,10 @@ const allocatableStats = [
 
 // Class multipliers for each stat and class
 const classMultipliers = {
-    Squire:    { Health: 1.00, Mana: 1.00, Magic: 1.00, Damage: 1.00, Movespeed: 1.00, Ability: 1.00, "Attack Speed": 1.00, "HP Regen": 1.00, "MP Regen": 1.00, Range: 1.00, Armor: 1.00, Defense: 1.00, Capacity: 1.00 },
-    Knight:    { Health: 2.00, Mana: 0.50, Magic: 0.50, Damage: 1.00, Movespeed: 1.00, Ability: 1.25, "Attack Speed": 1.00, "HP Regen": 1.25, "MP Regen": 0.50, Range: 0.50, Armor: 1.50, Defense: 1.50, Capacity: 1.50 },
-    Rogue:     { Health: 1.00, Mana: 1.25, Magic: 1.50, Damage: 1.00, Movespeed: 1.00, Ability: 1.50, "Attack Speed": 1.25, "HP Regen": 1.00, "MP Regen": 1.00, Range: 1.00, Armor: 1.00, Defense: 1.00, Capacity: 1.00 },
-    Mage:      { Health: 0.75, Mana: 2.00, Magic: 2.00, Damage: 1.00, Movespeed: 1.00, Ability: 0.75, "Attack Speed": 1.00, "HP Regen": 0.75, "MP Regen": 2.00, Range: 1.00, Armor: 0.75, Defense: 0.75, Capacity: 0.75 }
+    Squire:    { Health: 1.00, Mana: 1.00, Magic: 1.00, Damage: 1.00, "Min Damage": 1.00, "Max Damage": 1.00, "Average Damage Per Hit": 1.00, "Bow Damage": 1.00, "True Damage": 1.00, "Min True Damage": 1.00, "Max True Damage": 1.00, "Average True Damage Per Hit": 1.00, DPS: 1.00, Movespeed: 1.00, Ability: 1.00, "Attack Speed": 1.00, "HP Regen": 1.00, "MP Regen": 1.00, Range: 1.00, Armor: 1.00, Defense: 1.00, "Capacity Used": 1.00, "Capacity Free": 1.00, Capacity: 1.00 },
+    Knight:    { Health: 2.00, Mana: 0.50, Magic: 0.50, Damage: 1.00, "Min Damage": 1.00, "Max Damage": 1.00, "Average Damage Per Hit": 1.00, "Bow Damage": 1.00, "True Damage": 1.00, "Min True Damage": 1.00, "Max True Damage": 1.00, "Average True Damage Per Hit": 1.00, DPS: 1.00, Movespeed: 1.00, Ability: 1.25, "Attack Speed": 1.00, "HP Regen": 1.25, "MP Regen": 0.50, Range: 0.50, Armor: 1.50, Defense: 1.50, "Capacity Used": 1, "Capacity Free": 1, Capacity: 1.50 },
+    Rogue:     { Health: 1.00, Mana: 1.25, Magic: 1.50, Damage: 1.00, "Min Damage": 1.00, "Max Damage": 1.00, "Average Damage Per Hit": 1.00, "Bow Damage": 1.00, "True Damage": 1.00, "Min True Damage": 1.00, "Max True Damage": 1.00, "Average True Damage Per Hit": 1.00, DPS: 1.00, Movespeed: 1.00, Ability: 1.50, "Attack Speed": 1.25, "HP Regen": 1.00, "MP Regen": 1.00, Range: 1.00, Armor: 1.00, Defense: 1.00, "Capacity Used": 1.00, "Capacity Free": 1.00, Capacity: 1.00 },
+    Mage:      { Health: 0.75, Mana: 2.00, Magic: 2.00, Damage: 1.00, "Min Damage": 1.00, "Max Damage": 1.00, "Average Damage Per Hit": 1.00, "Bow Damage": 1.00, "True Damage": 1.00, "Min True Damage": 1.00, "Max True Damage": 1.00, "Average True Damage Per Hit": 1.00, DPS: 1.00, Movespeed: 1.00, Ability: 0.75, "Attack Speed": 1.00, "HP Regen": 0.75, "MP Regen": 2.00, Range: 1.00, Armor: 0.75, Defense: 0.75, "Capacity Used": 1, "Capacity Free": 1, Capacity: 0.75 }
 };
 // Point value for each allocatable stat
 const pointValues = {
@@ -877,6 +911,15 @@ const statData = {
     Mana:        { base: 15,  statBonus: 0, itemBonus: 0, traitBonus: 0, final: 15 },
     Magic:       { base: 0,   statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
     Damage:      { base: 0,   statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
+    "Min Damage": { base: 0,   statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
+    "Max Damage": { base: 0,   statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
+    "Average Damage Per Hit": { base: 0,   statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
+    "Bow Damage": { base: 0,   statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
+    "True Damage":      { base: 0,   statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
+    "Min True Damage": { base: 0,   statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
+    "Max True Damage": { base: 0,   statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
+    "Average True Damage Per Hit": { base: 0,   statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
+    DPS:         { base: 0,   statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
     Movespeed:   { base: 35,  statBonus: 0, itemBonus: 0, traitBonus: 0, final: 35 },
     Ability:     { base: 0,   statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
     "Attack Speed": { base: 10,  statBonus: 0, itemBonus: 0, traitBonus: 0, final: 10 },
@@ -885,6 +928,8 @@ const statData = {
     Range:       { base: 15,  statBonus: 0, itemBonus: 0, traitBonus: 0, final: 15 },
     Armor:       { base: 0,   statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
     Defense:     { base: 0,   statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
+    "Capacity Used": { base: 0, statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
+    "Capacity Free": { base: 0, statBonus: 0, itemBonus: 0, traitBonus: 0, final: 0 },
     Capacity:    { base: 225, statBonus: 0, itemBonus: 0, traitBonus: 0, final: 225 }
 };
 
@@ -894,6 +939,15 @@ const baseValues = {
     Mana: 15,
     Magic: 0,
     Damage: 0,
+    "Min Damage": 0,
+    "Max Damage": 0,
+    "Average Damage Per Hit": 0,
+    "Bow Damage": 0,
+    "True Damage": 0,
+    "Min True Damage": 0,
+    "Max True Damage": 0,
+    "Average True Damage Per Hit": 0,
+    DPS: 0,
     Movespeed: 35,
     Ability: 0,
     "Attack Speed": 10,
@@ -902,6 +956,8 @@ const baseValues = {
     Range: 15,
     Armor: 0,
     Defense: 0,
+    "Capacity Used": 0,
+    "Capacity Free": 0,
     Capacity: 225
 };
  function SetImageSize(img) {
@@ -926,16 +982,27 @@ function updateStatData() {
     statData.Mana.statBonus = addedPoints["Mana"] * 5;
     statData.Magic.statBonus = addedPoints["Magic"] * 1;
     statData.Ability.statBonus = addedPoints["Ability"] * 1;
-    statData["HP Regen"].statBonus = addedPoints["HP Regen"] * 0.2;
-    statData["MP Regen"].statBonus = addedPoints["MP Regen"] * 0.2;
-    statData.Capacity.statBonus = addedPoints["Capacity"] * 10;
+    statData["HP Regen"].statBonus = addedPoints["HP Regen"] * 1;
+    statData["MP Regen"].statBonus = addedPoints["MP Regen"] * 1;
     // Other stats get 0 from stat allocation
     statData.Damage.statBonus = 0;
+    statData["Min Damage"].statBonus = 0;
+    statData["Max Damage"].statBonus = 0;
+    statData["Average Damage Per Hit"].statBonus = 0;
+    statData["Bow Damage"].statBonus = 0;
+    statData["True Damage"].statBonus = 0;
+    statData["Min True Damage"].statBonus = 0;
+    statData["Max True Damage"].statBonus = 0;
+    statData["Average True Damage Per Hit"].statBonus = 0;
+    statData.DPS.statBonus = 0;
     statData.Movespeed.statBonus = 0;
     statData["Attack Speed"].statBonus = 0;
     statData.Range.statBonus = 0;
     statData.Armor.statBonus = 0;
     statData.Defense.statBonus = 0;
+    statData["Capacity Used"].statBonus = 0;
+    statData["Capacity Free"].statBonus = addedPoints["Capacity"] * 25;
+    statData.Capacity.statBonus = addedPoints["Capacity"] * 25;
     // Item and trait bonuses can be set elsewhere
     // Calculate final values (with class multiplier)
     const currentClass = selectedClass || "Squire";
@@ -953,7 +1020,7 @@ function updateStatData() {
 function getBowDamage() {
     // Example: Bow Damage = Damage.final * 1.5 + Attack Speed.final * 0.5
 
-    let value = statData["Damage"].final / (statData["Attack Speed"].final / 100);
+    let value = statData["Damage"].final + (statData["Attack Speed"].final / 5) + (statData["Movespeed"].final / 5);
     console.log("Bow Damage:", value);
     return value;
 }
@@ -970,27 +1037,28 @@ function updateStatTable() {
     availablePoints = totalStatPoints - usedPoints;
     // Stat and trait counter
     document.querySelector('.stat-counter').innerHTML =
-        `<div style='width:50%;text-align:center;'>
-            Stat Points: <span id='available-points'>${availablePoints}</span>/<span id='total-points'>${totalStatPoints}</span><br>
+        `<div class="points-box">
+            Stat<br>Points:<br><span id='available-points'>${availablePoints}</span>/<span id='total-points'>${totalStatPoints}</span><br>
             </div>
-            <div style='width:50%;text-align:center;'>
-            Trait Points: <span id='available-trait-points'>${getRemainingTraitPoints()}</span>/<span id='total-trait-points'>${getAvailableTraitPoints(level)}</span>
+            <div class="points-box">
+            Trait<br>Points:<br><span id='available-trait-points'>${getRemainingTraitPoints()}</span>/<span id='total-trait-points'>${getAvailableTraitPoints(level)}</span>
         </div>`;
     // Build stat table (manual rows for each stat)
     let html = `<div class=\"stat-table-outer\">`;
-    html += `<div class=\"stat-container\">
+    html += `<div class=\"stat-container wide\">
         <div>Stat</div>
-        <div>Class Multiplier</div>
+        <div>Class<br>Multiplier</div>
         <div>Base</div>
         <div>-</div>
         <div>+</div>
         <div>Pts</div>
-        <div style='min-width:120px;'>Stat Calculation</div>
-        <div>Stat Bonus</div>
-        <div style='min-width:120px;'>Item Calculation</div>
+        <div style='min-width:50px;'>Stat<br>Calc</div>
+        <div>Stat<br>Bonus</div>
+        <div style='min-width:50px;'>Item Calculation</div>
         <div>Item Bonus</div>
         <div style='min-width:120px;'>Traits Calculation</div>
         <div>Traits Bonus</div>
+        <div>Final<br>Value</div>
     </div>`;
     const currentClass = selectedClass || "Squire";
     // Health
@@ -1001,6 +1069,24 @@ function updateStatTable() {
     html += buildStatRow("Magic", baseValues["Magic"], currentClass);
     // Damage
     html += buildStatRow("Damage", baseValues["Damage"], currentClass);
+    // Min Damage
+    html += buildStatRow("Min Damage", 0, currentClass);
+    // Max Damage
+    html += buildStatRow("Max Damage", 0, currentClass);
+    // Average Damage Per Hit
+    html += buildStatRow("Average Damage Per Hit", 0, currentClass);
+    // Bow Damage
+    html += buildStatRow("Bow Damage", 0, currentClass);
+    // True Damage
+    html += buildStatRow("True Damage", 0, currentClass);
+    // Min True Damage
+    html += buildStatRow("Min True Damage", 0, currentClass);
+    // Max True Damage
+    html += buildStatRow("Max True Damage", 0, currentClass);
+    // Average True Damage Per Hit
+    html += buildStatRow("Average True Damage Per Hit", 0, currentClass);
+    // DPS
+    html += buildStatRow("DPS", 0, currentClass);
     // Movespeed
     html += buildStatRow("Movespeed", baseValues["Movespeed"], currentClass);
     // Ability
@@ -1017,6 +1103,10 @@ function updateStatTable() {
     html += buildStatRow("Armor", baseValues["Armor"], currentClass);
     // Defense
     html += buildStatRow("Defense", baseValues["Defense"], currentClass);
+    // Capacity Used
+    html += buildStatRow("Capacity Used", 0, currentClass);
+    // Capacity Free
+    html += buildStatRow("Capacity Free", baseValues["Capacity"], currentClass);
     // Capacity
     html += buildStatRow("Capacity", baseValues["Capacity"], currentClass);
     html += `</div>`;
@@ -1164,6 +1254,24 @@ function buildStatRow(stat, baseValue, currentClass) {
                             itemCalc += `${item[11] || 0}`;
                         }
                         break;
+                    case "Capacity Used":
+                        //add item[3] (weight) to Capacity Used
+                        itemBonus += item[3]/10 || 0;
+                        if(item[3] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` + `;
+                            }
+                            itemCalc += `${(item[3]/10) || 0}`;
+                        }
+                        break;
+                    case "Capacity Free":
+                        itemBonus -= (item[3]/10) || 0;
+                        if(item[3] != null){
+                            if(itemCalc != ''){
+                                itemCalc += ` - `;
+                            }
+                            itemCalc += `${(item[3]/10) || 0}`;
+                        }
                     case "Capacity":
                         itemBonus += item[15] || 0;
                         if(item[15] != null){
@@ -1188,11 +1296,27 @@ function buildStatRow(stat, baseValue, currentClass) {
     if (itemCalc != ''){
         itemCalc =  `[(`+itemCalc+`) x ${multiplier}]`;
     }
-    //----- Traits calculation-----
+
+    //MAGIC AND ABILITY ON ITEMS - exception
+    if(stat === "Magic" || stat === "Ability"){
+        itemBonus = itemBonus.toFixed(2);
+    }
+    else{
+        itemBonus = (itemBonus * classMult).toFixed(2);
+    }
+
+    //---------------------------------------------------
+    //---------------------------------------------------
+    //---------------------------------------------------
+    //----- Traits calculation START-----
+    //---------------------------------------------------
+    //---------------------------------------------------
+    //---------------------------------------------------
+
     //check the stage of Trait ID 15, Blade Training
     traitBonus = 0;
     let traitCalc = '';
-    console.log("TEST: "+selectedTraits[15]);
+    //console.log("TEST: "+selectedTraits[15]);
     //15 - Blade Training
     if (parseInt(selectedTraits[15]) > 0) {
         if(stat === "Damage"){
@@ -1214,7 +1338,10 @@ function buildStatRow(stat, baseValue, currentClass) {
                 typeOfItem = item[2] || '';
                 if(typeOfItem == 'sword'){
                     traitBonus += Math.max(1,damageOfItem * (traitStage / 100));
-                    traitCalc += ` + Max(1, (${damageOfItem} x (${traitStage}%))`;
+                    if (traitCalc != '') {
+                        traitCalc += ` + `;
+                    }   
+                    traitCalc += `Max(1, (${damageOfItem} x (${traitStage}%))`;
                 }
             }
             if(itemInHand.length > 1){
@@ -1230,13 +1357,16 @@ function buildStatRow(stat, baseValue, currentClass) {
                     typeOfItem = item[2] || '';
                     if(typeOfItem == 'sword'){
                         traitBonus += Math.max(1,damageOfItem * (traitStage / 100));
-                        traitCalc += ` + Max(1, (${damageOfItem} x (${traitStage}%))`;
+                        if (traitCalc != '') {
+                            traitCalc += ` + `;
+                        }
+                        traitCalc += `Max(1, (${damageOfItem} x (${traitStage}%))`;
                     }
                 }
             }
         }
     }
-    itemBonus *= classMult;
+
     //16 - Hand Finesse - Gain 1 Attackspeed for each X Ability you have capping at 5
     if (parseInt(selectedTraits[16]) > 0) {
         console.log("Stat: " + stat);
@@ -1252,29 +1382,1234 @@ function buildStatRow(stat, baseValue, currentClass) {
             //cap at 5
             abilityToAdd = Math.min(abilityToAdd, 5);
             traitBonus += abilityToAdd;
-            traitCalc += ` + Min(floor(${totalAbility} / ${traitStage}), 5)`;
+            if (traitCalc != '') {
+                traitCalc += ` + `;
+            }
+            traitCalc += `Min(floor(${totalAbility} / ${traitStage}), 5)`;
             //check if item in left hand type == sword
         }
     }
-    //-----------------------------
+
+    // 19 - Highlander - Blade spells cost 50% less mana, lose the ability to auto-attack. Additionally, converts every 2 Attackspeed into 1 Damage
+    if (selectedTraits[19] != "Off" && selectedTraits[19]) {
+        if(stat === "Damage"){
+            console.log("Highlander is selected with level: " + selectedTraits[19]);
+            //get total Attack Speed from stats and from items. Include base Attack Speed
+            let totalAttackSpeed = 10 + statData["Attack Speed"].statBonus + statData["Attack Speed"].itemBonus;
+            //console.log("Stat bonus: " + statData["Attack Speed"].statBonus + " Item Bonus: " + statData["Attack Speed"].itemBonus + " Total Attack Speed: " + totalAttackSpeed);
+            //divide Attack Speed by 2
+            let attackSpeedToAdd = Math.floor(totalAttackSpeed / 2);
+            traitBonus += attackSpeedToAdd;
+            if (traitCalc != '') {
+                traitCalc += ` + `;
+            }
+            traitCalc += `floor(${totalAttackSpeed} / 2)`; //TODO: Check if Highlander also converts base ASPD
+        }
+    }
+    //20 - Dual-wielding - Size 6 swords have an equipsize of 5, but deal X% less damage
+    if(selectedTraits[20] && selectedTraits[20] != 0) {
+        if(stat === "Damage"){
+            let traitStage = parseInt(selectedTraits[20]);
+            console.log("Dual-wielding is selected with level: " + selectedTraits[20]);
+            //Get damage for items in hand
+            const itemsInHands = document.querySelectorAll('.item-slot[data-slot="hand"]');
+            console.log("Item 1 in hands: ", itemsInHands[0]);
+            console.log("Item 2 in hands: ", itemsInHands[1]);
+            let damageOfItem1 = 0;
+            let damageOfItem2 = 0;
+            let damagePenalty = 0;
+            if (itemsInHands[0] && itemsInHands[0].querySelector('img')) {
+                const img1 = itemsInHands[0].querySelector('img');
+                if (img1.alt) {
+                    const [name, rarity] = img1.alt.split(';');
+                    const item1 = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                    if (item1) {
+                        damageOfItem1 = item1[5] || 0;
+                        console.log("Found item in left hand: " + item1[0] + " with rarity: " + rarity + " and damage: " + item1[5]+" and equipsize: " + item1[15]);
+                        if (item1[15] == 6){
+                            damagePenalty += (damageOfItem1 * traitStage / 100);
+                            traitCalc += ` - (${damageOfItem1} x (${traitStage}%))`;
+                        }
+                    }
+                }
+            }
+            if (itemsInHands[1] && itemsInHands[1].querySelector('img')) {
+                const img2 = itemsInHands[1].querySelector('img');
+                if (img2.alt) {
+                    const [name, rarity] = img2.alt.split(';');
+                    const item2 = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                    if (item2) {
+                        damageOfItem2 = item2[5] || 0;
+                        console.log("Found item in right hand: " + item2[0] + " with rarity: " + rarity + " and damage: " + item2[5]+" and equipsize: " + item2[15]);
+                        if (item2[15] == 6){
+                            damagePenalty += (damageOfItem2 * traitStage / 100);
+                            traitCalc += ` - (${damageOfItem2} x (${traitStage}%))`;
+                        }
+                    }
+                }
+            }
+            //calculate damage penalty
+            //apply damage penalty
+            traitBonus -= damagePenalty;
+        }
+    }
+    //22 - Glove Passion - While wearing gloves, gain X Mana or Health Regen depending on the item you're holding
+    // type: staff or bow in hands, gain MP Regen. Otherwise, gain HP Regen
+    if (selectedTraits[22] && selectedTraits[22] != 0) {
+        if(stat === "HP Regen" || stat === "MP Regen"){
+            let traitStage = parseInt(selectedTraits[22]);
+            console.log("Glove Passion is selected with level: " + selectedTraits[22]);
+            //get item types in hands
+            const itemsInHands = document.querySelectorAll('.item-slot[data-slot="hand"] img');
+            let itemType1 = '';
+            let itemType2 = '';
+            if (itemsInHands[0] && itemsInHands[0].alt) {
+                const [name, rarity] = itemsInHands[0].alt.split(';');
+                const item1 = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                if (item1) {
+                    itemType1 = item1[2] || '';
+                    console.log("Found item in left hand: " + item1[0] + " with rarity: " + rarity + " and type: " + itemType1);
+                }
+            }
+            if (itemsInHands[1] && itemsInHands[1].alt) {
+                const [name, rarity] = itemsInHands[1].alt.split(';');
+                const item2 = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                if (item2) {
+                    itemType2 = item2[2] || '';
+                    console.log("Found item in right hand: " + item2[0] + " with rarity: " + rarity + " and type: " + itemType2);
+                }
+            }
+            if(itemType1 === 'gloves' || itemType2 === 'gloves'){
+                //if item in left hand is staff or bow, gain MP Regen
+                if(itemType1 === 'staff' || itemType1 === 'bow' || itemType2 === 'staff' || itemType2 === 'bow'){
+                    if(stat === "MP Regen"){
+                        traitBonus += traitStage * 1; // 1 MP Regen per trait level
+                        if (traitCalc != '') {
+                            traitCalc += ` + `;
+                        }
+                        traitCalc += `${traitStage} x 1`;
+                    }
+                } else {
+                    //otherwise, gain HP Regen
+                    if(stat === "HP Regen"){
+                        traitBonus += traitStage * 1; // 1 HP Regen per trait level
+                        if (traitCalc != '') {
+                            traitCalc += ` + `;
+                        }
+                        traitCalc += `${traitStage} x 1`;
+                    }
+                }
+            }   
+        }
+    }
+    // 24 - Unnatural Flow - our attacks deal X extra True Damage
+    if( selectedTraits[24] && selectedTraits[24] != 0) {
+        if(stat === "True Damage" || stat === "Min True Damage" || stat === "Max True Damage" || stat === "Average True Damage Per Hit"){
+            let traitStage = parseInt(selectedTraits[24]);
+            console.log("Unnatural Flow is selected with level: " + selectedTraits[24]);
+            //add traitStage to True Damage
+            traitBonus += traitStage;
+            if (traitCalc != '') {
+                traitCalc += ` + `;
+            }
+            traitCalc += `${traitStage}`;
+        }
+    }
+    // 25 - Battle Mage - converts 50 Max Mana into 1 extra True Damage
+    if( selectedTraits[25] && selectedTraits[25] != "Off") {
+        if(stat === "True Damage" || stat === "Min True Damage" || stat === "Max True Damage" || stat === "Average True Damage Per Hit"){
+            let traitStage = parseInt(selectedTraits[25]);
+            console.log("Battle Mage is selected with level: " + selectedTraits[25]);
+            //get total Mana from stats and from items
+            let totalMana = statData["Mana"].final;
+
+            console.log(totalMana);
+            //divide Mana by 50
+            let trueDamageToAdd = Math.floor(totalMana / 50);
+            //cap at traitStage
+            console.log("Adding True Damage: " + trueDamageToAdd);
+            traitBonus += trueDamageToAdd;
+            if (traitCalc != '') {
+                traitCalc += ` + `;
+            }
+            traitCalc += `(Floor(${totalMana} / 50)`;
+        }
+    }
+    // 29 - Going Big - Large weapons have X% extra damage
+    if( selectedTraits[29] && selectedTraits[29] != "Off") {
+        if(stat === "Damage"){
+            let traitStage = parseInt(selectedTraits[29]);
+            console.log("Going Big is selected with level: " + selectedTraits[29]);
+            //get item in left hand
+            const itemInHand = document.querySelector('.item-slot[data-slot="hand"] img');
+            if (itemInHand && itemInHand.alt) {
+                const [name, rarity] = itemInHand.alt.split(';');
+                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                if (item) {
+                    //check if item's type contains 'large'
+                    const typeOfItem = item[2] || '';
+                    if (typeOfItem.includes('large')) {
+                        //add traitStage% to Damage
+                        traitBonus += Math.floor(item[5] * (traitStage / 100));
+                        if (traitCalc != '') {
+                            traitCalc += ` + `;
+                        }
+                        traitCalc += `Floor(${item[5]} x (${traitStage}%))`;
+                    }
+                }
+            }
+        }
+    }
+    //34 - Magic Blade - Removes negative effects from Large Weapons
+    if( selectedTraits[34] && selectedTraits[34] != "Off") {
+        let traitStage = parseInt(selectedTraits[34]);
+        console.log("Magic Blade is selected with level: " + selectedTraits[34]);
+        //get item in left hand
+        const itemInHand = document.querySelector('.item-slot[data-slot="hand"] img');
+        if (itemInHand && itemInHand.alt) {
+            const [name, rarity] = itemInHand.alt.split(';');
+            const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+            if (item) {
+                //check if item's type contains 'large'
+                const typeOfItem = item[2] || '';
+                if (typeOfItem.includes('large')) {
+                    switch(stat){
+                        case "Damage":
+                            //remove negative damage
+                            if(item[5] < 0){
+                                traitBonus -= item[5];
+                                if (traitCalc != '') {
+                                    traitCalc += ` + `;
+                                }
+                                traitCalc += `(${item[5]} x -1)`;
+                            }
+                            break;
+                        case "Attack Speed":
+                            //remove negative attack speed
+                            console.log("->ASPD");
+                            if(item[13] < 0){
+                                console.log("Negative ASPD");
+                                traitBonus -= item[13];
+                                if (traitCalc != '') {
+                                    traitCalc += ` + `;
+                                }
+                                traitCalc += `(${item[13]} x -1)`;
+                            }
+                            break;
+                        case "Ability":
+                            //remove negative ability
+                            if(item[8] < 0){
+                                traitBonus -= item[8];
+                                if (traitCalc != '') {
+                                    traitCalc += ` + `;
+                                }
+                                traitCalc += `(${item[8]} x -1)`;
+                            }
+                            break;
+                        case "Movespeed":
+                            //remove negative movespeed
+                            if(item[12] < 0){
+                                traitBonus -= item[12];
+                                if (traitCalc != '') {
+                                    traitCalc += ` + `;
+                                }
+                                traitCalc += `(${item[12]} x -1)`;
+                            }
+                            break;
+                        case "Armor":
+                            //remove negative armor
+                            if(item[10] < 0){
+                                traitBonus -= item[10];
+                                if (traitCalc != '') {
+                                    traitCalc += ` + `;
+                                }
+                                traitCalc += `(${item[10]} x -1)`;
+                            }
+                            break;
+                        case "Defense":
+                            //remove negative defense
+                            if(item[11] < 0){
+                                traitBonus -= item[11];
+                                if (traitCalc != '') {
+                                    traitCalc += ` + `;
+                                }
+                                traitCalc += `(${item[11]} x -1)`;
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    let jaggedRhythmMaxTrueDmgBonus = 0;
+    let jaggedRhythmAvgTrueDmgBonus = 0;
+    
+    // 38 - Jagged Rhythm - Attacking using a dagger has a X% chance of dealing extra (Ability/4) True Damage
+    if( selectedTraits[38] && selectedTraits[38] != "Off") {
+        if(stat === "True Damage" || stat === "Max True Damage" || stat === "Average True Damage Per Hit"){
+            let traitStage = parseInt(selectedTraits[38]);
+            console.log("Jagged Rhythm is selected with level: " + selectedTraits[38]);
+            //get item in left hand
+            let hasDagger = false;
+            const itemsInHands = document.querySelectorAll('.item-slot[data-slot="hand"] img');
+            itemsInHands.forEach(itemInHand => {
+                if (itemInHand && itemInHand.alt) {
+                    const [name, rarity] = itemInHand.alt.split(';');
+                    const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                    if (item) {
+                        //check if item's type contains 'dagger'
+                    const typeOfItem = item[2] || '';
+                    if (typeOfItem.includes('dagger')) {
+                        hasDagger = true;
+                    }
+                }
+            }
+            });
+            console.log("Has dagger: " + hasDagger);
+            if(hasDagger){
+                //add traitStage% of Ability/4 to True Damage
+                if(stat === "Average True Damage Per Hit"){
+                    jaggedRhythmAvgTrueDmgBonus += (Math.floor(statData["Ability"].final / 4) * (traitStage / 100));
+                    traitBonus += jaggedRhythmAvgTrueDmgBonus;
+                    final += traitBonus;
+                    console.log("ADDING AVG TRUE DAMAGE: " + jaggedRhythmAvgTrueDmgBonus);
+                }
+                else if (stat === "Max True Damage"){
+                    jaggedRhythmMaxTrueDmgBonus += Math.floor((statData["Ability"].final / 4));
+                    traitBonus += jaggedRhythmMaxTrueDmgBonus;
+                }
+                else{
+                    
+                    traitBonus += Math.floor((statData["Ability"].final / 4));
+                    if (traitCalc != '') {
+                        traitCalc += ` + `;
+                    }
+                    traitCalc += `Floor(${statData["Ability"].final} / 4 x (${traitStage}%))`;
+                }
+            }
+        }
+    }
+    // 39 - Luck Foreseen - Converts every 6 Ability into 1% chance of attacking twice
+    let luckForeseenDpsBonus = 0;
+    if( selectedTraits[39] && selectedTraits[39] != "Off") {
+        if(stat === "Average Damage Per Hit"){
+            let traitStage = parseInt(selectedTraits[39]);
+            console.log("Luck Foreseen is selected with level: " + selectedTraits[39]);
+            //get total Ability from stats and from items
+            let totalAbility = statData["Ability"].statBonus + statData["Ability"].itemBonus;
+            console.log("Stat bonus: " + statData["Ability"].statBonus + " Item Bonus: " + statData["Ability"].itemBonus + " Total Ability: " + totalAbility);
+            //divide Ability by 6
+            let abilityToAdd = Math.floor(totalAbility / 6);
+            //cap at traitStage
+            luckForeseenDpsBonus += abilityToAdd;
+        }
+    }
+    // 40 - Dark Blade - Doubles all True Damage you deal
+    if (selectedTraits[40] && selectedTraits[40] != "Off") {
+        if(stat === "True Damage" || stat === "Min True Damage" || stat === "Max True Damage" || stat === "Average True Damage Per Hit"){
+            console.log("Dark Blade is selected with level: " + selectedTraits[40]);
+            //double trait bonus
+            traitBonus *= 2;
+            if (traitCalc != '') {
+                traitCalc = `[${traitCalc}] x 2`;
+            }
+        }
+    }
+    //42 - Double Danger - Using two daggers doubles your item damage
+    if (selectedTraits[42] && selectedTraits[42] != "Off") {
+        if(stat === "Damage"){
+            let daggerCount = 0;
+            const itemsInHands = document.querySelectorAll('.item-slot[data-slot="hand"] img');
+            itemsInHands.forEach(itemInHand => {
+                const [name, rarity] = itemInHand.alt.split(';');
+                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                if (item) {
+                    //check if item's type contains 'dagger'
+                    const typeOfItem = item[2] || '';
+                    if (typeOfItem.includes('dagger')) {
+                        daggerCount++;
+                    }
+                }
+            });
+            if (daggerCount >= 2) {
+                console.log("Double Danger is active");
+                traitBonus = itemBonus;
+                if (traitCalc != '') {
+                    traitCalc += " + ";
+                }
+                traitCalc = `[${itemCalc}]`;
+            }
+        }
+    }
+    //43 - "Bow Guidance" - "Bows have X extra Attackspeed"
+    if(selectedTraits[43] && selectedTraits[43] != "Off") {
+        if(stat === "Attack Speed"){
+            let usingBow = false;
+            //check if item in any hand type == bow
+            const itemInHand = document.querySelectorAll('.item-slot[data-slot="hand"] img');
+            if (itemInHand[0] && itemInHand[0].alt) {
+                const [name, rarity] = itemInHand[0].alt.split(';');
+                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                if (item) {
+                    //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??
+                    if(item[2] === 'bow'){  
+                        usingBow = true;
+                    }
+                }
+            }
+            if (itemInHand[1] && itemInHand[1].alt) {
+                const [name, rarity] = itemInHand[1].alt.split(';');
+                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                if (item) {
+                    //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??
+                    if(item[2] === 'bow'){
+                        usingBow = true;
+                    }
+                }
+            }
+            if (usingBow){
+                console.log("Bow Guidance is selected with level: " + selectedTraits[43]);
+                //add trait bonus
+                traitBonus += parseInt(selectedTraits[43]);
+                if (traitCalc != '') {
+                    traitCalc += " + ";
+                }
+                traitCalc += traitBonus;
+            }
+        }
+    }
+    //44 - Good Technique" - "Gain X extra Range"
+    if (selectedTraits[44] && selectedTraits[44] != "Off") {
+        if(stat === "Range"){
+            console.log("Good Technique is selected with level: " + selectedTraits[44]);
+            //add trait bonus
+            traitBonus += parseInt(selectedTraits[44]);
+            if (traitCalc != '') {
+                traitCalc += " + ";
+            }
+            traitCalc += traitBonus;
+        }
+    }
+    //45 - "Artisenal Arsenal" - "Non-magic arrow get +X Damage and break less often"
+    if (selectedTraits[45] && selectedTraits[45] != "Off") {
+        if(stat === "Damage"){
+            let hasNormalAmmo = false;
+            //check if item in ammoslot == normalAmmo
+            const ammoSlot = document.querySelector('.item-slot[data-slot="ammo"] img');
+            if (ammoSlot && ammoSlot.alt) {
+                const [name, rarity] = ammoSlot.alt.split(';');
+                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                if (item) {
+                    //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??
+                    if(item[2] === 'normalAmmo'){
+                        hasNormalAmmo = true;
+                    }
+                }
+            }
+            if(hasNormalAmmo){
+                console.log("Artisenal Arsenal is selected with level: " + selectedTraits[45]);
+                //add trait bonus
+                traitBonus += parseInt(selectedTraits[45]);
+                if (traitCalc != '') {
+                    traitCalc += " + ";
+                }
+                traitCalc += traitBonus;
+            }
+        }
+    }
+    //46 - "Tunnelvision" - "Gain 10 Attackspeed"
+    if (selectedTraits[46] && selectedTraits[46] != "Off") {
+        if(stat === "Attack Speed"){
+            console.log("Tunnelvision is selected with level: " + selectedTraits[46]);
+            //add trait bonus
+            traitBonus += parseInt(selectedTraits[46]);
+            if (traitCalc != '') {
+                traitCalc += " + ";
+            }
+            traitCalc += traitBonus;
+        }
+    }
+    // 50 - "Cozy and Useful" - "Get X extra mana for every piece of light armor you wear",
+    if (selectedTraits[50] && selectedTraits[50] != "Off") {
+        if(stat === "Mana"){
+            console.log("Cozy and Useful is selected with level: " + selectedTraits[50]);
+            //get all items in armor slots
+            const armorSlots = document.querySelectorAll('.item-slot img');
+            let lightArmorCount = 0;
+            armorSlots.forEach(armorSlot => {
+                if (armorSlot && armorSlot.alt) {
+                    const [name, rarity] = armorSlot.alt.split(';');
+                    const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                    if (item) {
+                        //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??
+                        if(item[2].includes('light')){
+                            lightArmorCount++;
+                        }
+                    }
+                }
+            });
+            console.log("Light armor count: " + lightArmorCount);
+
+            //add trait bonus
+            traitBonus += parseInt(selectedTraits[50]) * lightArmorCount;
+            if (traitCalc != '') {
+                traitCalc += " + ";
+            }
+            traitCalc += `${parseInt(selectedTraits[50])} x ${lightArmorCount}`;
+        }
+    }
+    // 51 - "Lightfoot" - "Converts X Free Capacity into 1 Movespeed capping at 3"
+    if (selectedTraits[51] && selectedTraits[51] != "Off") {
+        if(stat === "Movespeed"){
+            console.log("Lightfoot is selected with level: " + selectedTraits[51]);
+            //get free capacity from stats
+            let freeCapacity = statData["Capacity Free"].final;
+            //divide free capacity by traitStage
+            let movespeedToAdd = Math.floor(freeCapacity / parseInt(selectedTraits[51]));
+            //cap at 3
+            movespeedToAdd = Math.min(movespeedToAdd, 3);
+            traitBonus += movespeedToAdd;
+            if (traitCalc != '') {
+                traitCalc += ` + `;
+            }
+            traitCalc += `Min(floor(${freeCapacity} / ${selectedTraits[51]}), 3)`;
+        }
+    }
+    // 52 - Dress Wizardly" - "Light Armor that weighs less than X oz gives you +1 Magic"
+    if (selectedTraits[52] && selectedTraits[52] != "Off") {
+        if(stat === "Magic"){
+            console.log("Dress Wizardly is selected with level: " + selectedTraits[52]);
+            //get all items in armor slots
+            const armorSlots = document.querySelectorAll('.item-slot img');
+            let lightArmorCount = 0;
+            //check each slot if it contains "light" in its type and weight is less than traitStage
+            armorSlots.forEach(armorSlot => {
+                console.log("Checking armor slot: ", armorSlot);
+                if (armorSlot && armorSlot.alt) {
+                    const [name, rarity] = armorSlot.alt.split(';');
+                    const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                    if (item) {
+                        //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??
+                        if(item[2].includes('light') && (item[3]/10) < parseInt(selectedTraits[52])){
+                            lightArmorCount++;
+                        }
+                    }
+                }
+            });
+            console.log("Light armor count: " + lightArmorCount);
+
+            //add trait bonus
+            traitBonus += lightArmorCount;
+            if (traitCalc != '') {
+                traitCalc += " + ";
+            }
+            traitCalc += `${lightArmorCount}`;
+        }
+    }
+    //53 - Clothes of the Damned" - "Removes negative effects from Light Armor and gain 5% Magic for each equipped Light Armor."
+    let clothesOfTheDamnedPercentBonus = 0;
+    if (selectedTraits[53] && selectedTraits[53] != "Off") {
+        console.log("Clothes of the Damned is selected with level: " + selectedTraits[53]);
+        //get all items in armor slots
+        const armorSlots = document.querySelectorAll('.item-slot img');
+        let lightArmorCount = 0;
+        //check each slot if it contains "light" in its type
+        armorSlots.forEach(armorSlot => {
+            if (armorSlot && armorSlot.alt) {
+                const [name, rarity] = armorSlot.alt.split(';');
+                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                if (item) {
+                    
+                    const typeOfItem = item[2] || '';
+                    if (typeOfItem.includes('light')) {
+                        switch(stat){
+
+            //name	 slot	 type	 weight	 range	 DMG	 hp	 mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??	 eqSize	HP reg	MP reg	 description 	rarity
+                            case "Damage":
+                                //remove negative damage
+                                if(item[5] < 0){
+                                    traitBonus -= item[5];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[5]} x -1)`;
+                                }
+                                break;
+                            case "Attack Speed":
+                                //remove negative attack speed
+                                console.log("->ASPD");
+                                if(item[13] < 0){
+                                    console.log("Negative ASPD");
+                                    traitBonus -= item[13];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[13]} x -1)`;
+                                }
+                                break;
+                            case "Ability":
+                                //remove negative ability
+                                if(item[8] < 0){
+                                    traitBonus -= item[8];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[8]} x -1)`;
+                                }
+                                break;
+                            case "Movespeed":
+                                //remove negative movespeed
+                                if(item[12] < 0){
+                                    traitBonus -= item[12];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[12]} x -1)`;
+                                }
+                                break;
+                            case "Armor":
+                                //remove negative armor
+                                if(item[10] < 0){
+                                    traitBonus -= item[10];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[10]} x -1)`;
+                                }
+                                break;
+                            case "Defense":
+                                //remove negative defense
+                                if(item[11] < 0){
+                                    traitBonus -= item[11];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[11]} x -1)`;
+                                }
+                                break;
+                            case "Health":
+                                //remove negative health
+                                if(item[6] < 0){
+                                    traitBonus -= item[6];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[6]} x -1)`;
+                                }
+                                break;
+                            case "Mana":
+                                //remove negative mana
+                                if(item[7] < 0){
+                                    traitBonus -= item[7];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[7]} x -1)`;
+                                }
+                                break;
+                            case "Magic":
+                                //remove negative magic
+                                if(item[9] < 0){
+                                    traitBonus -= item[9];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[9]} x -1)`;
+                                }
+                                clothesOfTheDamnedPercentBonus += 5; // 5% Magic for each equipped Light Armor
+                                break;
+                        }
+                    }
+                }
+            }
+        });
+        if(stat === "Magic"){
+            if(clothesOfTheDamnedPercentBonus > 0){
+                //get total Magic from stats, items and traits
+                let totalMagic = statData["Magic"].statBonus + statData["Magic"].itemBonus + traitBonus;
+                console.log("Total Magic: " + totalMagic);
+                //add clothesOfTheDamnedPercentBonus% to Magic
+                traitBonus += Math.floor(totalMagic * (clothesOfTheDamnedPercentBonus/100));
+                if (traitCalc != '') {
+                    traitCalc += ` + `;
+                }
+                traitCalc += `(${traitBonus})`;
+            }
+        }
+    }
+    //55 - Breeze in your hair - Not wearing a "helmet" type gives you +X Movespeed
+    if(selectedTraits[55] && selectedTraits[55] != "Off" && selectedTraits[55] != 0) {
+        //check the type of item in head slot
+        if(stat === "Movespeed"){
+            console.log("Breeze in your hair is selected with level: " + selectedTraits[55]);
+            const headSlot = document.querySelector('.item-slot[data-slot="head"] img');
+            let headType = '';
+            if (headSlot && headSlot.alt) {
+                const [name, rarity] = headSlot.alt.split(';');
+                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                if (item) {
+                    //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??
+                    headType = item[2] || '';
+                    if (!headType.includes('helmet')) {
+                        // If the head item is a helmet, apply the bonus
+                        traitBonus += selectedTraits[55];
+                        if (traitCalc != '') {
+                            traitCalc += ` + `;
+                        }
+                        traitCalc += `(${selectedTraits[55]})`;
+                    }
+                }
+            }
+        }
+    }
+    //56 - "Battle Boots" - "Gives 2 Damage for every extra Movespeed"
+    if(selectedTraits[56] && selectedTraits[56] != "Off" && selectedTraits[56] != 0) {
+        console.log("Battle Boots is selected with level: " + selectedTraits[56]);
+        if(stat === "Damage"){
+            // Get the current Movespeed
+            let bonusMovespeed = (statData["Movespeed"].final - 35) || 0;
+            // Calculate the bonus damage
+            let bonusDamage = Math.floor(bonusMovespeed) * 2;
+            traitBonus += bonusDamage;
+            if (traitCalc != '') {
+                traitCalc += ` + `;
+            }
+            traitCalc += `(${bonusDamage})`;
+        }
+    }
+    //57 - Block Efficiacy - Shields have X% extra defense
+    if(selectedTraits[57] && selectedTraits[57] != "Off" && selectedTraits[57] != 0) {
+        console.log("Block Efficiacy is selected with level: " + selectedTraits[57]);
+        if(stat === "Defense"){
+            //check if item in left hand is a shield
+            const itemsInHands = document.querySelectorAll('.item-slot[data-slot="hand"] img');
+            itemsInHands.forEach(itemInHand => {
+                if (itemInHand && itemInHand.alt) {
+                    const [name, rarity] = itemInHand.alt.split(';');
+                    const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                    if (item) {
+                        //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??
+                        if(item[2].includes('shield')){
+                            //add trait bonus
+                            traitBonus += Math.max(1,Math.floor(item[11] * (selectedTraits[57] / 100)));
+                            if (traitCalc != '') {
+                                traitCalc += ` + `;
+                            }
+                            traitCalc += `Max(1, Floor(${item[11]} x (${selectedTraits[57]}%)))`;
+                        }
+                    }
+                }
+            });
+        }
+    }
+    //63 - Monster Candy - Lose 99 Damage
+    if(selectedTraits[63] && selectedTraits[63] != "Off" && selectedTraits[63] != 0) {
+        console.log("Monster Candy is selected with level: " + selectedTraits[63]);
+        if(stat === "Damage"){
+            //subtract 99 from Damage
+            traitBonus -= 99;
+            if (traitCalc != '') {
+                traitCalc += ` - `;
+            }
+            traitCalc += `99`;
+        }
+    }
+    // 64 - "Well Protected","Heavy Armor has X extra health"
+    if(selectedTraits[64] && selectedTraits[64] != "Off" && selectedTraits[64] != 0) {
+        console.log("Well Protected is selected with level: " + selectedTraits[64]);
+        if(stat === "Health"){
+            //count all items with "heavy" in their type
+            const armorSlots = document.querySelectorAll('.item-slot img');
+            let heavyArmorCount = 0;
+            armorSlots.forEach(armorSlot => {
+                if (armorSlot && armorSlot.alt) {
+                    const [name, rarity] = armorSlot.alt.split(';');
+                    const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                    if (item) {
+                        //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??
+                        if(item[2].includes('heavy')){
+                            heavyArmorCount++;
+                        }
+                    }
+                }
+            });
+            //add trait bonus
+            traitBonus += parseInt(selectedTraits[64]) * heavyArmorCount;
+            if (traitCalc != '') {
+                traitCalc += ` + `;
+            }
+            traitCalc += `${parseInt(selectedTraits[64])} x ${heavyArmorCount}`;
+        }
+    }
+    // 65 - Heavy Metal - Heavy Armor that weighs more than X oz. has 1 Ability extra
+    if(selectedTraits[65] && selectedTraits[65] != "Off" && selectedTraits[65] != 0) {
+        console.log("Heavy Metal is selected with level: " + selectedTraits[65]);
+        //count all heavy armor items that weigh more than X oz.
+        const armorSlots = document.querySelectorAll('.item-slot img');
+        let heavyArmorCount = 0;
+        armorSlots.forEach(armorSlot => {
+            if (armorSlot && armorSlot.alt) {
+                const [name, rarity] = armorSlot.alt.split(';');
+                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                if (item) {
+                    //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??
+                    if(item[2].includes('heavy') && (item[3]/10) > selectedTraits[65]) {
+                        heavyArmorCount++;
+                    }
+                }
+            }
+        });
+        //add trait bonus
+        traitBonus += heavyArmorCount;
+        if (traitCalc != '') {
+            traitCalc += ` + `;
+        }
+        traitCalc += `${heavyArmorCount}`;
+    }
+    //67 - Blessed Plate - Heavy Armor has 1 Magic and 25 Mana extra
+    if(selectedTraits[67] && selectedTraits[67] != "Off" && selectedTraits[67] != 0) {
+        if(stat === "Magic" || stat === "Mana"){
+            console.log("Blessed Plate is selected with level: " + selectedTraits[67]);
+            //count all heavy armor items
+            const armorSlots = document.querySelectorAll('.item-slot img');
+            let heavyArmorCount = 0;
+            armorSlots.forEach(armorSlot => {
+                if (armorSlot && armorSlot.alt) {
+                    const [name, rarity] = armorSlot.alt.split(';');
+                    const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                    if (item) {
+                        //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??
+                        if(item[2].includes('heavy')) {
+                            heavyArmorCount++;
+                        }
+                    }
+                }
+            });
+            //add trait bonus
+            if(stat === "Magic"){
+                traitBonus += heavyArmorCount;
+                if (traitCalc != '') {
+                    traitCalc += ` + `;
+                }
+                traitCalc += `${heavyArmorCount}`;
+            }
+            if(stat === "Mana"){
+                traitBonus += heavyArmorCount * 25;
+                if (traitCalc != '') {
+                    traitCalc += ` + `;
+                }
+                traitCalc += `${heavyArmorCount} x 25`;
+            }
+        }
+    }   
+
+
+    //68 - "Carry Your Might - "Gain 1 Armor for every 100 Max Capacity, capping at X"
+    if(selectedTraits[68] != "Off" && selectedTraits[68]) {
+        if(stat === "Armor"){
+            let traitStage = parseInt(selectedTraits[68]);
+            console.log("Carry Your Might is selected with level: " + selectedTraits[68]);
+            //get Capacity 
+            let totalCapacity = statData["Capacity"].final;
+            //divide Capacity by 100
+            let capacityToAdd = Math.ceil(totalCapacity / 100);
+
+            //cap at traitStage
+            capacityToAdd = Math.min(capacityToAdd, traitStage);
+            traitBonus += capacityToAdd;
+            if (traitCalc != '') {
+                traitCalc += ` + `;
+            }
+            traitCalc += `Min(Floor(${totalCapacity} / 100), ${traitStage})`;
+        }
+    }
+    // 69 - "Juggernaut","Removes negative effects from Heavy Armor. Gain 5% Ability for each equipped Heavy Armor."
+    let juggernautPercentBonus = 0;
+    if(selectedTraits[69] && selectedTraits[69] != "Off" && selectedTraits[69] != 0) {
+        console.log("Juggernaut is selected with level: " + selectedTraits[69]);
+        //get all items in armor slots
+        const armorSlots = document.querySelectorAll('.item-slot img');
+        let heavyArmorCount = 0;
+        //check each slot if it contains "heavy" in its type
+        armorSlots.forEach(armorSlot => {
+            if (armorSlot && armorSlot.alt) {
+                const [name, rarity] = armorSlot.alt.split(';');
+                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                if (item) {
+                    const typeOfItem = item[2] || '';
+                    if (typeOfItem.includes('heavy')) {
+                        switch(stat){
+                            //name	 slot	 type	 weight	 range	 DMG	 hp     mana    ability	 magic	 arm	 def	 moveS	 atkSpd	 ??	 eqSize     HP reg	MP reg	 description 	rarity  
+                            case "Damage":
+                                //remove negative damage
+                                if(item[5] < 0){
+                                    traitBonus -= item[5];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[5]} x -1)`;
+                                }
+                                break;
+                            case "Attack Speed":
+                                //remove negative attack speed
+                                if(item[13] < 0){
+                                    traitBonus -= item[13];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[13]} x -1)`;
+                                }
+                                break;
+                            case "Ability":
+                                //remove negative ability
+                                if(item[8] < 0){
+                                    traitBonus -= item[8];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[8]} x -1)`;
+                                }
+                                break;
+                            case "Movespeed":
+                                //remove negative movespeed
+                                if(item[12] < 0){
+                                    traitBonus -= item[12];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[12]} x -1)`;
+                                }
+                                break;
+                            case "Armor":
+                                //remove negative armor
+                                if(item[10] < 0){
+                                    traitBonus -= item[10];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[10]} x -1)`;
+                                }
+                                break;
+                            case "Defense":
+                                //remove negative defense
+                                if(item[11] < 0){
+                                    traitBonus -= item[11];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[11]} x -1)`;
+                                }
+                                break;
+                            case "Health":
+                                //remove negative health
+                                if(item[6] < 0){
+                                    traitBonus -= item[6];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[6]} x -1)`;
+                                }
+                                break;
+                            case "Mana":
+                                //remove negative mana
+                                if(item[7] < 0){
+                                    traitBonus -= item[7];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[7]} x -1)`;
+                                }
+                                break;
+                            case "Magic":
+                                //remove negative magic
+                                if(item[9] < 0){
+                                    traitBonus -= item[9];
+                                    if (traitCalc != '') {
+                                        traitCalc += ` + `;
+                                    }
+                                    traitCalc += `(${item[9]} x -1)`;
+                                }
+                                break;
+                        }
+                        heavyArmorCount++;
+                    }
+                }
+            }
+        });
+        if(stat === "Ability"){
+            if(heavyArmorCount > 0){
+                //get total Ability from stats, items and traits
+                let totalAbility = statData["Ability"].statBonus + statData["Ability"].itemBonus + traitBonus;
+                console.log("Total Ability: " + totalAbility);
+                //add juggernautPercentBonus% to Ability
+                juggernautPercentBonus += 5 * heavyArmorCount; // 5%
+                traitBonus += Math.floor(totalAbility * (juggernautPercentBonus/100));
+                if (traitCalc != '') {
+                    traitCalc += ` + `;
+                }
+                traitCalc += `(${traitBonus})`;
+            }
+        }
+    }
+    //70 - "Endowed in Steel"- "Using gloves in both your hands gives you +10% lifesteal, +23 Damage, +13 Ability and +7 Attack Speed"
+    if (selectedTraits[70] && selectedTraits[70] != "Off") {
+        console.log("Endowed in Steel is selected with level: " + selectedTraits[70]);
+        //check if item in both hands is a glove
+        const itemsInHands = document.querySelectorAll('.item-slot[data-slot="hand"] img');
+        let glovesCounter = 0;
+        itemsInHands.forEach(itemInHand => {
+            if (itemInHand && itemInHand.alt) {
+                const [name, rarity] = itemInHand.alt.split(';');
+                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                if (item) {
+                    //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??
+                    if(item[2].includes('glove')){
+                        glovesCounter++;
+                    }
+                }
+            }
+        });
+        if (glovesCounter >= 2) {
+            //add trait bonus
+            if(stat === "Damage"){
+                if(traitCalc != '') {
+                    traitCalc += ` + `;
+                }
+                traitCalc += '23';
+                traitBonus += 23; // damage
+            }
+            if(stat === "Ability"){
+                if(traitCalc != '') {
+                    traitCalc += ` + `;
+                }
+                traitCalc += '13';
+                traitBonus += 13; // ability
+            }
+            if(stat === "Attack Speed"){
+                if(traitCalc != '') {
+                    traitCalc += ` + `;
+                }
+                traitCalc += '7';   // attack speed
+                traitBonus += 7; // attack speed
+            }
+        }
+    }
+    //---------------------------------------------------
+    //---------------------------------------------------
+    //---------------------------------------------------
+    //---------------------------------------------------
+    //----- Traits calculation FINISH:-----
+    //---------------------------------------------------
+    //---------------------------------------------------
+    //---------------------------------------------------
+    if (traitCalc != ''){
+        traitCalc =  `[`+traitCalc+`] x ${multiplier}`;
+    }
+    traitBonus = (traitBonus * classMult).toFixed(2);
 
     statData[stat].statBonus = parseInt(statBonus);
     statData[stat].itemBonus = parseInt(itemBonus);
     statData[stat].traitBonus = traitBonus;
+    final = (parseInt(baseValue) + parseFloat(statBonus) + parseFloat(itemBonus) + parseFloat(traitBonus));
+    statData[stat].final = final;
     //-----------------------------
-    return `<div class=\"stat-container\">
+    rowClass = 'stat-container';
+    
+    //Exception for Damage which has range
+    let minDamage = 0;
+    let maxDamage = 0;
+    let dphValue = 0;
+    let damageRangeString = '';
+
+    //Exception for Magic
+    if(stat == "Damage"){
+        console.log("final:"+final+" and ability:"+statData["Ability"].final);
+        minDamage = (parseInt(final))/(5/(1+((parseInt(statData["Ability"].final)*1.25)/100)));
+        console.log("minDamage:"+minDamage);
+        maxDamage = (parseInt(final))*(1+(parseInt(statData["Ability"].final)*1.25)/100);
+        console.log("maxDamage:"+maxDamage);
+        damageRangeString = '<span class="grey"> ('+minDamage.toFixed(0)+"-"+maxDamage.toFixed(0)+')</span>';
+        dphValue = (minDamage + maxDamage) / 2;
+        //final += damageRangeString;
+    }
+    //Exception for Min Damage
+    if(stat === "Min Damage"){
+        multiplier = '';
+        baseValue = '';
+        added = '';
+        statCalc = '';
+        statBonus = '';
+        itemCalc = '';
+        itemBonus = '';
+        traitCalc = '';
+        traitBonus = '';
+        final = (parseFloat(statData["Damage"].final))/(5/(1+((parseFloat(statData["Ability"].final)*1.25)/100)));
+        statData[stat].final = final;
+    }
+    //Exception for Max Damage
+    if(stat === "Max Damage"){
+        multiplier = '';
+        baseValue = '';
+        added = '';
+        statCalc = '';
+        statBonus = '';
+        itemCalc = '';
+        itemBonus = '';
+        traitCalc = '';
+        traitBonus = '';
+        final = (parseFloat(statData["Damage"].final))*(1+(parseFloat(statData["Ability"].final)*1.25)/100);
+        statData[stat].final = final;
+    }
+    //Exception for Average Damage Per Hit
+    if(stat === "Average Damage Per Hit"){
+        stat = "Avg Dmg Per Hit";
+        multiplier = '';
+        baseValue = '';
+        added = '';
+        statCalc = '';
+        statBonus = '';
+        itemCalc = '';
+        itemBonus = '';
+        traitCalc = '';
+        traitBonus = '';
+        final = ((statData["Min Damage"].final + statData["Max Damage"].final) / 2);
+        console.log("Luck foreseen bonus: " + luckForeseenDpsBonus);
+        final *= (1 + luckForeseenDpsBonus/100);
+        statData["Average Damage Per Hit"].final = final;
+    }
+    //Exception for Bow Damage
+    if(stat === "Bow Damage"){
+        multiplier = '';
+        baseValue = '';
+        added = '';
+        statCalc = '';
+        statBonus = '';
+        itemCalc = '';
+        itemBonus = '';
+        traitCalc = '';
+        traitBonus = '';
+        //check if item in any hand type == bow
+        const itemInHand = document.querySelectorAll('.item-slot[data-slot="hand"] img');
+        let hasBow = false;
+        if (itemInHand[0] && itemInHand[0].alt) {
+            const [name, rarity] = itemInHand[0].alt.split(';');
+            const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+            if (item) {
+                //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??     eqSize	HP reg	MP reg	 description 	rarity
+                if(item[2] === 'bow'){
+                    hasBow = true;
+                }
+            }
+        }
+        if (itemInHand[1] && itemInHand[1].alt) {
+            const [name, rarity] = itemInHand[1].alt.split(';');
+            const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+            if (item) {
+                //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??
+                if(item[2] === 'bow'){
+                    hasBow = true;
+                }
+            }
+        }
+        if (hasBow) {
+            //get bow damage from stats and items
+            final += getBowDamage();
+        }
+        statData[stat].final = final;
+    }
+    if(stat === "True Damage"){
+        multiplier = '';
+        baseValue = '';
+        added = '';
+        statCalc = '';
+        statBonus = '';
+        itemCalc = '';
+        itemBonus = '';
+        //traitCalc = '';
+        //traitBonus = '';
+        statData[stat].traitCalc = traitCalc;
+        statData[stat].final = final.toFixed(2);
+    }
+    if(stat === "Min True Damage"){
+        multiplier = '';
+        baseValue = '';
+        added = '';
+        statCalc = '';
+        statBonus = '';
+        itemCalc = '';
+        itemBonus = '';
+        traitCalc = '';
+        traitBonus = '';
+        statData[stat].final = final.toFixed(2);
+    }
+    if(stat === "Max True Damage"){
+        multiplier = '';
+        baseValue = '';
+        added = '';
+        statCalc = '';
+        statBonus = '';
+        itemCalc = '';
+        itemBonus = '';
+        traitCalc = statData["True Damage"].traitCalc || '';
+        //traitCalc = '';
+        statData[stat].final = final.toFixed(2);
+    }
+
+    if(stat === "Average True Damage Per Hit"){
+        stat = "Avg True Dmg Per Hit";
+        multiplier = '';
+        baseValue = '';
+        added = '';
+        statCalc = '';
+        statBonus = '';
+        itemCalc = '';
+        itemBonus = '';
+        traitCalc = '';
+        //get min and max true damage
+        //calculate average true damage per hit
+        statData["Average True Damage Per Hit"].final = final;
+    }
+    //Exception for DPS, which is not allocatable
+    if (stat === "DPS") {
+        multiplier = '';
+        baseValue = '';
+        added = '';
+        statCalc = '';
+        statBonus = '';
+        itemCalc = '';
+        itemBonus = '';
+        traitCalc = '';
+        console.log("Aspd from dps point: " + statData["Attack Speed"].final);
+        //1. Get avg DMG Per Hit - if bow > 0, then use (Bow Damage/2), otherwise use Average Damage Per Hit
+        //2. Get avg True Damage Per Hit
+        //3. Get Attack Speed
+        //4. Calculate DPS = (Avg DMG Per Hit + Avg True Damage Per Hit) * (Attack Speed / 10)
+        let avgDmgPerHit = 0;
+        if(statData["Bow Damage"] > 0){
+            avgDmgPerHit = (statData["Bow Damage"].final || 0) / 2;
+        }
+        else{
+            avgDmgPerHit += (statData["Average Damage Per Hit"].final || 0) + (statData["Average True Damage Per Hit"].final || 0);
+        }
+        const attackSpeed = statData["Attack Speed"].final || 10; // Default to 10 if not set
+        final = (avgDmgPerHit * (attackSpeed / 10)).toFixed(2);
+    }
+    if(stat === "True Damage") return ""; //Skip row print for true damage
+
+    return `<div class=\"${rowClass}\">
         <div>${stat}</div>
         <div>${multiplier}</div>
         <div>${baseValue}</div>
         <div>${canAllocate && added > 0 ? `<button class="stats" onclick='subtractPoint(\"${stat}\")'><img class="minus" src="Icons/minus.png"></button>` : ''}</div>
         <div>${canAllocate && (availablePoints > 0 && added < selectedLevel) ? `<button class="stats" onclick='addPoint(\"${stat}\")'><img class="plus" src="Icons/plus.png"></button>` : ''}</div>
         <div>${added}</div>
-        <div>${statCalc}</div>
+        <div><marquee width="50px" scrollamount="3" onmouseover="this.stop();" onmouseout="this.start();">${statCalc}</marquee></div>
         <div>${statBonus}</div>
-        <div>${itemCalc}</div>
+        <div><marquee width="50px" scrollamount="3" onmouseover="this.stop();" onmouseout="this.start();">${itemCalc}</marquee></div>
         <div>${itemBonus}</div>
-        <div style='min-width:120px;'>${traitCalc}</div>
-        <div style='min-width:120px;'>${traitBonus.toFixed(1)}</div>
+        <div style='min-width:120px;'><marquee width="210px" scrollamount="3" onmouseover="this.stop();" onmouseout="this.start();">${traitCalc}</marquee></div>
+        <div style='min-width:60px;'>${traitBonus}</div>
+        <div>${parseFloat(final).toFixed(2)}</div>
     </div>`;
 
     // Recalculate final value
@@ -1285,9 +2620,11 @@ function buildStatRow(stat, baseValue, currentClass) {
     window.updateDebug = function() {
         if(origUpdateDebug) origUpdateDebug();
         updateStatTable();
+        updateStatTable();
     };
 })();
 window.addEventListener('DOMContentLoaded', function() {
+    updateStatTable();
     updateStatTable();
     renderMiniTraitTree();
 });
@@ -1296,11 +2633,13 @@ function addPoint(stat) {
     if (availablePoints > 0 && addedPoints[stat] < level) {
         addedPoints[stat]++;
         updateStatTable();
+        updateStatTable();
     }
 }
 function subtractPoint(stat) {
     if (addedPoints[stat] > 0) {
         addedPoints[stat]--;
+        updateStatTable();
         updateStatTable();
     }
 }
@@ -1442,6 +2781,7 @@ function renderTraitTree() {
                     selectedTraits[traitId] = trait[4][currentIdx + 1];
                     renderMiniTraitTree();
                     updateStatTable();
+                    updateStatTable();
                     if (typeof updateHandSlotColors === 'function') updateHandSlotColors();
                 }
             }
@@ -1475,6 +2815,7 @@ function renderTraitTree() {
                 }
                 selectedTraits[traitId] = trait[4][currentIdx - 1];
                 renderMiniTraitTree();
+                updateStatTable();
                 updateStatTable();
                 if (typeof updateHandSlotColors === 'function') updateHandSlotColors();
             }
@@ -1611,6 +2952,7 @@ function renderMiniTraitTree() {
                     selectedTraits[traitId] = trait[4][currentIdx + 1];
                     renderMiniTraitTree();
                     updateStatTable();
+                    updateStatTable();
                     if (typeof updateHandSlotColors === 'function') updateHandSlotColors();
                 }
             }
@@ -1645,6 +2987,7 @@ function renderMiniTraitTree() {
                 }
                 selectedTraits[traitId] = trait[4][currentIdx - 1];
                 renderMiniTraitTree();
+                updateStatTable();
                 updateStatTable();
                 if (typeof updateHandSlotColors === 'function') updateHandSlotColors();
             }
@@ -1795,6 +3138,7 @@ function populateItemPicker(slotType) {
             img.src = `Items/${item[item.length-2]}`;
             img.alt = `${item[0]};${rarity}`;
             SetImageSize(img);
+            img.classList.remove('common', 'uncommon', 'rare', 'epic', 'legendary'); // Remove all rarity classes first
             if(rarity){
                 img.classList.add(rarity);
             }
@@ -1810,7 +3154,9 @@ function populateItemPicker(slotType) {
                     slotImg.alt = `${item[0]};${rarity}`;
                     slotImg.style.display = 'block';
                     SetImageSize(slotImg);
+                    slotImg.classList.remove('common', 'uncommon', 'rare', 'epic', 'legendary');
                     if(rarity){
+                        
                         slotImg.classList.add(rarity);
                     }
                     // Debug log for troubleshooting
@@ -1935,7 +3281,7 @@ function showItemName(item) { //Show item description
 }
 function clearItemName() {
     const descCell = document.querySelector('.upper-col2-row1-desc');
-    if (descCell) descCell.innerHTML = 'Description';
+    if (descCell) descCell.innerHTML = '';
 }
 function showTraitDescription(trait) {
     const descCell = document.querySelector('.upper-col2-row1-desc');
@@ -1961,7 +3307,7 @@ function showTraitDescription(trait) {
 }
 function clearTraitDescription() {
     const descCell = document.querySelector('.upper-col2-row1-desc');
-    if (descCell) descCell.innerHTML = 'Description';
+    if (descCell) descCell.innerHTML = '';
 }
 // Call patchSimpleItemHover after populating equipment grid and item picker
 function setupEquipmentGrid() {
@@ -1993,6 +3339,7 @@ function populateItemPicker(slotType) {
             img.src = `Items/${item[item.length-2]}`;
             img.alt = `${item[0]};${rarity}`;
             SetImageSize(img);
+            img.classList.remove('common', 'uncommon', 'rare', 'epic', 'legendary');
             if(rarity){
                 img.classList.add(rarity);
             }
@@ -2008,6 +3355,7 @@ function populateItemPicker(slotType) {
                     slotImg.alt = `${item[0]};${rarity}`;
                     slotImg.style.display = 'block';
                     SetImageSize(slotImg);
+                        slotImg.classList.remove('common', 'uncommon', 'rare', 'epic', 'legendary');
                     if(rarity){
                         slotImg.classList.add(rarity);
                     }
@@ -2027,31 +3375,26 @@ function populateItemPicker(slotType) {
 }
 </script>
 <script>
-// Add toggle logic for trait tree view
-let traitTreeToggled = false;
-function toggleTraitTreeView() {
-    const plannerUI = document.getElementById('planner-ui');
-    const traitTreeUI = document.getElementById('trait-tree-ui');
-    if (!traitTreeToggled) {
-        plannerUI.style.display = 'none';
-        traitTreeUI.style.display = 'flex';
-        traitTreeToggled = true;
-        renderTraitTree(); // Build the trait tree when shown
-    } else {
-        plannerUI.style.display = 'flex';
-        traitTreeUI.style.display = 'none';
-        traitTreeToggled = false;
-    }
+// Patch: Show <marquee> content in Description cell on hover
+function patchMarqueeHover() {
+    document.querySelectorAll('.stat-container marquee').forEach(marq => {
+        marq.onmouseover = function() {
+            const descCell = document.querySelector('.upper-col2-row1-desc');
+            if (descCell) descCell.innerHTML = marq.textContent;
+        };
+        marq.onmouseout = function() {
+            const descCell = document.querySelector('.upper-col2-row1-desc');
+            if (descCell) descCell.innerHTML = '';
+        };
+    });
 }
-// Attach click event to Trait Counter
-window.addEventListener('DOMContentLoaded', function() {
-    const traitCounter = document.querySelector('.trait-counter');
-    if (traitCounter) {
-        traitCounter.style.cursor = 'pointer';
-        traitCounter.title = 'Click to toggle trait tree view';
-        traitCounter.addEventListener('click', toggleTraitTreeView);
-    }
-});
+// Ensure this runs after stat table is updated
+const origUpdateStatTable3 = updateStatTable;
+updateStatTable = function() {
+    if (typeof origUpdateStatTable3 === 'function') origUpdateStatTable3();
+    patchMarqueeHover();
+    if (typeof updateHandSlotColors === 'function') updateHandSlotColors();
+};
 </script>
 <script>
 function highlightFailedRequirement(traitId) {
@@ -2097,7 +3440,7 @@ function updateHandSlotColors() {
     const rightHandItem = rightHandImg ? items.find(i => i[0] === rightHandImg.alt.split(";")[0]) : null;
     let leftHandSize = leftHandItem ? leftHandItem[15] || 0 : 0;
     let rightHandSize = rightHandItem ? rightHandItem[15] || 0 : 0;
-    console.log(leftHandSize+" + " + rightHandSize+ " = " + (leftHandSize + rightHandSize));
+    //console.log(leftHandSize+" + " + rightHandSize+ " = " + (leftHandSize + rightHandSize));
     // Trait 20: Dual-wielding
     const dualWieldingTrait = selectedTraits["20"];
     let dualWieldingActive = false;
