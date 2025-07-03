@@ -2795,7 +2795,7 @@ function buildStatRow(stat, baseValue, currentClass) {
         let avgDmgPerHit = 0;
             console.log("---> Bow Damage FINAL: " + statData["Bow Damage"].final);
         if(statData["Bow Damage"].final > 0){
-            avgDmgPerHit = (statData["Bow Damage"].final || 0) / 2;
+            avgDmgPerHit = ((statData["Bow Damage"].final || 0) / 2) + (statData["Average True Damage Per Hit"].final || 0);
         }
         else{
             avgDmgPerHit += (statData["Average Damage Per Hit"].final || 0) + (statData["Average True Damage Per Hit"].final || 0);
