@@ -2712,6 +2712,8 @@ function buildStatRow(stat, baseValue, currentClass) {
             //get bow damage from stats and items
             final += getBowDamage();
         }
+
+        console.log("1---> Bow Damage FINAL: " + statData["Bow Damage"].final);
         statData[stat].final = final;
     }
     if(stat === "True Damage"){
@@ -2782,7 +2784,8 @@ function buildStatRow(stat, baseValue, currentClass) {
         //3. Get Attack Speed
         //4. Calculate DPS = (Avg DMG Per Hit + Avg True Damage Per Hit) * (Attack Speed / 10)
         let avgDmgPerHit = 0;
-        if(statData["Bow Damage"] > 0){
+            console.log("---> Bow Damage FINAL: " + statData["Bow Damage"].final);
+        if(statData["Bow Damage"].final > 0){
             avgDmgPerHit = (statData["Bow Damage"].final || 0) / 2;
         }
         else{
