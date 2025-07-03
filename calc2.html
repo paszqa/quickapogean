@@ -3437,6 +3437,7 @@ function patchItemSlotRightClick() {
             if (typeof updateStatTable === 'function') updateStatTable();
             if (typeof updateHandSlotColors === 'function') updateHandSlotColors();
             if (typeof clearItemName === 'function') clearItemName();
+            updateStatTable();
         };
     });
 }
@@ -3548,6 +3549,7 @@ function setupEquipmentGrid() {
             console.log("Selected slot:", slot.getAttribute('data-slot'));
             populateItemPicker(slot.getAttribute('data-slot'));
             updateHandSlotColors();
+            updateStatTable();
         };
     });
     patchSimpleItemHover();
