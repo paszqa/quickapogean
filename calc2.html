@@ -2241,6 +2241,7 @@ function buildStatRow(stat, baseValue, currentClass) {
             console.log("Breeze in your hair is selected with level: " + selectedTraits[55]);
             const headSlot = document.querySelector('.item-slot[data-slot="head"] img');
             let headType = '';
+            let noHelmet = false;
             if (headSlot && headSlot.alt) {
                 const [name, rarity] = headSlot.alt.split(';');
                 const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
@@ -2249,13 +2250,21 @@ function buildStatRow(stat, baseValue, currentClass) {
                     headType = item[2] || '';
                     if (!headType.includes('helmet')) {
                         // If the head item is a helmet, apply the bonus
-                        traitBonus += selectedTraits[55];
-                        if (traitCalc != '') {
-                            traitCalc += ` + `;
-                        }
-                        traitCalc += `(${selectedTraits[55]})`;
+                        noHelmet = true;
                     }
                 }
+            }
+            else{
+                // If there is no item in the head slot, apply the bonus
+                noHelmet = true;
+            }
+            if (noHelmet) {
+                //add trait bonus
+                traitBonus += parseInt(selectedTraits[55]);
+                if (traitCalc != '') {
+                    traitCalc += " + ";
+                }
+                traitCalc += traitBonus;
             }
         }
     }
@@ -2794,6 +2803,25 @@ function buildStatRow(stat, baseValue, currentClass) {
         const attackSpeed = statData["Attack Speed"].final || 10; // Default to 10 if not set
         final = (avgDmgPerHit * (attackSpeed / 10)).toFixed(2);
     }
+    if(stat === "Capacity Used"){
+        multiplier = '';
+        baseValue = '';
+        added = '';
+        statCalc = '';
+        statBonus = '';
+        traitCalc = '';
+        traitBonus = '';
+    }
+    if(stat === "Capacity Free"){
+        multiplier = '';
+        baseValue = '';
+        added = '';
+        statCalc = '';
+        statBonus = '';
+        traitCalc = '';
+        traitBonus = '';
+    }
+
     if(stat === "True Damage") return ""; //Skip row print for true damage
 
     return `<div class=\"${rowClass}\">
