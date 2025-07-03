@@ -9,27 +9,134 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <!-- Leaflet JS -->
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-        </head>
+        <style>
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Bedstead', Arial, sans-serif;
+  background-color: #1e1e1e;
+  color: #cfcfcf;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7), -2px -2px 2px rgba(0, 0, 0, 0.3), -2px 2px 2px rgba(0, 0, 0, 0.3), 2px -2px 2px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+@font-face{
+    font-family: 'Bedstead';
+    src: url('bedstead-extracondensed.otf') format('truetype');
+}
+
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+#top-panel {
+  width: 100vw;
+  height: 50px;
+  background: #222;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  font-size: 1.2em;
+  box-sizing: border-box;
+}
+#mouse-coords {
+  font-size: 1.5em;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+#main-panel {
+  display: flex;
+  width: 100vw;
+  height: 75%;
+}
+#map-container {
+  width: 70vw;
+  height: 100%;
+  position: relative;
+}
+#map {
+  width: 100% !important;
+  height: 100% !important;
+  background: black;
+}
+#info-panel {
+  width: 25vw;
+  height: 100%;
+  background: #222;
+  color: #fff;
+  padding: 24px 18px;
+  overflow-y: auto;
+  overflow: hidden;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+  display: block;
+  box-sizing: border-box;
+}
+#info-panel h2 {
+  margin-top: 0;
+}
+#info-panel p {
+  white-space: pre-line;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  width: auto;
+  box-sizing: border-box;
+}
+.leaflet-popup-content-wrapper{
+  background: #1f1d1d;
+  border-radius: 2px;
+  border: 2px solid #000;
+}
+
+.leaflet-popup-content {
+  background: #1f1d1d;
+  color: rgb(255, 255, 255);
+  margin: 5px;
+  margin-top: 10px;
+  padding: 0;
+  text-shadow: none;
+  font-family: 'Bedstead', Arial, sans-serif;
+  font-size: 1.2em;
+}
+.leaflet-container a.leaflet-popup-close-button{
+  color: rgb(255, 255, 255);
+  background: rgb(165, 45, 45);
+  border-radius: 2px;
+  border: 2px solid #000;
+  text-shadow: none;
+}
+.leaflet-container a.leaflet-popup-close-button:hover{
+  color: #fff;
+  text-shadow: none;
+}
+.leaflet-marker-icon.leaflet-zoom-animated.leaflet-interactive{
+  filter: drop-shadow(1px 1px 2px #ffffff) drop-shadow(-1px -1px 2px #ffffff);
+}
+</style>
+    </head>
 <body class="small">
-<p class="normal">
-Information taken from the Discord. It may get changed any time.aaa
-</p>    
-<div id="map" style="width: 100%; height: 600px;"></div>
-<div id="map-container" style="display: grid; grid-template-columns: repeat(10, 32px);"></div>
+<div id="top-panel">
+  <div id="map-desc">Welcome to the Apogea Map! Explore locations and click markers for details.</div>
+  <div id="mouse-coords">X: ---, Y: ---</div>
+</div>
+<div id="main-panel">
+  <div id="map-container">
+    <div id="map"></div>
+  </div>
+  <div id="info-panel"><em>Select a marker for details.</em></div>
+</div>
 
 <script>
   // Image size in pixels (e.g., 4000x3000)
   const imageWidth = 4000;
   const imageHeight = 4000;
-
-    // Define a custom icon
-    const customIcon = L.icon({
-    iconUrl: 'Images/swordicon.png', // Path to your custom icon image
-    iconSize: [32, 32], // Size of the icon [width, height]
-    iconAnchor: [16, 32], // Point of the icon which will correspond to marker's location
-    popupAnchor: [0, -32] // Point from which the popup should open relative to the iconAnchor
-    });
-
     // Create the map and set the bounds
     const map = L.map('map', {
         crs: L.CRS.Simple,
@@ -56,26 +163,136 @@ overlayDiv.style.padding = '6px 12px';
 overlayDiv.style.borderRadius = '6px';
 overlayDiv.style.fontSize = '14px';
 overlayDiv.style.zIndex = 1000;
+overlayDiv.style.display = 'none';
 overlayDiv.innerText = 'X: --, Y: --';
 document.body.appendChild(overlayDiv);
 
 map.on('mousemove', function(e) {
-  // e.latlng gives [y, x] in map CRS.Simple
   const x = Math.round(e.latlng.lng);
   const y = Math.round(e.latlng.lat);
-  //first option
-  //overlayDiv.innerText = `X: ${x} => ${(x/5.7).toFixed(0) - 405}, Y: ${y} => ${(y/6.26).toFixed(0) - 283}`;
-  //second guess
-  //overlayDiv.innerText = `${(x * 0.165).toFixed(0) - 366}, Y: ${(y * 0.144).toFixed(0) - 273}`;
-  //thirdd guess, Y ok
-  //overlayDiv.innerText = `${(x * 0.168).toFixed(0) - 400}, Y: ${(y * 0.159).toFixed(0) - 282}`;
-  //fourth guess??? Y the same  OK
-  overlayDiv.innerText = `${(x * 0.1810).toFixed(0) - 409}, Y: ${(y * 0.159).toFixed(0) - 282}`;
+  let realCoords = TranslateToReal(x, y);
+  overlayDiv.innerText = `X: ${realCoords.x}, Y: ${realCoords.y}`;
+});
+// Update mouse coordinates in top panel
+const mouseCoordsDiv = document.getElementById('mouse-coords');
+map.on('mousemove', function(e) {
+  // e.latlng gives [y, x] in map CRS
+  const mapX = Math.round(e.latlng.lng);
+  const mapY = Math.round(e.latlng.lat);
+  // Convert to real coords
+  const real = TranslateToReal(mapX, mapY);
+  mouseCoordsDiv.textContent = `X: ${real.x}, Y: ${real.y}`;
 });
 
 map.on('mouseout', function() {
   //overlayDiv.innerText = 'X: --, Y: --';
 });
+
+function TranslateToReal(x, y) {
+  const realX = Math.round(x * 0.1810 - 409);
+  const realY = Math.round(y * 0.159 - 282);
+  return { x: realX, y: realY };
+}
+
+function TranslateToMap(x, y) {
+  const mapX = Math.round((x + 409) / 0.1810);
+  const mapY = Math.round((y + 282) / 0.159);
+  return { x: mapX, y: mapY };
+}
+
+// Example info data
+const infoData = {
+};
+
+function showInfoPanel(key) {
+  const info = infoData[key];
+  if (!info) return;
+  const panel = document.getElementById('info-panel');
+  // Replace newlines with <br> for proper line breaks
+  const descHtml = info.description.replace(/\n/g, '<br>');
+  panel.innerHTML = `<h2>${info.title}</h2><p style="white-space:pre-line;">${descHtml}</p><p><b>Coordinates:</b> ${info.coordinates.x}, ${info.coordinates.y}</p>`;
+}
+function addCustomMarker(iconName, realX, realY, title, shortDesc, fullDesc) {
+  //Tranform real Coords to map Coords
+  const mapCoords = TranslateToMap(realX, realY);
+  // Create custom icon
+  const icon = L.icon({
+    iconUrl: iconName,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+  // Add marker
+  const marker = L.marker([mapCoords.y, mapCoords.x], { icon }).addTo(map);
+  // Store info for the panel
+  const infoKey = `${title}_${realX}_${realY}`;
+  infoData[infoKey] = {
+    title: title,
+    description: fullDesc,
+    coordinates: { x: realX, y: realY }
+  };
+  // Bind popup with short description and link
+  marker.bindPopup(
+    `<b>${title}</b><br>${shortDesc}<br><a href='#' onclick="showInfoPanel('${infoKey}');return false;">More info</a>`
+  );
+}
+
+addCustomMarker("Icons/house.png", -120, 77, 'Caravan', 'A marketplace outside the city.', 'Open during the day, the caravan offers a variety of goods and services. You can get Arrows and Bolts here, or learn cooking.');
+
+addCustomMarker("Icons/arrowgreen.png", 40, 65, 'Tunnel to swamps', 'A short underground passage.', 'You can get to the Eastern Swamps area through here. Bandits, Skeletons and Goblins on the way there, but only if you don\'t get lost.');
+
+addCustomMarker("Icons/houseblue.png", -272, 270, 'Basile Monastery', 'The temple inside the main city.', 'One of the starting points of the game. Inside, you can find a lot of Monks and other enemies, but that area is not accessible easily.');
+
+addCustomMarker("Icons/bag.png", -250, 124, 'Basile Market', 'A lot of vendors.', 'All your basic purchasing needs can be fulfilled here. Some weapons, some armors, food, spells, tools, supplies.');
+
+addCustomMarker("Icons/box.png", -185, 152, 'Basile Depot', 'Player storage.', 'Multiple floors, serves as bank and a protection zone.');
+
+addCustomMarker("Icons/castle.png", -107, 188, 'East Gate', 'One of exits from Basile', 'Eastern gate leading to Goblin ruins, Orc\'s encampement and Nordha');
+
+addCustomMarker("Icons/castle.png", -174, 126, 'South Gate', 'One of exits from Basile', 'Southern gate leading to Caravan and Plains.');
+
+addCustomMarker("Icons/castle.png", -273, 111, 'West Gate', 'One of exits from Basile', 'Western gate leading to a housing area and Plains.');
+
+addCustomMarker("Icons/castle.png", -341, 164, 'North Gate', 'One of exits from Basile', 'Yep, that is North Gate. They ran out of directions. It leads straight into the Bandit camp to the West.');
+
+addCustomMarker("Icons/hammer.png", -256, 164, 'Blacksmith', 'Smith Balder resides here.', 'You can get temporary access to a private anvil here in exchange for some gold.');
+
+addCustomMarker("Icons/cross.png", -66, 3, 'Plains Monastery', 'Edmund\'s center of operations.', 'On of initial spawn points. Offers healing and stuff. There\'s a crypt underneath.');
+
+addCustomMarker("Icons/hammer.png", -29, 142, 'Blacksmith', 'Smithy in Nordha.', 'Buy crafting materials or weapons here.');
+
+addCustomMarker("Icons/cross.png", 31, 148, 'Nordha Temple', 'Spawn point and healing.', 'Petrus can heal you here if you are low on health. Protection zone inside.');
+
+addCustomMarker("Icons/box.png", 233, 230, 'Nordha Depot', 'Player storage.', 'A couple of depots and a protection zone.');
+
+addCustomMarker("Icons/arrowgreen.png", 60, 40, 'Swamps tunnel', 'Connects swamps with Eastern Plains.', 'A short underground passage.');
+
+addCustomMarker("Icons/cross.png", 183, 50, 'Swamps temple', 'Spawn point and healing.', 'A temple with a protection zone.');
+
+addCustomMarker("Icons/housegreen.png", 175, 0, 'Violet Hut', 'Protection zone and a store.', 'Safe spot in the middle of the marsh.');
+addCustomMarker("Icons/mountain.png", -18, 88, 'Amphitere Peak', 'A large mountain..', 'Some silly lizard flies near the top of it.');
+
+addCustomMarker("Icons/boots.png", -206, 8, 'Western Garden', 'A grassy area with mushrooms.', 'Boletuses like it here.');
+
+addCustomMarker("Icons/boots.png", -83, -86, 'Eastern Garden', 'Boletus paradise.', 'Some spiders, some boleti, and a riven inbetween.');
+
+addCustomMarker("Icons/mountain.png", -260, -60, 'Sunskin Mountain', 'Sandstone hills rules by a meaner Goblin type.', 'A dangerous place full of narrow pathways and small caves.');
+
+addCustomMarker("Icons/houseyellow.png", -300, -210, 'Vecan', 'Desert town.', 'A very treacherous at night, so don\'t stay up until late.');
+
+addCustomMarker("Icons/box.png", -327, -225, 'Vecan Depot', 'Player storage.', 'The entrance is on the western side of the building, a staircase leading underground.');
+
+addCustomMarker("Icons/cross.png", -312, -221, 'Vecan Hospital', 'Protection zone and spawnpoint.', 'It\'s located right above the depot, on the first floor - entrance from the western side.');
+
+addCustomMarker("Icons/skull.png", -140, -140, 'Death Valley', 'The passage leading to the desert.', 'A zone full of enemies that might be deadly for inexperienced adventurers.');
+
+addCustomMarker("Icons/arrowred.png", 183, 19, 'Trident Passage', 'North exit', 'One of the tunnels that allow traversal through swamps.');
+
+addCustomMarker("Icons/arrowred.png", 190, -45, 'Trident Passage', 'South exit', 'One of the tunnels that allow traversal through swamps.');
+
+addCustomMarker("Icons/arrowpurple.png", 171, -41, 'Blue Tunnel', 'South/east exit', 'One of the tunnels that allow traversal through swamps.');
+
+addCustomMarker("Icons/arrowpurple.png", 56, 11, 'Blue Tunnel', 'North/west exit', 'One of the tunnels that allow traversal through swamps.');
 </script>
 </body>
 </html>
