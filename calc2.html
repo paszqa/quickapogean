@@ -2349,28 +2349,30 @@ function buildStatRow(stat, baseValue, currentClass) {
     }
     // 65 - Heavy Metal - Heavy Armor that weighs more than X oz. has 1 Ability extra
     if(selectedTraits[65] && selectedTraits[65] != "Off" && selectedTraits[65] != 0) {
-        console.log("Heavy Metal is selected with level: " + selectedTraits[65]);
-        //count all heavy armor items that weigh more than X oz.
-        const armorSlots = document.querySelectorAll('.item-slot img');
-        let heavyArmorCount = 0;
-        armorSlots.forEach(armorSlot => {
-            if (armorSlot && armorSlot.alt) {
-                const [name, rarity] = armorSlot.alt.split(';');
-                const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
-                if (item) {
-                    //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??
-                    if(item[2].includes('heavy') && (item[3]/10) > selectedTraits[65]) {
-                        heavyArmorCount++;
+        if(stat === "Ability"){
+            console.log("Heavy Metal is selected with level: " + selectedTraits[65]);
+            //count all heavy armor items that weigh more than X oz.
+            const armorSlots = document.querySelectorAll('.item-slot img');
+            let heavyArmorCount = 0;
+            armorSlots.forEach(armorSlot => {
+                if (armorSlot && armorSlot.alt) {
+                    const [name, rarity] = armorSlot.alt.split(';');
+                    const item = items.find(i => i[0] === name && (i[i.length-1] === rarity || (!i[i.length-1] && !rarity)));
+                    if (item) {
+                        //name	 slot	 type	 weight	 range	 DMG	 hp     mana	ability	 magic	 arm	 def	 moveS	 atkSpd	 ??
+                        if(item[2].includes('heavy') && (item[3]/10) > selectedTraits[65]) {
+                            heavyArmorCount++;
+                        }
                     }
                 }
+            });
+            //add trait bonus
+            traitBonus += heavyArmorCount;
+            if (traitCalc != '') {
+                traitCalc += ` + `;
             }
-        });
-        //add trait bonus
-        traitBonus += heavyArmorCount;
-        if (traitCalc != '') {
-            traitCalc += ` + `;
+            traitCalc += `${heavyArmorCount}`;
         }
-        traitCalc += `${heavyArmorCount}`;
     }
     //67 - Blessed Plate - Heavy Armor has 1 Magic and 25 Mana extra
     if(selectedTraits[67] && selectedTraits[67] != "Off" && selectedTraits[67] != 0) {
