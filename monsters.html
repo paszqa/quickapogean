@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Quick Apogean - Monsters</title>
+        <link rel="stylesheet" href="style.css">
+        <style>
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Bedstead', Arial, sans-serif;
+  background-color: #1e1e1e;
+  color: #cfcfcf;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7), -2px -2px 2px rgba(0, 0, 0, 0.3), -2px 2px 2px rgba(0, 0, 0, 0.3), 2px -2px 2px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+@font-face{
+    font-family: 'Bedstead';
+    src: url('bedstead-extracondensed.otf') format('truetype');
+}
+
+.monstersTable {
+    width: 90%;
+    height: 80%;
+    border: 1px solid #faa;
+    overflow: scroll;
+}
+
+div .common{
+    width:48px;
+    min-height:14px;
+    font-size:0.85em;
+    text-align:center;
+    color:rgb(123, 180, 136);
+    line-height:1.1;
+    margin-top:2px;
+}
+
+div .semirare{
+    width:48px;
+    min-height:14px;
+    font-size:0.85em;
+    text-align:center;
+    color:rgb(123, 180, 136);
+    line-height:1.1;
+}
+
+img.semirare{
+    background: rgba(123, 180, 136, 0.281);
+
+}
+
+img.rare{
+    background: rgba(94, 124, 170, 0.281);
+}
+img.veryrare{
+    background: rgba(158, 106, 158, 0.281);
+}
+div .rare{
+    width:48px;
+    min-height:14px;
+    font-size:0.85em;
+    text-align:center;
+    color:rgb(94, 124, 170);
+    line-height:1.1;
+    margin-top:2px;
+}
+
+div .veryrare{
+    width:48px;
+    min-height:14px;
+    font-size:0.85em;
+    text-align:center;
+    color:rgb(158, 106, 158);
+    line-height:1.1;
+    margin-top:2px;
+}
+</style>
+    </head>
+    <body>
+        <div class="monstersTable" style="width: 90%; height: 80vh;">
+        </div>
+        <script>
+    monsters = [
+["Alpha Wolf", "", "alphawolf.png", 6000, 2500, [["Green Backpack", 1, "semirare"], ["Health Potion", 5], ["Fur", 3], ["Game Meat", 3], ["Hook Claw", 2], ["Leaf Blade", 1, "rare"]]], 
+["Ancient Snake", "", "ancientsnake.png", 400, 340, [["Wood Twigs", 1], ["Red Book: Precise Shot", 1, "semirare"], ["Plagued Scale", 1], ["Swamp Cod", 1], ["Cattail Flower", 1], ["Arrow", 5], ["Old Gloves", 1, "semirare"]]], 
+["Bandit", "", "bandit.png", 85, 30, [["Gold", 5], ["Knife", 1], ["Leather Boots", 1], ["Bread Piece", 1], ["Cloth Vest", 1], ["Cloth Pants", 1, "rare"]]], 
+["Banshee", "", "banshee.png", 950, 800, [["Gold", 15]]], 
+["Bear", "", "bear.png", 300, 130, [["Game Meat", 2], ["Wood Twigs", 2]]], 
+["Black Sheep", "", "blacksheep.png", 10, 2, [["Black Wool", 1], ["Lamb Meat", 1]]], 
+["Blackhat", "", "blackhat.png", 2000, 3600, [["Gold", 120], ["Worn Paper", 2], ["Mana Potion", 4], ["Epee", 1, "rare"], ["Bread Piece", 2], ["Tin Ingot", 2], ["Merchants Bag", 1, "semirare"], ["Leather Cloak", 1, "semirare"], ["Golden Ring", 1], ["Red Book: Energy Bolt", 1, "semirare"]]], 
+["Bone Eater", "", "boneeater.png", 450, 235, [["Gold", 5], ["Snapper", 1], ["Garlic", 1, "rare"], ["Crowbar", 1, "semirare"], ["Brass Shield", 1, "rare"], ["Green Book: Conjure Arrow", 1, "rare"], ["Bone Knife", 1, "rare"]]], 
+["Cave Spider", "", "cavespider.png", 95, 50, [["Gold", 3], ["Slime Essence", 1, "rare"], ["Cloth Pants", 1, "semirare"], ["Silver Dagger", 1, "veryrare"], ["Tofu Block", 1, "semirare"], ["Empty Pot", 1]]], 
+["Cave Troll", "", "cavetroll.png", 1100, 450, [["Gold", 13], ["Ragged Cloth", 1], ["Iron Ingot", 1, "semirare"], ["Broadsword", 1, "rare"], ["Leather Boots", 1]]], 
+["Conquest Crow", "", "conquestcrow.png", 620, , [["Gold", 15]]], 
+["Conquest Fowler", "", "conquestfowler.png", 310, 170, [["Gold", 12], ["Small Bones", 1], ["Bone Knife", 1, "rare"], ["Shovel", 1], ["Iron Ingot", 1, "rare"], ["Bone Bow", 1, "veryrare"], ["Red Book: Precise Shot", 1, "rare"], ["Sandworm Meal", 1, "semirare"]]], 
+["Conquest Priestess", "", "", 400, 500, [["Gold", 12]]], 
+["Crazed Occultist", "", "", 200, 200, [["Gold", 12], ["Torch"], ["Leather Collar", 1, "rare"], ["Cooked Snapper", 1, "rare"], ["Red Book: Berserk", 1, "rare"]]], 
+["Cube Of Doom", "", "", 380, 200, [["Gold", 10], ["Wooden Bow", 1, "rare"], ["Arrow", 3], ["Green Bag", 1, "rare"], ["Studded Shield", 1, "semirare"], ["Kettle Helmet", 1, "semirare"], ["Ironsword", 1, "semirare"]]], 
+["Deadly Webcap", "", "", 2000, 2700, [["White Mushroom", 2], ["Webcap Eye", 1]]], 
+["Deer", "", "", 20, 10, [["Game Meat", 1], ["Fur", 1]]], 
+["Devil Spider", "", "", 500, 500, [["Gold", 12], ["Simple Garment", 1], ["Cattail Flower", 1, "semirare"], ["Brass Legs", 1, "rare"], ["Slime Essence", 1], ["Health Potion", 1], ["Brass Armor", 1, "rare"], ["Zircon Ring", 1, "rare"]]], 
+["Digger", "", "", 230, 155, [["Gold", 10], ["Leather Cuisse", 1, "semirare"], ["Steel Ingot", 1, "rare"], ["Iron Ingot", 1, "rare"], ["Small Skull", 1], ["Shovel", 1], ["Diamond Ring", 1, "rare"]]], 
+["Eye Of Pestilence", "", "", 1400, 1600, [["Gold", 42], ["Worn Paper", 3], ["Ruby Amulet", 1, "rare"], ["Big Mana Potion", 1], ["Orb", 1], ["Plagued Scale", 1], ["Crystal Staff", 1, "rare"], ["Knife", 1], ["Dark Robe", 1, "rare"], ["Blue Spellbook: Magic Wall", 1, "rare"], ["Studded Shield", 1, "semirare"], ["Bread Loaf", 1]]], 
+
+
+
+
+
+
+
+
+
+
+
+
+];
+
+function renderMonstersTable(monsters) {
+  function lootSort(a, b) {
+    // a, b: [item, qty, rarity]
+    const getPriority = (item, rarity) => {
+      if (item === 'Gold') return 0;
+      if (!rarity) return 1;
+      if (rarity === 'semirare') return 2;
+      if (rarity === 'rare') return 3;
+      if (rarity === 'veryrare') return 4;
+      return 5;
+    };
+    const pa = getPriority(a[0], a[2]);
+    const pb = getPriority(b[0], b[2]);
+    if (pa !== pb) return pa - pb;
+    // If same priority, sort alphabetically by item name
+    return a[0].localeCompare(b[0]);
+  }
+
+  let html = `<table style="width:100%;border-collapse:collapse;">
+    <thead>
+      <tr style="background:#333;color:#fff;">
+        <th>Name</th>
+        <th>Icon</th>
+        <th>Image</th>
+        <th>HP</th>
+        <th>Base XP</th>
+        <th>Your XP</th>
+        <th>Loot</th>
+      </tr>
+    </thead>
+    <tbody>`;
+  for (const m of monsters) {
+    html += `<tr style="border-bottom:1px solid #555;">`;
+    html += `<td>${m[0]}</td>`;
+    html += `<td>${m[1] ? `<img src='${m[1]}' alt='icon' style='height:32px;'>` : ''}</td>`;
+    videoFileName = m[0] ? m[0].replace('.png', '') : '';
+    videoFileName = videoFileName.replace(' ', '').replace(' ', '');
+    html += `<td>${m[0] ? `<video src='Monsters/${videoFileName}.mp4' style='height:64px;' autoplay loop muted></video>` : ''}</td>`;
+    html += `<td>${m[3] ?? ''}</td>`;
+    html += `<td>${m[4] ?? ''}</td>`;
+    html += `<td></td>`; // Your XP (to be calculated later)
+    html += `<td style='vertical-align:middle;'>`;
+    if (Array.isArray(m[5])) {
+      // Sort loot array
+      const sortedLoot = m[5].slice().sort(lootSort);
+      html += '<div style="display:flex;gap:6px;">';
+      for (const loot of sortedLoot) {
+        let [item, qty, rarity] = loot;
+        html += `<div style='display:flex;flex-direction:column;align-items:center;width:48px;margin-bottom:2px;'>`;
+        html += `<div style='position:relative;width:48px;height:48px;'>`;
+        let imgSrc = `Items/${item.replace(/\s+/g, '')}.png`;
+            //Image name correction
+        imgSrc = imgSrc.replace(":", "");
+        imgSrc = imgSrc.replace(" ", "");
+        if(imgSrc.includes("RedBook")) imgSrc = imgSrc.replace("RedBook", "RedSpellbook");
+        if(imgSrc.includes("BlueBook")) imgSrc = imgSrc.replace("BlueBook", "BlueSpellbook");
+        if(imgSrc.includes("GreenBook")) imgSrc = imgSrc.replace("GreenBook", "GreenSpellbook");
+        if(imgSrc.includes("YellowBook")) imgSrc = imgSrc.replace("YellowBook", "YellowSpellbook");
+
+        html += `<img class='${rarity ? rarity : ''}' src='${imgSrc}' alt='${item}' title='${item}${rarity ? ` [${rarity}]` : ''}' style='width:48px;height:48px;border-radius:6px;border:1px solid #444;'>`;
+        if (qty && qty > 1) {
+          html += `<span style='position:absolute;right:2px;bottom:2px;font-size:1em;background:rgba(0,0,0,0.7);color:#fff;padding:1px 4px;border-radius:4px;'>${qty}</span>`;
+        }
+        html += `</div>`;
+        let rarityText = rarity;
+        if(rarityText === 'veryrare') rarityText = 'very rare';
+        html += `<div class='${rarity ? rarity : 'common'}'>${rarityText ? rarityText : ''}</div>`;
+        html += `</div>`;
+      }
+      html += '</div>';
+    }
+    html += `</td>`;
+    html += `</tr>`;
+  }
+  html += `</tbody></table>`;
+  document.querySelector('.monstersTable').innerHTML = html;
+}
+document.addEventListener('DOMContentLoaded', function() {
+  renderMonstersTable(monsters);
+});
+</script>
+    </body>
+</html>
