@@ -77,6 +77,11 @@ div .veryrare{
     line-height:1.1;
     margin-top:2px;
 }
+td.monsterName{
+  padding: 2px;
+  width: 200px;
+  font-size: 1.5em;
+}
 </style>
     </head>
     <body>
@@ -84,73 +89,106 @@ div .veryrare{
         </div>
         <script>
     monsters = [
-["Alpha Wolf", "", "alphawolf.png", 6000, 2500, [["Green Backpack", 1, "semirare"], ["Health Potion", 5], ["Fur", 3], ["Game Meat", 3], ["Hook Claw", 2], ["Leaf Blade", 1, "rare"]]], 
-["Ancient Snake", "", "ancientsnake.png", 400, 340, [["Wood Twigs", 1], ["Red Book: Precise Shot", 1, "semirare"], ["Plagued Scale", 1], ["Swamp Cod", 1], ["Cattail Flower", 1], ["Arrow", 5], ["Old Gloves", 1, "semirare"]]], 
-["Bandit", "", "bandit.png", 85, 30, [["Gold", 5], ["Knife", 1], ["Leather Boots", 1], ["Bread Piece", 1], ["Cloth Vest", 1], ["Cloth Pants", 1, "rare"]]], 
-["Banshee", "", "banshee.png", 950, 800, [["Gold", 15]]], 
-["Bear", "", "bear.png", 300, 130, [["Game Meat", 2], ["Wood Twigs", 2]]], 
-["Black Sheep", "", "blacksheep.png", 10, 2, [["Black Wool", 1], ["Lamb Meat", 1]]], 
-["Blackhat", "", "blackhat.png", 2000, 3600, [["Gold", 120], ["Worn Paper", 2], ["Mana Potion", 4], ["Epee", 1, "rare"], ["Bread Piece", 2], ["Tin Ingot", 2], ["Merchants Bag", 1, "semirare"], ["Leather Cloak", 1, "semirare"], ["Golden Ring", 1], ["Red Book: Energy Bolt", 1, "semirare"]]], 
-["Bone Eater", "", "boneeater.png", 450, 235, [["Gold", 5], ["Snapper", 1], ["Garlic", 1, "rare"], ["Crowbar", 1, "semirare"], ["Brass Shield", 1, "rare"], ["Green Book: Conjure Arrow", 1, "rare"], ["Bone Knife", 1, "rare"]]], 
-["Cave Spider", "", "cavespider.png", 95, 50, [["Gold", 3], ["Slime Essence", 1, "rare"], ["Cloth Pants", 1, "semirare"], ["Silver Dagger", 1, "veryrare"], ["Tofu Block", 1, "semirare"], ["Empty Pot", 1]]], 
-["Cave Troll", "", "cavetroll.png", 1100, 450, [["Gold", 13], ["Ragged Cloth", 1], ["Iron Ingot", 1, "semirare"], ["Broadsword", 1, "rare"], ["Leather Boots", 1]]], 
-["Conquest Crow", "", "conquestcrow.png", 620, , [["Gold", 15]]], 
-["Conquest Fowler", "", "conquestfowler.png", 310, 170, [["Gold", 12], ["Small Bones", 1], ["Bone Knife", 1, "rare"], ["Shovel", 1], ["Iron Ingot", 1, "rare"], ["Bone Bow", 1, "veryrare"], ["Red Book: Precise Shot", 1, "rare"], ["Sandworm Meal", 1, "semirare"]]], 
+["Adult Amphitere", "", "?", 6000, 5000, [["Gold", 100], ["Red Breast", 1], ["Dragonfruit", 1]]], 
+["Alpha Wolf", "", "", 5000, 3200, [["Green Backpack", 1, "semirare"], ["Health Potion", 5], ["Fur", 3], ["Game Meat", 3], ["Hook Claw", 2], ["Leaf Blade", 1, "rare"]]], 
+["Ancient Snake", "", "", 430, 340, [["Wood Twigs", 1], ["Red Book: Precise Shot", 1, "semirare"], ["Plagued Scale", 1], ["Swamp Cod", 1], ["Cattail Flower", 1], ["Arrow", 5], ["Old Gloves", 1, "semirare"]]], 
+["Bandit", "", "", 85, 30, [["Gold", 5], ["Knife", 1], ["Leather Boots", 1], ["Bread Piece", 1], ["Cloth Vest", 1], ["Cloth Pants", 1, "rare"]]], 
+["Banshee", "", "", 950, 800, [["Gold", 15]]], 
+["Bear", "", "", 300, 130, [["Game Meat", 2], ["Wood Twigs", 2]]], 
+["Black Lamb", "", "", 10, 2, [["Lamb Meat", 1]]], 
+["Black Sheep", "", "", 10, 2, [["Black Wool", 1], ["Lamb Meat", 1]]], 
+["Blackhat", "", "", 2000, 3600, [["Gold", 120], ["Worn Paper", 2], ["Mana Potion", 4], ["Epee", 1, "rare"], ["Bread Piece", 2], ["Tin Ingot", 2], ["Merchants Bag", 1, "semirare"], ["Leather Cloak", 1, "semirare"], ["Golden Ring", 1], ["Red Book: Energy Bolt", 1, "semirare"]]], 
+["Bone Eater", "", "", 450, 235, [["Gold", 5], ["Snapper", 1], ["Garlic", 1, "rare"], ["Crowbar", 1, "semirare"], ["Brass Shield", 1, "rare"], ["Green Book: Conjure Arrow", 1, "rare"], ["Bone Knife", 1, "rare"]]], 
+["Broodmother", "", "?", 3000, 2500, [["Gold", 25]]], 
+["Capozzi The Bandit", "", "?", 3000, 2500, [["Gold", 81], ["Wooden Cup", 1], ["Tofu Block", 1], ["Mana Potion", 3]]], 
+["Cave Spider", "", "", 95, 50, [["Gold", 3], ["Slime Essence", 1, "rare"], ["Cloth Pants", 1, "semirare"], ["Silver Dagger", 1, "veryrare"], ["Tofu Block", 1, "semirare"], ["Empty Pot", 1]]], 
+["Cave Troll", "", "", 1100, 450, [["Gold", 13], ["Ragged Cloth", 1], ["Iron Ingot", 1, "semirare"], ["Broadsword", 1, "rare"], ["Leather Boots", 1], ["Leather Collar", 1, "semirare"], ["Studded Shield", 1, "semirare"], ["Brass Legs", 1, "rare"]]], 
+["Conquest Crow", "", "", 620, 450, [["Gold", 15]]], 
+["Conquest Fowler", "", "", 310, 170, [["Gold", 12], ["Small Bones", 1], ["Small Skull", 1], ["Bone Knife", 1, "rare"], ["Shovel", 1], ["Iron Ingot", 1, "rare"], ["Bone Bow", 1, "veryrare"], ["Red Book: Precise Shot", 1, "rare"], ["Sandworm Meal", 1, "semirare"], ["Quoki Headgear", 1, "veryrare"], ["Sandworm Meal", 1, "rare"]]], 
 ["Conquest Priestess", "", "", 400, 500, [["Gold", 12]]], 
-["Crazed Occultist", "", "", 200, 200, [["Gold", 12], ["Torch"], ["Leather Collar", 1, "rare"], ["Cooked Snapper", 1, "rare"], ["Red Book: Berserk", 1, "rare"]]], 
-["Cube Of Doom", "", "", 380, 200, [["Gold", 10], ["Wooden Bow", 1, "rare"], ["Arrow", 3], ["Green Bag", 1, "rare"], ["Studded Shield", 1, "semirare"], ["Kettle Helmet", 1, "semirare"], ["Ironsword", 1, "semirare"]]], 
-["Deadly Webcap", "", "", 2000, 2700, [["White Mushroom", 2], ["Webcap Eye", 1]]], 
+["Crazed Occultist", "", "", 200, 200, [["Gold", 12], ["Torch"], ["Leather Collar", 1, "rare"], ["Cooked Snapper", 1, "rare"], ["Red Book: Berserk", 1, "rare"], ["Iron Pan", 1], ["Health Potion", 2]]], 
+["Cube of Doom", "", "", 380, 200, [["Gold", 10], ["Wooden Bow", 1, "rare"], ["Arrow", 3], ["Green Bag", 1, "rare"], ["Studded Shield", 1, "semirare"], ["Kettle Helmet", 1, "semirare"], ["Ironsword", 1, "semirare"]]], 
+["Deadly Webcap", "", "?", 2000, 2700, [["White Mushroom", 2], ["Webcap Eye", 1]]], 
 ["Deer", "", "", 20, 10, [["Game Meat", 1], ["Fur", 1]]], 
 ["Devil Spider", "", "", 500, 500, [["Gold", 12], ["Simple Garment", 1], ["Cattail Flower", 1, "semirare"], ["Brass Legs", 1, "rare"], ["Slime Essence", 1], ["Health Potion", 1], ["Brass Armor", 1, "rare"], ["Zircon Ring", 1, "rare"]]], 
-["Digger", "", "", 230, 155, [["Gold", 10], ["Leather Cuisse", 1, "semirare"], ["Steel Ingot", 1, "rare"], ["Iron Ingot", 1, "rare"], ["Small Skull", 1], ["Shovel", 1], ["Diamond Ring", 1, "rare"]]], 
-["Eye Of Pestilence", "", "", 1400, 1600, [["Gold", 42], ["Worn Paper", 3], ["Ruby Amulet", 1, "rare"], ["Big Mana Potion", 1], ["Orb", 1], ["Plagued Scale", 1], ["Crystal Staff", 1, "rare"], ["Knife", 1], ["Dark Robe", 1, "rare"], ["Blue Spellbook: Magic Wall", 1, "rare"], ["Studded Shield", 1, "semirare"], ["Bread Loaf", 1]]], 
+["Digger", "", "", 230, 155, [["Gold", 10], ["Leather Cuisse", 1, "semirare"], ["Steel Ingot", 1, "rare"], ["Iron Ingot", 1, "rare"], ["Small Skull", 1], ["Shovel", 1], ["Diamond Ring", 1, "veryrare"]]], 
+["Eye Of Pestilence", "", "", 1400, 1600, [["Gold", 42], ["Worn Paper", 3], ["Ruby Amulet", 1, "rare"], ["Big Mana Potion", 1], ["Orb", 1], ["Plagued Scale", 1], ["Crystal Staff", 1, "rare"], ["Knife", 1], ["Dark Robe", 1, "rare"], ["Blue Spellbook: Magic Wall", 1, "rare"], ["Studded Shield", 1, "semirare"], ["Bread Loaf", 1], ["Blue Spellbook: ManaShield", 1, "rare"]]], 
+["Gaglio The Bandit", "", "?", 4300, 2000, [["Gold", 50], ["Cooked Lamb", 1], ["Red Spellbook: RockThrow", 1, "semirare"], ["Cloth Vest", 1], ["Longsword", 1, "rare"]]], 
 ["Gardener", "", "", 5000, 2750, [["Gold", 90], ["Health Potion", 4], ["Torch", 1], ["Spring Stew", 3], ["Orb", 1], ["Dark Hood", 1, "semirare"], ["Dark Robe", 1, "semirare"], ["Regeneration Ring", 1], ["Blue Spellbook: Light Missile", 1]]], 
-["Giant Rat", "", "", 200, 100, [["Gold", 6], ["Cheese Slice", 1], ["Small Bones", 1], ["Rat Tail", 1], ["Spangenhelm", 1, "rare"], ["Cloth Vest", 1]]], 
-["Goblin", "", "", 90, 40, [["Gold", 5], ["Old Ring", 1, "rare"], ["Rope", 1, "semirare"], ["Ragged Cloth", 1]]], 
-["Grizzly Bear", "", "", 500, 300, [["Gold", 8], ["Game Meat", 1], ["Spangenhelm", 1, "rare"], ["Green Bag", 1, "rare"]]], 
+["Giant Lintwurm", "", "", 2000, 2500, [["Gold", 80]]], 
+["Giant Rat", "", "", 200, 100, [["Gold", 6], ["Cheese Slice", 1], ["Small Bones", 1], ["Rat Tail", 1], ["Spangenhelm", 1, "rare"], ["Cloth Vest", 1], ["Yellow Beauty", 1, "rare"]]], 
+["Goblin", "", "", 90, 40, [["Gold", 5], ["Old Ring", 1, "rare"], ["Rope", 1, "semirare"], ["Ragged Cloth", 1], ["Leather Bascinet", 1]]], 
+["Grizzly Bear", "", "", 500, 300, [["Gold", 10], ["Game Meat", 1], ["Spangenhelm", 1, "rare"], ["Green Bag", 1, "rare"], ["Bone Knife", 1, "rare"]]], 
 ["Imp", "", "", 300, 220, [["Gold", 3], ["Small Skull", 1]]], 
 ["Lamb", "", "", 10, 2, [["Lamb Meat", 1]]], 
 ["Lintwurm", "", "", 200, 100, [["Gold", 7], ["Snapper", 1], ["Sandworm Meal", 1]]], 
-["Minotaur", "", "", 800, 600, [["Gold", 15], ["Spangenhelm", 1, "semirare"], ["Longbow", 1, "rare"], ["Torch", 1], ["Old Ring", 1], ["Merchants Bag", 1, "semirare"]]], 
+["Mateo The Bandit", "", "?", 3000, 2500, [["Gold", 5]]], 
+["Minotaur", "", "", 800, 600, [["Gold", 15], ["Spangenhelm", 1, "semirare"], ["Longbow", 1, "rare"], ["Torch", 1], ["Old Ring", 1], ["Merchants Bag", 1, "semirare"], ["Wheat", 1], ["Tower Shield", 1, "veryrare"], ["Brass Amor", 1, "rare"], ["Golden Ring", 1, "rare"]]], 
 ["Mireling", "", "", 120, 60, [["Gold", 5], ["Swamp Cod", 1]]], 
 ["Mireling Noble", "", "", 333, 222, [["Gold", 5]]], 
 ["Monk", "", "", 200, 140, [["Gold", 6], ["Forsaken Cross", 1], ["Apple", 2], ["Wooden Staff", 1, "semirare"], ["Old Gloves", 1, "semirare"], ["Scarf", 1], ["Yellow Notebook", 1], ["Brown Backpack", 1], ["Bread Piece", 1], ["Cloth Pants", 1]]], 
-["Necromancer", "", "", 600, 600, [["Gold", 15],["Winged Boots", 1, "veryrare"]]], 
+["Necromancer", "", "", 600, 600, [["Gold", 15],["Winged Boots", 1, "veryrare"], ["Small Skull", 1], ["Torch", 1], ["Orb", 1, "rare"], ["Wooden Cup", 1], ["Mana Potion", 1]]], 
 ["Occultist Acolyte", "", "", 170, 100, [["Gold", 5], ["Worn Paper", 1], ["Mana Potion", 1], ["Wooden Staff", 1], ["Forsaken Cross", 1], ["Silver Amulet", 1, "rare"]]], 
 ["Occultist Apprentice", "", "", 100, 45, [["Gold", 4], ["Forsaken Cross", 1], ["Worn Paper", 1], ["Silver Ring", 1, "rare"], ["Red Book: ConjureFire", 1, "rare"], ["Cloth Pants", 1], ["Blueberries", 1, "semirare"]]], 
-["Occultist Enforcer", "", "", 340, 245, [["Gold", 14], ["Forsaken Cross", 1], ["Ironsword", 1, "semirare"], ["Health Potion", 1], ["Buckler", 1], ["Kettle Helmet", 1], ["Bread Loaf", 1]]], 
-["Occultist Scholar", "", "", 410, 390, [["Gold", 15], ["Mana Potion", 1], ["Small Skull", 1], ["Tofu Block", 1], ["Forsaken Cross", 1]]], 
-["Orc Berserker", "", "", 444, 444, [["Gold", 15], ["Gambeson", 1], ["Cooked White Mushroom", 1], ["Brigandine Legs", 1, "rare"]]], 
-["Orc General", "", "", 1500, 1200, [["Gold", 18], ["Brown Backpack", 1], ["Bread Loaf", 1], ["Longsword", 1, "rare"], ["Red Breast", 1]]], 
-["Orc Infantry", "", "", 500, 370, [["Gold", 10], ["Brigandine Vest", "rare"]]], 
+["Occultist Enforcer", "", "", 340, 245, [["Gold", 14], ["Forsaken Cross", 1], ["Ironsword", 1, "semirare"], ["Health Potion", 1], ["Buckler", 1], ["Kettle Helmet", 1], ["Bread Loaf", 1], ["Chain Mail", 1, "veryrare"], ["Yellow Spellbook: ShieldBlock", 1, "veryrare"]]], 
+["Occultist Scholar", "", "", 410, 390, [["Gold", 15], ["Mana Potion", 1], ["Small Skull", 1], ["Tofu Block", 1], ["Forsaken Cross", 1], ["Crystal Ring", 1, "rare"], ["Silver Mask", 1, "rare"]]], 
+["Orc Berserker", "", "", 780, 600, [["Gold", 15], ["Gambeson", 1], ["Cooked White Mushroom", 1], ["Brigandine Legs", 1, "veryrare"], ["Health Potion", 1], ["Red Spellbook: Berserk", 1, "rare"]]], 
+["Orc General", "", "", 1500, 1200, [["Gold", 25], ["Brown Backpack", 1], ["Bread Loaf", 1], ["Longsword", 1, "rare"], ["Red Breast", 1], ["Meaty Stew", 1]]], 
+["Orc Infantry", "", "", 500, 370, [["Gold", 10], ["Brigandine Vest", "rare"], ["Red Breast", 1], ["Rope", 1], ["Ironsword", 1, "semirare"], ["Cloth Pants", 1]]], 
 ["Orc Shaman", "", "", 650, 600, [["Gold", 7], ["Small Bones", 1], ["Empty Pot", 1], ["Boletus Piece", 1], ["Rat Tail", 1], ["Moon Ingot", 1, "rare"]]], 
-["Pestilence Plague", "", "", 1000, 700, [["Gold", 10]]], 
-["Pestilence Spawn", "", "", 280, 175, [["Gold", 6], ["Arrow", 6], ["Bug Wings", 2], ["Rice", 1], ["Blueberries", 2], ["Plagued Scale", 1, "semirare"], ["Green Book: Dash", 1, "rare"], ["Green Orb", 1, "veryrare"], ["Regeneration Ring", 1, "rare"]]], 
-["Pestilence Stinger", "", "", 140, 215, [["Gold", 12], ["Small Bones", 1], ["Small Skull", 1], ["Broadsword", 1, "rare"], ["Red Book: FierceThrust", 1, "rare"], ["Plagued Scale", 1, "semirare"], ["Tin Ingot", 1, "rare"]]], 
+["Pestilence Knight", "", "?", 8000, 8000, [["Gold", 100], ["Pestilence Sword", 1, "rare"]]], 
+["Pestilence Plague", "", "?", 1000, 700, [["Gold", 10], ["Rat Tail", 1], ["Mana Potion", 1], ["Old Gloves", 1], ["Leahter Cloak", 1, "rare"], ["Plagued Scale", 1], ["Dark Robe", 1, "rare"]]], 
+["Pestilence Spawn", "", "", 275, 175, [["Gold", 6], ["Arrow", 6], ["Bug Wings", 2], ["Rice", 1], ["Blueberries", 2], ["Plagued Scale", 1, "semirare"], ["Green Book: Dash", 1, "rare"], ["Green Orb", 1, "veryrare"], ["Regeneration Ring", 1, "rare"]]], 
+["Pestilence Stinger", "", "", 210, 165, [["Gold", 12], ["Small Bones", 1], ["Small Skull", 1], ["Broadsword", 1, "rare"], ["Red Book: FierceThrust", 1, "rare"], ["Plagued Scale", 1, "semirare"], ["Tin Ingot", 1, "rare"], ["Spicy Stew", 1, "semirare"], ["Leather Coif", 1, "veryrare"]]], 
 ["Plea", "", "", 200, 80, [["Gold", 8], ["Ragged Cloth", 1], ["Plea Toe", 1, "semirare"], ["Torch", 1], ["Broadsword", 1, "rare"], ["Studded Shield", 1, "rare"], ["Leather Collar", 1, "rare"], ["Red Book: Thrash", 1, "rare"], ["Fish Steak", 1]]], 
 ["Plea Occultist", "", "", 175, 150, [["Gold", 10], ["Worn Paper", 1], ["Forsaken Cross", 1], ["Gray Backpack", 1, "semirare"], ["Bone Knife", 1, "rare"], ["Red Book: Conjure Fire", 1, "rare"]]], 
-["Profaner", "", "", 1100, 450, [["Gold", 10]]], 
+["Profaner", "", "?", 1100, 450, [["Gold", 10], ["Torch", 1], ["Forsaken Cross", 1], ["Scarf", 1], ["Dark Robe", 1, "rare"], ["Moon Ingot", 1, "rare"]]], 
 ["Rat", "", "", 35, 10, [["Gold", 3], ["Cheese Slice", 1], ["Rat Tail", 1]]], 
-["Rat Shipper", "", "", 350, 15, [["Gold", 3], ["Cheese Slice", 1], ["Rat Tail", 1], ["Torch", 1]]], 
+["Rat Shipper", "", "", 350, 15, [["Gold", 3], ["Cheese Slice", 1], ["Rat Tail", 1], ["Torch", 1], ["Brown Backpack", 1]]], 
 ["Rubellus", "", "", 210, 125, [["Gold", 6], ["Small Skull", 1], ["Mana Potion", 1], ["Tomatoes", 1, "semirare"], ["Silver Ring", 1, "rare"], ["Blue Gill", 1]]], 
 ["Sheep", "", "", 30, 3, [["Wool", 1], ["Lamb Meat", 1]]], 
 ["Skeleton", "", "", 50, 20, [["Gold", 3], ["Small Skull", 1], ["Small Bones", 1], ["Ironsword", 1, "rare"], ["Buckler", 1, "rare"], ["Pumpkin", 1, "rare"]]], 
 ["Sunskin", "", "", 360, 195, [["Gold", 8], ["Sandworm Meal", 1], ["Burlap Wool", 1], ["Old Gloves", 1, "semirare"], ["Old Backpack", 1, "rare"], ["Rice", 1]]], 
-["Sunskin Enchanter", "", "", 550, 440, [["Gold", 8], ["Rope", 1], ["Red Book: Energy Bolt", 1], ["Burlap Hat", 1, "very rare"], ["Burlap Skirt", 1, "very rare"]]], 
-["Swamp Troll", "", "", 2000, 1600, [["Gold", 21], ["Swamp Cod", 1], ["Plagued Scale", 1], ["Brass Legs", 1, "semirare"], ["Steel Ingot", 1], ["Steelsword", 1, "rare"], ["Brigandine Vest", 1, "rare"]]], 
-["Terror Spider", "", "", 2500, 2000, [["Gold", 30], ["Plagued Scale", 1], ["Slime Essence", 1]]], 
+["Sunskin Enchanter", "", "", 550, 440, [["Gold", 8], ["Rope", 1], ["Red Book: Energy Bolt", 1], ["Burlap Hat", 1, "rare"], ["Burlap Skirt", 1, "rare"], ["Snake Orb", 1, "veryrare"]]], 
+["Swamp Troll", "", "", 2000, 1600, [["Gold", 21], ["Swamp Cod", 1], ["Plagued Scale", 1], ["Brass Legs", 1, "semirare"], ["Steel Ingot", 1], ["Steelsword", 1, "rare"], ["Brigandine Vest", 1, "rare"], ["Tower Shield", 1, "veryrare"], ["Ragged Cloth", 1]]], 
+["Terror Spider", "", "?", 3000, 3000, [["Gold", 30], ["Plagued Scale", 1], ["Slime Essence", 1], ["Plated Legs", 1, "rare"]]], 
 ["The Augur", "", "", 6200, 2700, [["Gold", 91], ["Green Backpack", 1], ["Battle Cloak", 1, "rare"], ["Mana Potion", 1], ["Strawberries", 2], ["Rawhide", 2], ["Cooked Game Meat", 1]]], 
+["Tock", "", "?", 300, 200, []], 
 ["Tomb Guardian", "", "", 800, 400, [["Gold", 20], ["Rock Core", 1]]], 
-["Tundra Rat", "", "", 370, 260, [["Gold", 8], ["Rat Tail", 1], ["Cheese Slice", 1], ["Leather Boots", 1], ["Leather Gloves", 1, "rare"], ["Crystal Shard", 1]]], 
+["Tundra Rat", "", "", 370, 260, [["Gold", 8], ["Rat Tail", 1], ["Cheese Slice", 1], ["Leather Boots", 1], ["Leather Gloves", 1, "rare"], ["Crystal Shard", 1], ["Blue Spellbook: IceBerserk", 1,  "veryrare"]]], 
 ["Viscid Goblin", "", "", 200, 125, [["Gold", 8], ["Bug Wings", 1], ["Ironsword", 1, "rare"], ["Leather Cuisse", 1, "rare"], ["Merchants Bag", 1, "rare"], ["Silver Amulet", 1, "rare"], ["Ragged Cloth", 1]]], 
 ["Walking Boletus", "", "", 150, 75, [["Leather Boots", 1], ["White Mushroom", 1], ["Boletus Piece", 1], ["Golden Ring", 1, "rare"]]], 
 ["Wolf", "", "", 100, 35, [["Fur", 1], ["Small Bones", 2], ["Game Meat", 1]]], 
-["Young Amphitere", "", "", 800, 1500, [["Gold", 15], ["Regeneration Ring", 1, "semirare"], ["Dragonfruit", 1], ["Leather Coif", 1], ["Scale Armor", 1, "rare"], ["Blue Spellbook: Windfall", 1, "rare"]]], 
-
-
+["Young Amphitere", "", "", 800, 1500, [["Gold", 15], ["Regeneration Ring", 1, "semirare"], ["Dragonfruit", 1], ["Leather Coif", 1], ["Scale Armor", 1, "rare"], ["Blue Spellbook: Windfall", 1, "rare"], ["Epee", 1, "rare"], ["Hookclaw", 1]]], 
 
 
 ];
+
+let sortColumn = null;
+let sortDirection = 'asc';
+
+function sortMonsters(monsters, column, direction) {
+  return monsters.slice().sort((a, b) => {
+    let aVal, bVal;
+    
+    switch(column) {
+      case 'name':
+        aVal = a[0] || '';
+        bVal = b[0] || '';
+        return direction === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+      case 'hp':
+        aVal = a[3] || 0;
+        bVal = b[3] || 0;
+        return direction === 'asc' ? aVal - bVal : bVal - aVal;
+      case 'xp':
+        aVal = a[4] || 0;
+        bVal = b[4] || 0;
+        return direction === 'asc' ? aVal - bVal : bVal - aVal;
+      default:
+        return 0;
+    }
+  });
+}
 
 function renderMonstersTable(monsters) {
   function lootSort(a, b) {
@@ -173,27 +211,31 @@ function renderMonstersTable(monsters) {
   let html = `<table style="width:100%;border-collapse:collapse;">
     <thead>
       <tr style="background:#333;color:#fff;">
-        <th>Name</th>
-        <th>Icon</th>
-        <th>Image</th>
-        <th>HP</th>
-        <th>Base XP</th>
-        <th>Your XP</th>
-        <th>Loot</th>
+        <th style="cursor:pointer;padding:2px;text-align:left;width:200px;" onclick="handleSort('name')">
+          Name ${sortColumn === 'name' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
+        </th>
+        <th style="padding:2px;text-align:center;width:80px;">Image</th>
+        <th style="cursor:pointer;padding:2px;text-align:center;width:80px;" onclick="handleSort('hp')">
+          HP ${sortColumn === 'hp' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
+        </th>
+        <th style="cursor:pointer;padding:2px;text-align:center;width:100px;" onclick="handleSort('xp')">
+          Base XP ${sortColumn === 'xp' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
+        </th>
+        <th style="padding:2px;text-align:center;width:100px;">Your XP</th>
+        <th style="padding:2px;text-align:left;">Loot</th>
       </tr>
     </thead>
     <tbody>`;
   for (const m of monsters) {
     html += `<tr style="border-bottom:1px solid #555;">`;
-    html += `<td>${m[0]}</td>`;
-    html += `<td>${m[1] ? `<img src='${m[1]}' alt='icon' style='height:32px;'>` : ''}</td>`;
+    html += `<td class="monsterName">${m[0]}</td>`;
     videoFileName = m[0] ? m[0].replace('.png', '') : '';
     videoFileName = videoFileName.replace(' ', '').replace(' ', '');
-    html += `<td>${m[0] ? `<video src='Monsters/${videoFileName}.mp4' style='height:64px;' autoplay loop muted></video>` : ''}</td>`;
-    html += `<td>${m[3] ?? ''}</td>`;
-    html += `<td>${m[4] ?? ''}</td>`;
-    html += `<td></td>`; // Your XP (to be calculated later)
-    html += `<td style='vertical-align:middle;'>`;
+    html += `<td style="padding:2px;text-align:center;width:80px;">${m[0] ? `<video src='Monsters/${videoFileName}.mp4' style='height:64px;' autoplay loop muted></video>` : ''}</td>`;
+    html += `<td style="padding:2px;text-align:center;width:80px;">${m[3] ?? ''}</td>`;
+    html += `<td style="padding:2px;text-align:center;width:100px;">${m[4] ?? ''}${m[2] ?? ''}</td>`;
+    html += `<td style="padding:2px;text-align:center;width:100px;"> </td>`; // Your XP (to be calculated later)
+    html += `<td style='vertical-align:middle;padding:2px;'>`;
     if (Array.isArray(m[5])) {
       // Sort loot array
       const sortedLoot = m[5].slice().sort(lootSort);
@@ -229,8 +271,25 @@ function renderMonstersTable(monsters) {
   html += `</tbody></table>`;
   document.querySelector('.monstersTable').innerHTML = html;
 }
+
+function handleSort(column) {
+  if (sortColumn === column) {
+    sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortColumn = column;
+    sortDirection = 'asc';
+  }
+  
+  const sortedMonsters = sortMonsters(monsters, column, sortDirection);
+  renderMonstersTable(sortedMonsters);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
-  renderMonstersTable(monsters);
+  // Set initial sort by Base XP (ascending)
+  sortColumn = 'xp';
+  sortDirection = 'asc';
+  const sortedMonsters = sortMonsters(monsters, sortColumn, sortDirection);
+  renderMonstersTable(sortedMonsters);
 });
 </script>
     </body>
