@@ -1077,7 +1077,7 @@ const traits = [
 [63,62,"Monster Candy","Taunt lasts 100% longer, Conjure and Defense spells are 50% cheaper. Lose 99 Damage.",["Off","active"],0,0,0,0,0,400],
 [64,0,"Well Protected","Heavy Armor has X extra health",[0,1,3,6,10,15],0,0,0,0,100,200],
 [65,64,"Heavy Metal","Heavy Armor that weighs more than X oz. has 1 Ability extra",[0,100,75,35],0,0,0,0,200,200],
-[66,65,"Magic Steel","Casting a Time or Heal spell gives you a Magic Shield equal to X% of your Armor, capping at 100",[0,50,100,150],0,0,0,0,200,300],
+[66,65,"Magic Steel","Casting a Time or Heal spell gives you a Magic Shield equal to X% of your Armor, capping at 100",[0,50,75,100],0,0,0,0,200,300],
 [67,66,"Blessed Plate","Heavy Armor has 1 Magic and 25 Mana extra",["Off","active"],66,3,64,5,200,400],
 [68,65,"Carry Your Might","Gain 1 Armor for every 100 Max Capacity, capping at X",[0,2,4,8],0,0,0,0,300,300],
 [69,68,"Juggernaut","Removes negative effects from Heavy Armor. Gain 5% Ability for each equipped Heavy Armor.",["Off","active"],68,3,64,5,300,400],
@@ -1313,7 +1313,7 @@ function updateStatTable() {
     // Capacity Used
     html += buildStatRow("Capacity Used", 0, currentClass);
     // Capacity Free
-    html += buildStatRow("Capacity Free", baseValues["Capacity"], currentClass);
+    html += buildStatRow("Capacity Free", statData["Capacity"].final, currentClass);
     // Capacity
     html += buildStatRow("Capacity", baseValues["Capacity"], currentClass);
     html += `</div>`;
