@@ -75,6 +75,9 @@
         .hiddenHeavyWeapons{
             display: none;
         }
+        .hiddenRegularWeapons{
+            display: none;
+        }
 
     </style>
 </head>
@@ -82,7 +85,7 @@
     <p style="width: 1150px; text-align: justify;">
         <span class="orange">The table is sortable. Choose filters:</span>
         <label style="margin-left:20px;"><input type="checkbox" id="showRarities"> Show other rarities</label>
-        <label style="margin-left:20px;"><input type="checkbox" id="showHeavyWeapons" onchange="toggleHeavyWeaponsFilter()"> Show heavy weapons</label>
+        <span id="dynamicFilters"></span>
     </p>
     <table id="meleeTable">
         <thead>
@@ -780,18 +783,34 @@
             // Apply rarity filter after populating
             toggleRarityFilter();
             
+            // Setup and apply dynamic filters
+            setupDynamicFilters();
+            
+            // Apply weapon type filter if applicable
+            if (document.getElementById('showHeavyWeapons') || document.getElementById('showRegularWeapons')) {
+                setTimeout(toggleWeaponTypeFilter, 10); // Small delay to ensure DOM is ready
+            }
+            
             switch(filter1){
                 case "sword":
                 case "dagger":
                 case "bow":
                 case "staff":
                 case "gloves":
+                    sortTable(2, 'asc');
+                    sortTable(3, 'desc');
+                    sortTable(2, 'asc');
                     sortTable(5, 'asc');
                     break;
                 case "shield":
+                    sortTable(2, 'asc');
+                    sortTable(3, 'desc');
+                    sortTable(2, 'asc');
                     sortTable(11, 'asc');
                     break;
                 case "orb":
+                    sortTable(2, 'asc');
+                    sortTable(3, 'desc');
                     sortTable(2, 'asc');
                     break;
                 case "helmet":
@@ -824,8 +843,48 @@
             });
         }
         
-
-
+        function setupDynamicFilters() {
+            const filter1 = getParameterByName('filter1') || getParameterByName('filter') || '';
+            const dynamicFiltersContainer = document.getElementById('dynamicFilters');
+            
+            // Clear existing dynamic filters
+            dynamicFiltersContainer.innerHTML = '';
+            
+            if (filter1 === 'sword') {
+                dynamicFiltersContainer.innerHTML = `
+                    <label style="margin-left:20px;"><input type="checkbox" id="showHeavyWeapons" onchange="toggleWeaponTypeFilter()" checked> Show Heavy Weapons</label>
+                    <label style="margin-left:20px;"><input type="checkbox" id="showRegularWeapons" onchange="toggleWeaponTypeFilter()" checked> Show Regular Weapons</label>
+                `;
+            }
+            // Add more filter types here for other filter1 values
+        }
+        
+        function toggleWeaponTypeFilter() {
+            const showHeavy = document.getElementById('showHeavyWeapons')?.checked;
+            const showRegular = document.getElementById('showRegularWeapons')?.checked;
+            const table = document.getElementById('meleeTable');
+            const rows = table.querySelectorAll('tr[data-rarity]');
+            
+            rows.forEach(row => {
+                const typeCell = row.cells[15]; // Type column is at index 15
+                const type = typeCell?.textContent || '';
+                
+                let shouldHide = false;
+                
+                if (type === 'Heavy Weapon' && !showHeavy) {
+                    shouldHide = true;
+                } else if (type === 'Sword' && !showRegular) {
+                    shouldHide = true;
+                }
+                
+                if (shouldHide) {
+                    row.classList.add('hiddenHeavyWeapons');
+                } else {
+                    row.classList.remove('hiddenHeavyWeapons');
+                }
+            });
+        }
+        
         function returnItemType(dbtype){
             //if it includes heavy
             if(dbtype.includes("largesword")){
