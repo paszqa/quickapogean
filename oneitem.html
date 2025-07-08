@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Item Details</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .item-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #2e2e2e;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .item-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #444;
+            padding-bottom: 20px;
+        }
+        
+        .item-image {
+            width: 80px;
+            height: 80px;
+            margin-right: 20px;
+            border: 2px solid #555;
+            border-radius: 5px;
+            background-color: #1e1e1e;
+            padding: 10px;
+        }
+        
+        .item-title {
+            flex: 1;
+        }
+        
+        .item-name {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            color: #ffbb00;
+        }
+        
+        .item-type {
+            font-size: 1.2em;
+            color: #aaa;
+            margin-bottom: 5px;
+        }
+        
+        .item-rarity {
+            font-size: 1em;
+            padding: 5px 10px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        
+        .rarity- {
+            background-color: #666;
+            color: #ddd;
+        }
+        
+        .item-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            background-color: #3e3e3e;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #555;
+        }
+        
+        .stat-label {
+            font-weight: bold;
+            color: #ffbb00;
+            margin-bottom: 5px;
+        }
+        
+        .stat-value {
+            font-size: 1.1em;
+            color: #cfcfcf;
+        }
+        
+        .stat-positive {
+            color: #4f4;
+        }
+        
+        .stat-negative {
+            color: #f44;
+        }
+        
+        .item-description {
+            background-color: #1e1e1e;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #ffbb00;
+            margin-top: 20px;
+        }
+        
+        .error-message {
+            text-align: center;
+            color: #f44;
+            font-size: 1.5em;
+            margin: 50px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #ffbb00;
+            color: #1e1e1e;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .back-link:hover {
+            background-color: #ffd700;
+        }
+        
+        /* Stat-specific colors */
+        .stat-hp { border-left-color: #ff5555; }
+        .stat-mana { border-left-color: #5588ff; }
+        .stat-damage { border-left-color: #ff8800; }
+        .stat-armor { border-left-color: #888888; }
+        .stat-magic { border-left-color: #3333bb; }
+        .stat-ability { border-left-color: #ff00ff; }
+        .stat-speed { border-left-color: #44ff44; }
+    </style>
+</head>
+<body class="small">
+
+    <div class="item-container">
+        <div id="item-content">
+            <!-- Item details will be populated here -->
+        </div>
+        <a href="items.html" class="back-link">← Back to Items</a>
+    </div>
+
+    <!-- Import items data from external file -->
+    <script src="itemdata.js"></script>
+    <script>
+        function getParameterByName(name) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name);
+        }
+        
+        function formatStatValue(value) {
+            if (!value || value === '') return 'N/A';
+            
+            const numValue = parseFloat(value);
+            if (isNaN(numValue)) return value;
+            
+            if (numValue > 0) return `+${numValue}`;
+            return numValue.toString();
+        }
+        
+        function getStatClass(value) {
+            if (!value || value === '') return '';
+            
+            const numValue = parseFloat(value);
+            if (isNaN(numValue)) return '';
+            
+            if (numValue > 0) return 'stat-positive';
+            if (numValue < 0) return 'stat-negative';
+            return '';
+        }
+        
+        function createStatItem(label, value, className = '', isWeight = false) {
+            if (!value || value === '') return '';
+            
+            const statValue = isWeight ? (parseFloat(value) / 10).toFixed(1) : formatStatValue(value);
+            const statClass = getStatClass(value);
+            
+            return `
+                <div class="stat-item ${className}">
+                    <div class="stat-label">${label}</div>
+                    <div class="stat-value ${statClass}">${statValue}</div>
+                </div>
+            `;
+        }
+        
+        function displayItem(item) {
+            const itemContent = document.getElementById('item-content');
+            
+            // Item data structure: [Name, Type, Subtype, Weight, Damage, Range, HP, Mana, Ability, Magic, Armor, Defense, MoveSpeed, AttackSpeed, ?, EquipSize, ?, ?, Description, ImageFile, Rarity]
+            const [name, type, subtype, weight, damage, range, hp, mana, ability, magic, armor, defense, moveSpeed, attackSpeed, , equipSize, , , description, imageFile, rarity] = item;
+            
+            const rarityClass = rarity ? `rarity-${rarity}` : 'rarity-';
+            const rarityText = rarity || 'Common';
+            
+            itemContent.innerHTML = `
+                <div class="item-header">
+                    <img src="Items/${imageFile}" alt="${name}" class="item-image" onerror="this.style.display='none'">
+                    <div class="item-title">
+                        <div class="item-name">${name}</div>
+                        <div class="item-type">${type} - ${subtype}</div>
+                        <div class="item-rarity ${rarityClass}">${rarityText}</div>
+                    </div>
+                </div>
+                
+                <div class="item-stats">
+                    ${weight ? createStatItem('Weight', weight, '', true) : ''}
+                    ${damage ? createStatItem('Damage', damage, 'stat-damage') : ''}
+                    ${range ? createStatItem('Range', range) : ''}
+                    ${hp ? createStatItem('Health Points', hp, 'stat-hp') : ''}
+                    ${mana ? createStatItem('Mana Points', mana, 'stat-mana') : ''}
+                    ${ability ? createStatItem('Ability', ability, 'stat-ability') : ''}
+                    ${magic ? createStatItem('Magic', magic, 'stat-magic') : ''}
+                    ${armor ? createStatItem('Armor', armor, 'stat-armor') : ''}
+                    ${defense ? createStatItem('Defense', defense, 'stat-armor') : ''}
+                    ${moveSpeed ? createStatItem('Move Speed', moveSpeed, 'stat-speed') : ''}
+                    ${attackSpeed ? createStatItem('Attack Speed', attackSpeed, 'stat-speed') : ''}
+                    ${equipSize ? createStatItem('Equipment Size', equipSize) : ''}
+                </div>
+                
+                ${description ? `
+                    <div class="item-description">
+                        <div class="stat-label">Description</div>
+                        <div>${description}</div>
+                    </div>
+                ` : ''}
+            `;
+        }
+        
+        function showError(message) {
+            const itemContent = document.getElementById('item-content');
+            itemContent.innerHTML = `<div class="error-message">${message}</div>`;
+        }
+        
+        function loadItemDetails() {
+            const itemName = getParameterByName('filter1');
+            
+            if (!itemName) {
+                showError('No item name specified. Please provide an item name in the URL parameter "filter1".');
+                return;
+            }
+            
+            // Find the item with matching name and empty rarity
+            const matchingItem = items.find(item => {
+                return item[0].toLowerCase() === itemName.toLowerCase() && item[20] === '';
+            });
+            
+            if (!matchingItem) {
+                // If no empty rarity item found, try to find any item with that name
+                const anyMatchingItem = items.find(item => {
+                    return item[0].toLowerCase() === itemName.toLowerCase();
+                });
+                
+                if (anyMatchingItem) {
+                    showError(`Item "${itemName}" found but not with empty rarity. Available rarities: ${items.filter(item => item[0].toLowerCase() === itemName.toLowerCase()).map(item => item[20] || 'Common').join(', ')}`);
+                } else {
+                    showError(`Item "${itemName}" not found in the database.`);
+                }
+                return;
+            }
+            
+            displayItem(matchingItem);
+        }
+        
+        // Load item details when page loads
+        document.addEventListener('DOMContentLoaded', loadItemDetails);
+    </script>
+</body>
+</html>
