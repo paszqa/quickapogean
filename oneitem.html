@@ -6,141 +6,146 @@
     <title>Item Details</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        .item-container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #2e2e2e;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        }
-        
-        .item-header {
+        body {
+            background-color: transparent;
+            font-family: 'Bedstead', Arial, sans-serif;
             display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #444;
-            padding-bottom: 20px;
-        }
-        
-        .item-image {
-            width: 80px;
-            height: 80px;
-            margin-right: 20px;
-            border: 2px solid #555;
-            border-radius: 5px;
-            background-color: #1e1e1e;
-            padding: 10px;
-        }
-        
-        .item-title {
-            flex: 1;
-        }
-        
-        .item-name {
-            font-size: 2.5em;
-            margin-bottom: 5px;
-            color: #ffbb00;
-        }
-        
-        .item-type {
-            font-size: 1.2em;
-            color: #aaa;
-            margin-bottom: 5px;
-        }
-        
-        .item-rarity {
-            font-size: 1em;
-            padding: 5px 10px;
-            border-radius: 3px;
-            display: inline-block;
-        }
-        
-        .rarity- {
-            background-color: #666;
-            color: #ddd;
-        }
-        
-        .item-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            justify-content: flex-start;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
             gap: 15px;
-            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         
-        .stat-item {
-            background-color: #3e3e3e;
-            padding: 10px;
-            border-radius: 5px;
-            border-left: 4px solid #555;
+        .items-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: flex-start;
         }
         
-        .stat-label {
+@font-face{
+    font-family: 'Bedstead';
+    src: url('bedstead-extracondensed.otf') format('truetype');
+}
+
+        .tooltip-container {
+            width: 200px;
+            background-color: #0000009a;
+            color: #fff;
+            border: 1px solid #666;
+            padding: 8px;
+            text-align: center;
+            font-family: 'Bedstead', Arial, sans-serif;
+            font-size: 1em;
+            line-height: 1.3em;
+            border-radius: 7px;
+        }
+        
+        .tooltip-image {
+            width: 32px;
+            height: 32px;
+            margin: 0 auto 6px auto;
+            display: block;
+        }
+        
+        .tooltip-name {
             font-weight: bold;
-            color: #ffbb00;
-            margin-bottom: 5px;
+            font-size: 1.2em;
+            margin-bottom: 2px;
+        }
+        .item-name{
+            font-weight: bold;
+            font-size: 1.2em;
         }
         
+        .tooltip-subtype {
+            color: #ccc;
+            margin-bottom: 4px;
+        }
+        
+        .tooltip-stat {
+            margin-bottom: 1px;
+        }
+
+        .item-image{
+            width: 64px;
+            height: 64px;
+            margin-bottom: 8px;
+        }
+        .item-description{
+            color: rgb(116, 204, 143);
+        }
+        .stat-item{
+            display: flex;
+            justify-content: center;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            display: flex;
+            width: auto;
+            text-align: center;
+        }
         .stat-value {
-            font-size: 1.1em;
-            color: #cfcfcf;
+            text-align: left;
+            width: auto;
         }
-        
         .stat-positive {
-            color: #4f4;
+            color: #0f0;
         }
         
         .stat-negative {
-            color: #f44;
+            color: #f00;
         }
         
-        .item-description {
-            background-color: #1e1e1e;
-            padding: 15px;
-            border-radius: 5px;
-            border-left: 4px solid #ffbb00;
-            margin-top: 20px;
+        .tooltip-weight {
+            color: #ccc;
+            margin-top: 4px;
+            margin-bottom: 2px;
+        }
+        
+        .tooltip-rarity {
+            margin-top: 4px;
+        }
+        
+        .tooltip-description {
+            color: #ccc;
+            margin-top: 4px;
+            font-style: italic;
         }
         
         .error-message {
             text-align: center;
-            color: #f44;
-            font-size: 1.5em;
+            color: #f00;
+            font-size: 14px;
             margin: 50px;
         }
         
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #ffbb00;
-            color: #1e1e1e;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
+        /* Rarity colors */
+        .rarity-common { color: #fff; }
+        .rarity-uncommon { color: #1eff00; }
+        .rarity-rare { color: #0070dd; }
+        .rarity-epic { color: #a335ee; }
+        .rarity-legendary { color: #ff8000; }
+        
+        /* Variant tooltip styling */
+        .tooltip-variant {
+            opacity: 0.85;
+            border-color: #444;
         }
         
-        .back-link:hover {
-            background-color: #ffd700;
+        .tooltip-main {
+            border-color: #666;
+            opacity: 1;
         }
-        
-        /* Stat-specific colors */
-        .stat-hp { border-left-color: #ff5555; }
-        .stat-mana { border-left-color: #5588ff; }
-        .stat-damage { border-left-color: #ff8800; }
-        .stat-armor { border-left-color: #888888; }
-        .stat-magic { border-left-color: #3333bb; }
-        .stat-ability { border-left-color: #ff00ff; }
-        .stat-speed { border-left-color: #44ff44; }
     </style>
 </head>
-<body class="small">
-
-    <div class="item-container">
-        <div id="item-content">
-            <!-- Item details will be populated here -->
-        </div>
-        <a href="items.html" class="back-link">← Back to Items</a>
+<body>
+    <div class="items-container" id="items-container">
+        <!-- Item tooltips will be populated here -->
     </div>
 
     <!-- Import items data from external file -->
@@ -175,63 +180,323 @@
         function createStatItem(label, value, className = '', isWeight = false) {
             if (!value || value === '') return '';
             
-            const statValue = isWeight ? (parseFloat(value) / 10).toFixed(1) : formatStatValue(value);
-            const statClass = getStatClass(value);
+            const statPositive = parseFloat(value) > 0 ? 'stat-positive' : '';
+            let statClass = getStatClass(value);
             
+            let statValue = isWeight ? (parseFloat(value) / 10).toFixed(1) : formatStatValue(value);
+            if(label == "Equip Size") {
+                label = "Size";
+                statValue = parseInt(value)+"/10"; 
+                statClass = "";
+            }
+            if(isWeight) {
+                return `
+                    <div class="stat-item ${className}">
+                        <div class="stat-label">It weighs ${statValue} oz.</div>
+                    </div>
+                `;
+            }
             return `
                 <div class="stat-item ${className}">
-                    <div class="stat-label">${label}</div>
+                    <div class="stat-label">${label}:</div>
                     <div class="stat-value ${statClass}">${statValue}</div>
                 </div>
             `;
         }
         
-        function displayItem(item) {
-            const itemContent = document.getElementById('item-content');
-            
+        function displayItem(item, isMain = true) {
             // Item data structure: [Name, Type, Subtype, Weight, Damage, Range, HP, Mana, Ability, Magic, Armor, Defense, MoveSpeed, AttackSpeed, ?, EquipSize, ?, ?, Description, ImageFile, Rarity]
-            const [name, type, subtype, weight, damage, range, hp, mana, ability, magic, armor, defense, moveSpeed, attackSpeed, , equipSize, , , description, imageFile, rarity] = item;
+            const [name, type, subtype, weight, range, damage, hp, mana, ability, magic, armor, defense, moveSpeed, attackSpeed, , equipSize, , , description, imageFile, rarity] = item;
             
-            const rarityClass = rarity ? `rarity-${rarity}` : 'rarity-';
+            const rarityClass = rarity ? `rarity-${rarity}` : 'rarity-common';
             const rarityText = rarity || 'Common';
             
-            itemContent.innerHTML = `
-                <div class="item-header">
-                    <img src="Items/${imageFile}" alt="${name}" class="item-image" onerror="this.style.display='none'">
-                    <div class="item-title">
-                        <div class="item-name">${name}</div>
-                        <div class="item-type">${type} - ${subtype}</div>
-                        <div class="item-rarity ${rarityClass}">${rarityText}</div>
+            let subtypeShown = "";
+            switch(subtype){
+                case "largesword":
+                    subtypeShown = "Large Weapon";
+                    break;
+                case "sword":
+                    subtypeShown = "Regular Weapon";
+                    break;
+                default:
+                    subtypeShown = subtype;
+            }
+            
+            const tooltipClass = isMain ? 'tooltip-main' : 'tooltip-variant';
+            
+            return `
+                <div class="tooltip-container ${tooltipClass}">
+                    <div class="item-header">
+                        <img src="Items/${imageFile}" alt="${name}" class="item-image" onerror="this.style.display='none'">
+                        <div class="item-title">
+                            <div class="item-name ${rarityClass}">${name}</div>
+                            <div class="item-type">[${subtypeShown}]</div>
+                        </div>
+                    </div>
+                    
+                    ${description ? `
+                        <div class="item-description">
+                            <div>${description}</div>
+                        </div>
+                    ` : ''}
+                    <div class="item-stats">
+                        ${range ? createStatItem('Range', range) : ''}
+                        ${damage ? createStatItem('Damage', damage, 'stat-damage') : ''}
+                        ${hp ? createStatItem('Health Points', hp, 'stat-hp') : ''}
+                        ${mana ? createStatItem('Mana Points', mana, 'stat-mana') : ''}
+                        ${ability ? createStatItem('Ability', ability, 'stat-ability') : ''}
+                        ${magic ? createStatItem('Magic', magic, 'stat-magic') : ''}
+                        ${armor ? createStatItem('Armor', armor, 'stat-armor') : ''}
+                        ${defense ? createStatItem('Defense', defense, 'stat-armor') : ''}
+                        ${moveSpeed ? createStatItem('Move Speed', moveSpeed, 'stat-speed') : ''}
+                        ${attackSpeed ? createStatItem('Attack Speed', attackSpeed, 'stat-speed') : ''}
+                        ${equipSize ? createStatItem('Equip Size', equipSize) : ''}
+                        ${weight ? createStatItem('Weight', weight, '', true) : ''}
+                        ${rarity ? `<div class="tooltip-rarity ${rarityClass}">${rarityText.charAt(0).toUpperCase() + rarityText.slice(1)} item.</div>` : ''}
                     </div>
                 </div>
-                
-                <div class="item-stats">
-                    ${weight ? createStatItem('Weight', weight, '', true) : ''}
-                    ${damage ? createStatItem('Damage', damage, 'stat-damage') : ''}
-                    ${range ? createStatItem('Range', range) : ''}
-                    ${hp ? createStatItem('Health Points', hp, 'stat-hp') : ''}
-                    ${mana ? createStatItem('Mana Points', mana, 'stat-mana') : ''}
-                    ${ability ? createStatItem('Ability', ability, 'stat-ability') : ''}
-                    ${magic ? createStatItem('Magic', magic, 'stat-magic') : ''}
-                    ${armor ? createStatItem('Armor', armor, 'stat-armor') : ''}
-                    ${defense ? createStatItem('Defense', defense, 'stat-armor') : ''}
-                    ${moveSpeed ? createStatItem('Move Speed', moveSpeed, 'stat-speed') : ''}
-                    ${attackSpeed ? createStatItem('Attack Speed', attackSpeed, 'stat-speed') : ''}
-                    ${equipSize ? createStatItem('Equipment Size', equipSize) : ''}
-                </div>
-                
-                ${description ? `
-                    <div class="item-description">
-                        <div class="stat-label">Description</div>
-                        <div>${description}</div>
-                    </div>
-                ` : ''}
             `;
         }
         
+        function getAllItemVariants(itemName) {
+            return items.filter(item => item[0].toLowerCase() === itemName.toLowerCase());
+        }
+        
+        function generateMissingRarity(baseItem, targetRarity) {
+            // This will be expanded later with your rules
+            // For now, just create a placeholder with modified stats
+            const [name, type, subtype, weight, range, damage, hp, mana, ability, magic, armor, defense, moveSpeed, attackSpeed, , equipSize, , , description, imageFile, rarity] = baseItem;
+            
+            // Basic stat scaling rules (to be refined later)
+            modifiedItem = [...baseItem];
+            let baseItemWeight = weight;
+            let newWeight = weight;
+            let newRange = range;
+            let newDamage = damage;
+            let newHP = hp;
+            let newMana = mana;
+            let newAbility = ability;
+            let newMagic = magic;
+            let newArmor = armor;
+            let newDefense = defense;
+            let newMoveSpeed = moveSpeed;
+            let newAttackSpeed = attackSpeed;
+            // Calculate for uncommon
+            //Weight
+            newWeight = weight ? Math.round(baseItemWeight * 0.8) : weight;
+            //Range
+            let rangeToAdd = range * 0.12;
+            newRange = range ? Math.round(range + rangeToAdd) : range;
+            //Damage
+            let damageToAdd = damage * 0.12;
+            newDamage = damage ? Math.round(damage + damageToAdd) : damage;
+            // HP
+            let hpToAdd = hp * 0.1;
+            newHP = hp ? Math.floor(hp + Math.abs(hpToAdd)) : hp;
+            // Mana
+            let manaToAdd = mana * 0.1;
+            newMana = mana ? Math.floor(mana + Math.abs(manaToAdd)) : mana;
+            // Ability
+            let abilityToAdd = ability * 0.1;
+            newAbility = ability ? Math.floor(ability + Math.abs(abilityToAdd)) : ability;
+            // Magic
+            let magicToAdd = magic * 0.1;
+            newMagic = magic ? Math.floor(magic + Math.abs(magicToAdd)) : magic;
+            // Armor
+            let armorToAdd = armor * 0.1;
+            newArmor = armor ? Math.floor(armor + Math.abs(armorToAdd)) : armor;
+            // Defense
+            let defenseToAdd = defense * 0.1;
+            newDefense = defense ? Math.floor(defense + Math.abs(defenseToAdd)) : defense;
+            // Move Speed
+            let moveSpeedToAdd = moveSpeed * 0.1;
+            newMoveSpeed = moveSpeed ? Math.floor(moveSpeed + Math.abs(moveSpeedToAdd)) : moveSpeed;
+            // Attack Speed
+            let attackSpeedToAdd = attackSpeed * 0.1;
+            newAttackSpeed = attackSpeed ? Math.floor(attackSpeed + Math.abs(attackSpeedToAdd)) : attackSpeed;
+            
+            modifiedItem[3] = newWeight; // weight
+            modifiedItem[4] = newRange; //Range /distance
+            modifiedItem[5] = newDamage; // Damage
+            modifiedItem[6] = newHP; // HP
+            modifiedItem[7] = newMana; // Mana
+            modifiedItem[8] = newAbility; // Ability
+            modifiedItem[9] = newMagic; // Magic
+            modifiedItem[10] = newArmor; // Armor
+            modifiedItem[11] = newDefense; // Defense
+            modifiedItem[12] = newMoveSpeed; // Move Speed
+            modifiedItem[13] = newAttackSpeed; // Attack Speed
+            modifiedItem[20] = targetRarity + "(estimated)"; // rarity
+
+            if(targetRarity === 'uncommon'){
+                return modifiedItem;
+            }
+            //----------RARE-----------------
+            //Weight
+            newWeight = weight ? Math.round(baseItemWeight * 0.7) : weight;
+            //Range
+            rangeToAdd = Math.ceil(newRange * 0.1) + 1;
+            console.log("Range: ", range, "Range to add: ", rangeToAdd);
+            newRange = range ? Math.round(range + rangeToAdd) : range;
+            //Damage
+            damageToAdd = damage * 0.28;
+            newDamage = damage ? Math.round(damage + damageToAdd) : damage;
+            // HP
+            hpToAdd = hp * 0.2;
+            newHP = hp ? Math.floor(hp + Math.abs(hpToAdd)) : hp;
+            // Mana
+            manaToAdd = mana * 0.2;
+            newMana = mana ? Math.floor(mana + Math.abs(manaToAdd)) : mana;
+            // Ability
+            abilityToAdd = ability * 0.2;
+            newAbility = ability ? Math.floor(ability + Math.abs(abilityToAdd)) : ability;
+            // Magic
+            magicToAdd = magic * 0.2;
+            newMagic = magic ? Math.floor(magic + Math.abs(magicToAdd)) : magic;
+            // Armor
+            armorToAdd = armor * 0.2;
+            newArmor = armor ? Math.floor(armor + Math.abs(armorToAdd)) : armor;
+            // Defense
+            defenseToAdd = defense * 0.2;
+            newDefense = defense ? Math.floor(defense + Math.abs(defenseToAdd)) : defense;
+            // Move Speed
+            moveSpeedToAdd = moveSpeed * 0.2;
+            newMoveSpeed = moveSpeed ? Math.floor(moveSpeed + Math.abs(moveSpeedToAdd)) : moveSpeed;
+            // Attack Speed
+            attackSpeedToAdd = attackSpeed * 0.2;
+            newAttackSpeed = attackSpeed ? Math.floor(attackSpeed + Math.abs(attackSpeedToAdd)) : attackSpeed;
+            
+            modifiedItem[3] = newWeight; // weight
+            modifiedItem[4] = newRange; //Range /distance
+            modifiedItem[5] = newDamage; // Damage
+            modifiedItem[6] = newHP; // HP
+            modifiedItem[7] = newMana; // Mana
+            modifiedItem[8] = newAbility; // Ability
+            modifiedItem[9] = newMagic; // Magic
+            modifiedItem[10] = newArmor; // Armor
+            modifiedItem[11] = newDefense; // Defense
+            modifiedItem[12] = newMoveSpeed; // Move Speed
+            modifiedItem[13] = newAttackSpeed; // Attack Speed
+            modifiedItem[20] = targetRarity + "(estimated)"; // rarity
+            if(targetRarity === 'rare'){
+                return modifiedItem;
+            }
+            //----------EPIC-----------------
+            // Weight
+            newWeight = weight ? Math.round(baseItemWeight * 0.6) : weight;
+            // Range
+            rangeToAdd = range * 0.2;
+            console.log("Range: ", range, "Range to add: ", rangeToAdd);
+            newRange = range ? Math.round(range + rangeToAdd) : range;
+            // Damage
+            damageToAdd = damage * 0.3;
+            newDamage = damage ? Math.round(damage + damageToAdd) : damage;
+            // HP
+            hpToAdd = hp * 0.38;
+            newHP = hp ? Math.floor(hp + Math.abs(hpToAdd)) : hp;
+            // Mana
+            manaToAdd = mana * 0.38;
+            newMana = mana ? Math.floor(mana + Math.abs(manaToAdd)) : mana;
+            // Ability
+            abilityToAdd = ability * 0.25;
+            newAbility = ability ? Math.floor(ability + Math.abs(abilityToAdd)) : ability;
+            // Magic
+            magicToAdd = magic * 0.25;
+            newMagic = magic ? Math.floor(magic + Math.abs(magicToAdd)) : magic;
+            // Armor
+            armorToAdd = armor * 0.25;
+            newArmor = armor ? Math.floor(armor + Math.abs(armorToAdd)) : armor;
+            // Defense
+            defenseToAdd = defense * 0.25;
+            newDefense = defense ? Math.floor(defense + Math.abs(defenseToAdd)) : defense;
+            // Move Speed
+            moveSpeedToAdd = moveSpeed * 0.25;
+            newMoveSpeed = moveSpeed ? Math.floor(moveSpeed + Math.abs(moveSpeedToAdd)) : moveSpeed;
+            // Attack Speed
+            attackSpeedToAdd = attackSpeed * 0.25;
+            newAttackSpeed = attackSpeed ? Math.floor(attackSpeed + Math.abs(attackSpeedToAdd)) : attackSpeed;
+            
+            modifiedItem[3] = newWeight; // weight
+            modifiedItem[4] = newRange; //Range /distance
+            modifiedItem[5] = newDamage; // Damage
+            modifiedItem[6] = newHP; // HP
+            modifiedItem[7] = newMana; // Mana
+            modifiedItem[8] = newAbility; // Ability
+            modifiedItem[9] = newMagic; // Magic
+            modifiedItem[10] = newArmor; // Armor
+            modifiedItem[11] = newDefense; // Defense
+            modifiedItem[12] = newMoveSpeed; // Move Speed
+            modifiedItem[13] = newAttackSpeed; // Attack Speed
+            modifiedItem[20] = targetRarity + "(estimated)"; // rarity
+            if(targetRarity === 'epic'){
+                return modifiedItem;
+            }
+
+            //----------LEGENDARY-----------------
+            // Weight
+            newWeight = weight ? Math.round(baseItemWeight * 0.5) : weight;
+            // Range
+            rangeToAdd = range * 0.3;
+            console.log("Range: ", range, "Range to add: ", rangeToAdd);
+            newRange = range ? Math.round(range + rangeToAdd) : range;
+            // Damage
+            damageToAdd = newDamage * 0.1;
+            newDamage = damage ? Math.round(damage + damageToAdd) : damage;
+            // HP
+            hpToAdd = hp * 0.45;
+            newHP = hp ? Math.floor(hp + Math.abs(hpToAdd)) : hp;
+            // Mana
+            manaToAdd = mana * 0.45;
+            newMana = mana ? Math.floor(mana + Math.abs(manaToAdd)) : mana;
+            // Ability
+            abilityToAdd = ability * 0.3;
+            newAbility = ability ? Math.floor(ability + Math.abs(abilityToAdd)) : ability;
+            // Magic
+            magicToAdd = magic * 0.3;
+            newMagic = magic ? Math.floor(magic + Math.abs(magicToAdd)) : magic;
+            // Armor
+            armorToAdd = armor * 0.3;
+            newArmor = armor ? Math.floor(armor + Math.abs(armorToAdd)) : armor;
+            // Defense
+            defenseToAdd = defense * 0.3;
+            newDefense = defense ? Math.floor(defense + Math.abs(defenseToAdd)) : defense;
+            // Move Speed
+            moveSpeedToAdd = moveSpeed * 0.3;
+            newMoveSpeed = moveSpeed ? Math.floor(moveSpeed + Math.abs(moveSpeedToAdd)) : moveSpeed;
+            // Attack Speed
+            attackSpeedToAdd = attackSpeed * 0.3;
+            newAttackSpeed = attackSpeed ? Math.floor(attackSpeed + Math.abs(attackSpeedToAdd)) : attackSpeed;
+            
+            modifiedItem[3] = newWeight; // weight
+            modifiedItem[4] = newRange; //Range /distance
+            modifiedItem[5] = newDamage; // Damage
+            modifiedItem[6] = newHP; // HP
+            modifiedItem[7] = newMana; // Mana
+            modifiedItem[8] = newAbility; // Ability
+            modifiedItem[9] = newMagic; // Magic
+            modifiedItem[10] = newArmor; // Armor
+            modifiedItem[11] = newDefense; // Defense
+            modifiedItem[12] = newMoveSpeed; // Move Speed
+            modifiedItem[13] = newAttackSpeed; // Attack Speed
+            modifiedItem[20] = targetRarity + "(estimated)"; // rarity
+            if(targetRarity === 'legendary'){
+                return modifiedItem;
+            }
+        }
+        
+        function getSubtypesWithVariants() {
+            // Define which subtypes should show all rarities
+            return ['staff', 'largesword', 'sword', 'bow', 'dagger', 'lightchest', 'heavychest', 'ring', 'necklace', 'shield', 'lightboots', 'heavyboots', 'orb'];
+        }
+        
+        function shouldShowVariants(subtype) {
+            return getSubtypesWithVariants().includes(subtype);
+        }
+        
         function showError(message) {
-            const itemContent = document.getElementById('item-content');
-            itemContent.innerHTML = `<div class="error-message">${message}</div>`;
+            const itemsContainer = document.getElementById('items-container');
+            itemsContainer.innerHTML = `<div class="tooltip-container"><div class="error-message">${message}</div></div>`;
         }
         
         function loadItemDetails() {
@@ -242,12 +507,12 @@
                 return;
             }
             
-            // Find the item with matching name and empty rarity
-            const matchingItem = items.find(item => {
+            // Find the item with matching name and empty rarity (main item)
+            const mainItem = items.find(item => {
                 return item[0].toLowerCase() === itemName.toLowerCase() && item[20] === '';
             });
             
-            if (!matchingItem) {
+            if (!mainItem) {
                 // If no empty rarity item found, try to find any item with that name
                 const anyMatchingItem = items.find(item => {
                     return item[0].toLowerCase() === itemName.toLowerCase();
@@ -261,7 +526,42 @@
                 return;
             }
             
-            displayItem(matchingItem);
+            const itemsContainer = document.getElementById('items-container');
+            let htmlContent = '';
+            
+            // Display main item (empty rarity)
+            htmlContent += displayItem(mainItem, true);
+            
+            // Check if this subtype should show variants
+            if (shouldShowVariants(mainItem[2])) {
+                // Get all existing variants
+                const allVariants = getAllItemVariants(itemName);
+                const availableRarities = allVariants.map(item => item[20] || 'common');
+                const rarityOrder = ['', 'uncommon', 'rare', 'epic', 'legendary'];
+                
+                // Create a map of existing variants by rarity
+                const variantMap = {};
+                allVariants.forEach(variant => {
+                    const rarity = variant[20] || '';
+                    variantMap[rarity] = variant;
+                });
+                
+                // Display variants in order (excluding the main empty rarity item which is already shown)
+                rarityOrder.forEach(rarity => {
+                    if (rarity !== '') { // Skip empty rarity as it's already shown as main
+                        if (variantMap[rarity]) {
+                            // Display existing variant
+                            htmlContent += displayItem(variantMap[rarity], false);
+                        } else {
+                            // Generate missing rarity
+                            const generatedItem = generateMissingRarity(mainItem, rarity);
+                            htmlContent += displayItem(generatedItem, false);
+                        }
+                    }
+                });
+            }
+            
+            itemsContainer.innerHTML = htmlContent;
         }
         
         // Load item details when page loads
