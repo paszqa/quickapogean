@@ -66,6 +66,7 @@ div .semirare{
     margin-top:2px;
 }
 
+
 div .ultrarare{
     width:48px;
     min-height:14px;
@@ -88,6 +89,23 @@ div.veryrarebox{
 div.ultrararebox{
     background: rgba(216, 208, 141, 0.6688);
 }
+
+
+div.semirareboxbig{
+    background: rgba(123, 180, 136, 0.3);
+}
+
+div.rareboxbig{
+    background: rgba(94, 124, 170, 0.451);
+}
+div.veryrareboxbig{
+    background: rgba(158, 106, 158, 0.619);
+}
+div.ultrarareboxbig{
+    background: rgba(216, 208, 141, 0.6688);
+}
+
+
 div .rare{
     width:48px;
     min-height:14px;
@@ -112,7 +130,7 @@ td.monsterName{
   width: 200px;
   font-size: 1.5em;
 }
-video {
+.monsterImg {
   border-radius: 5px;
   border: 1px solid #444;
 }
@@ -160,21 +178,73 @@ video {
   width: auto;
   box-sizing: border-box;
 }
+.xp-calculator{
+  margin: 20px;
+  padding: 15px;
+  background: #2a2a2a;
+  border: 1px solid #555;
+  border-radius: 8px;
+  width: 500px;
+}
+.lootitem{
+   position:relative;
+   width:64px;
+   height:64px;
+   border-radius: 3px;
+   align-items:center;
+   border: 2px solid rgba(255, 255, 255, 0.178);
+   justify-content:center;
+   display:flex;
+  }
+
+.highlightOnHover:hover{
+  border: 2px solid #fff;
+}
+
+div.raritytextwide{
+    width:64px;
+}
+.niceField{
+  width: 100px;
+  height: 40px;
+  font-family: 'Bedstead', Arial, sans-serif;
+  background-color: #111;
+  color: #eee;
+  font-size: 1.2em;
+  text-align: center;
+}
+.niceButton{
+  padding: 8px 16px;
+  background: #868665;
+  color: #cfcfcf;
+  border: 1px solid #666;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: 'Bedstead', Arial, sans-serif;
+  width: 100px;
+  height: 80px;
+  font-size: 1.3em;
+  text-align: center;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 1), -1px -1px 2px rgba(0, 0, 0, 1);
+}
+.niceButton:hover{
+  background: #dcdf3d;
+}
 </style>
     </head>
     <body>
-        <div class="xp-calculator" style="margin: 20px; padding: 15px; background: #2a2a2a; border: 1px solid #555; border-radius: 8px;">
+        <div class="xp-calculator">
             <div style="display: flex; gap: 20px; align-items: center;">
                 <div>
                     <label for="characterLevel" style="display: block; margin-bottom: 5px; color: #cfcfcf;">Character Level:</label>
-                    <input type="number" id="characterLevel" min="1" max="26" value="1" style="padding: 5px; border: 1px solid #555; background: #1e1e1e; color: #cfcfcf; border-radius: 4px;">
+                    <input type="number" id="characterLevel" min="1" max="100" value="1" class="niceField">
                 </div>
                 <div>
-                    <label for="faithAmount" style="display: block; margin-bottom: 5px; color: #cfcfcf;">Faith Amount:</label>
-                    <input type="number" id="faithAmount" min="80" max="120" value="100" style="padding: 5px; border: 1px solid #555; background: #1e1e1e; color: #cfcfcf; border-radius: 4px;">
+                    <label for="faithAmount" style="display: block; margin-bottom: 5px; color: #cfcfcf;">Faith:</label>
+                    <input type="number" id="faithAmount" min="80" max="120" value="100" class="niceField">
                 </div>
                 <div>
-                    <button onclick="updateXPCalculations()" style="padding: 8px 16px; background: #4a4a4a; color: #cfcfcf; border: 1px solid #666; border-radius: 4px; cursor: pointer;">Calculate XP</button>
+                    <button class="niceButton" onclick="updateXPCalculations()">Calculate Your XP</button>
                 </div>
             </div>
         </div>
@@ -315,7 +385,7 @@ function renderMonstersTable(monsters, level = 1, faith = 100) {
     html += `<td class="monsterName">${m[1]}</td>`;
     videoFileName = m[1] ? m[1].replace('.png', '') : '';
     videoFileName = videoFileName.replace(' ', '').replace(' ', '').split('(')[0];
-    html += `<td style="padding:2px;text-align:center;width:80px;">${m[1] ? `<video src='Monsters/${videoFileName}.mp4' style='height:64px;' autoplay loop muted></video>` : ''}</td>`;
+    html += `<td style="padding:2px;text-align:center;width:80px;">${m[1] ? `<img src='Monsters/${videoFileName}.png' style='height:64px;' class="monsterImg"></img>` : ''}</td>`;
     html += `<td class="hp">${m[4]+'<br>HP' ?? ''}</td>`;
     html += `<td class="xp">${m[5]+' <br>XP' ?? ''}${m[3] ?? ''}</td>`;
     html += `<td class="yourxp">${calculatePlayerXP(m[5] || 0, level, faith)}<br>XP</td>`; // Your XP
@@ -384,8 +454,8 @@ document.addEventListener('DOMContentLoaded', function() {
   renderMonstersTable(sortedMonsters, 1, 100);
   
   // Add event listeners for automatic calculation when inputs change
-  document.getElementById('characterLevel').addEventListener('input', updateXPCalculations);
-  document.getElementById('faithAmount').addEventListener('input', updateXPCalculations);
+  //document.getElementById('characterLevel').addEventListener('input', updateXPCalculations);
+  //document.getElementById('faithAmount').addEventListener('input', updateXPCalculations);
 });
 
 function showMonsterInfo(monsterId) {
@@ -417,17 +487,35 @@ function showMonsterInfo(monsterId) {
       if(rarityText === 'mystery') rarityText = '?';
       
       lootHtml += `<div style='display:flex;flex-direction:column;align-items:center;width:70px;margin-bottom:8px;'>`;
-      lootHtml += `<div class='${rarity ? rarity : ''}boxbig' style='position:relative;width:64px;height:64px; border: 1px solid #444; border-radius: 3px; align-items:center; justify-content:center; display:flex;'>`;
+      let itemNameForLink = item.replace(/([a-z])([A-Z])/g, '$1 $2');
+      itemNameForLink = itemNameForLink.charAt(0).toUpperCase() + itemNameForLink.slice(1);
+      if(itemNameForLink.includes("Book") && (itemNameForLink.includes("Red") || itemNameForLink.includes("Blue") || itemNameForLink.includes("Green") || itemNameForLink.includes("Yellow"))) {
+        itemNameForLink = itemNameForLink.replace("Book", "Spellbook:");
+        itemNameForLink = itemNameForLink.split(":")[0] + ":" + itemNameForLink.split(":")[1].replace(" ","").replace(" ","").replace(" ","");
+        itemNameForLink = itemNameForLink.replace(":",": ");
+        
+      }
+      let extraLinkClass = '';
+      if(item != "mystery"){
+        lootHtml += `<a href="index.html?page=oneitem.html&filter1=${itemNameForLink}" target="_parent">`
+        extraLinkClass = " highlightOnHover";
+      }
+      lootHtml += `<div class='lootitem ${rarity ? rarity : ''}boxbig${extraLinkClass}'>`;
+      //change CamelCase to space
+      
       lootHtml += `<img src='${imgSrc}' alt='${item}' title='${item}${rarity ? ` [${rarity}]` : ''}' style='border-radius:6px;border:0px solid #444;' onload="SetImageSize(this, true)">`;
       if (qty && qty > 1) {
         lootHtml += `<span style='position:absolute;right:0px;bottom:0px;font-size:0.7em;background:rgba(0,0,0,0.7);color:#fff;padding:1px 4px;border-radius:4px;'>${qty}</span>`;
       }
       lootHtml += `</div>`;
-      lootHtml += `<div style='font-size:0.9em;text-align:center;color:#888;margin-top:2px;'>${item}</div>`;
+      lootHtml += `<div style='font-size:0.9em;text-align:center;color:#888;margin-top:2px;'>${itemNameForLink}</div>`;
       if (rarityText) {
-        lootHtml += `<div class='${rarity ? rarity : 'common'}' style='font-size:0.9em;text-align:center;margin-top:1px;'>${rarityText}</div>`;
+        lootHtml += `<div class='raritytextwide ${rarity ? rarity : 'common'}' style='font-size:0.9em;text-align:center;margin-top:1px;'>${rarityText}</div>`;
       }
       lootHtml += `</div>`;
+      if(item != "mystery"){
+        lootHtml += `</a>`;
+      }
     }
   }
   lootHtml += '</div>';

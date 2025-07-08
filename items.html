@@ -45,6 +45,7 @@
         }
         tr:hover{
             background-color: #555;
+            cursor: pointer;
         }
         img {
             vertical-align: middle;
@@ -165,6 +166,10 @@
             
             filteredItems.forEach(item => {
                 const row = document.createElement('tr');
+                row.style.cursor = 'pointer';
+                row.onclick = function() {
+                    window.open(`index.html?page=oneitem.html&filter1=${encodeURIComponent(item[0])}`, '_parent');
+                };
                 const imgCell = document.createElement('td');
                 const img = document.createElement('img');
                 img.src = `Items/${item[19]}`;
