@@ -1435,12 +1435,11 @@ function buildStatRow(stat, baseValue, currentClass) {
                         }
                         break;
                     case "Range":
-                        itemBonus += item[4] || 0;
-                        if(item[4] != null){
-                            if(itemCalc != ''){
-                                itemCalc += ` + `;
+                        if(itemBonus < item[4]){
+                            itemBonus = item[4];
+                            if(item[4] != null){
+                                itemCalc = `${item[4] || 0}`;
                             }
-                            itemCalc += `${item[4] || 0}`;
                         }
                         break;
                     case "Armor":
@@ -1510,6 +1509,10 @@ function buildStatRow(stat, baseValue, currentClass) {
     }
     else{
         itemBonus = (itemBonus * classMult).toFixed(2);
+    }
+    if(stat === "Range"){
+        console.log("!!!!!!!!!!!!!aaa RANGE ITEM BONUS: " + statData["Range"].itemBonus);
+        console.log("!!!!!!!!!!!!!bbb RANGE ITEM BONUS: " + itemBonus);
     }
 
     //---------------------------------------------------
@@ -1585,7 +1588,7 @@ function buildStatRow(stat, baseValue, currentClass) {
             let totalAbility = statData["Ability"].statBonus + statData["Ability"].itemBonus;
             console.log("Stat bonus: " + statData["Ability"].statBonus + " Item Bonus: " + statData["Ability"].itemBonus + " Total Ability: " + totalAbility);
             //divide Ability by traitStage
-            let abilityToAdd = Math.floor(totalAbility / traitStage);
+            let abilityToAdd = Math.ceil(totalAbility / traitStage);
             //cap at 5
             abilityToAdd = Math.min(abilityToAdd, 5);
             traitBonus += abilityToAdd;
@@ -2612,6 +2615,12 @@ function buildStatRow(stat, baseValue, currentClass) {
             }
         }
     }
+    if(stat === "Range"){
+        console.log("RANGE1111!!!!!!!!!!!!!!!!!!!!!!!!!! Baze "+baseValue);
+        console.log("RANGE2222!!!!!!!!!!!!!!!!!!!!!!!!!! Baze "+baseValues["Range"]);
+        console.log("RANGE3333!!!!!!!!!!!!!!!!!!!!!!!!!! item1 "+itemBonus);
+        console.log("RANGE3333!!!!!!!!!!!!!!!!!!!!!!!!!! item2 "+statData["Range"].itemBonus);
+    }
     //---------------------------------------------------
     //---------------------------------------------------
     //---------------------------------------------------
@@ -2639,6 +2648,13 @@ function buildStatRow(stat, baseValue, currentClass) {
     let dphValue = 0;
     let damageRangeString = '';
 
+    //Exception for Range
+    if(stat == "Range"){
+        console.log("RANGE!!!!!!!!!!!!!!!!!!!!!!!!!! base "+baseValues["Range"]);
+        console.log("RANGE!!!!!!!!!!!!!!!!!!!!!!!!!! item "+statData["Range"].itemBonus);
+        console.log("RANGE!!!!!!!!!!!!!!!!!!!!!!!!!! final:"+final+" and range:"+statData["Range"].final);
+        //minRange = (parseInt(final))/(5/(1+((parseInt(statData["Ability"].final)*1.25)/100)));
+    }
     //Exception for Magic
     if(stat == "Damage"){
         console.log("final:"+final+" and ability:"+statData["Ability"].final);

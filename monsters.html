@@ -45,18 +45,31 @@ div .semirare{
     text-align:center;
     color:rgb(123, 180, 136);
     line-height:1.1;
+    margin-top:2px;
 }
 
+div .ultrarare{
+    width:48px;
+    min-height:14px;
+    font-size:0.85em;
+    text-align:center;
+    color:rgba(216, 208, 141, 1);
+    line-height:1.1;
+    margin-top:2px;
+}
 img.semirare{
-    background: rgba(123, 180, 136, 0.281);
+    background: rgba(123, 180, 136, 0.3);
 
 }
 
 img.rare{
-    background: rgba(94, 124, 170, 0.281);
+    background: rgba(94, 124, 170, 0.451);
 }
 img.veryrare{
-    background: rgba(141, 79, 141, 0.281);
+    background: rgba(158, 106, 158, 0.619);
+}
+img.ultrarare{
+    background: rgba(216, 208, 141, 0.6688);
 }
 div .rare{
     width:48px;
@@ -82,99 +95,160 @@ td.monsterName{
   width: 200px;
   font-size: 1.5em;
 }
+video {
+  border-radius: 5px;
+  border: 1px solid #444;
+}
+.hp {
+  padding: 2px;
+  text-align: center;
+  width: 80px;
+  color: rgb(160, 82, 82);
+}
+.xp {
+  padding: 2px;
+  text-align: center;
+  width: 80px;
+  color: rgba(3, 192, 167, 0.466);
+}
+.yourxp {
+  padding: 2px;
+  text-align: center;
+  width: 80px;
+  color: rgba(91, 250, 229, 0.897);
+  font-weight: bold;
+  font-size: 1.2em;
+}
 </style>
     </head>
     <body>
-      TODO: Add base xp calculation from level. Add panel to the right with monster info. Add monster info. Add icons
-        <div class="monstersTable" style="width: 90%; height: 80vh;">
+        <div class="xp-calculator" style="margin: 20px; padding: 15px; background: #2a2a2a; border: 1px solid #555; border-radius: 8px;">
+            <div style="display: flex; gap: 20px; align-items: center;">
+                <div>
+                    <label for="characterLevel" style="display: block; margin-bottom: 5px; color: #cfcfcf;">Character Level:</label>
+                    <input type="number" id="characterLevel" min="1" max="26" value="1" style="padding: 5px; border: 1px solid #555; background: #1e1e1e; color: #cfcfcf; border-radius: 4px;">
+                </div>
+                <div>
+                    <label for="faithAmount" style="display: block; margin-bottom: 5px; color: #cfcfcf;">Faith Amount:</label>
+                    <input type="number" id="faithAmount" min="80" max="120" value="100" style="padding: 5px; border: 1px solid #555; background: #1e1e1e; color: #cfcfcf; border-radius: 4px;">
+                </div>
+                <div>
+                    <button onclick="updateXPCalculations()" style="padding: 8px 16px; background: #4a4a4a; color: #cfcfcf; border: 1px solid #666; border-radius: 4px; cursor: pointer;">Calculate XP</button>
+                </div>
+            </div>
+        </div>
+        <div class="monstersTable" style="width: 90%; height: 70vh;">
         </div>
         <script>
     monsters = [
-["Alpha Wolf", "", "", 4500, 1500, [['SmallBones', 4], ['HookClaw', 4], ['Fur', 5], ['GameMeat', 4], ['HealthPotion', 5], ['GreenBackpack', 1], ['Broadsword', 1], ['BattleCloak', 1], ['LeafBlade', 1], ['GoldenTorc', 1, 'semirare']]], 
-["Amphitere", "", "", 7500, 6000, [['Gold', 100], ['RedBreast', 1], ['Dragonfruit', 2], ['BrownBackpack', 10], ['LambMeat', 1], ['HookClaw', 1], ['LeatherCollar', 1], ['ScaleKilt', 1, 'semirare'], ['RedBookFireball', 1, 'semirare'], ['MoonIngot', 1, 'semirare'], ['NightshadeKilt', 1, 'rare'], ['SteelBracelet', 1, 'rare'], ['LineageShield', 1, 'veryrare'], ['Greatsword', 1, 'veryrare'], ['RoyalHelmet', 1, 'veryrare'], ['RoyalArmor', 1, 'veryrare'], ['GreatAxe', 1, 'veryrare']]], 
-["Ancient Snake", "", "", 450, 375, [['WoodTwigs', 1], ['SwampCod', 1], ['CattailFlower', 1], ['Arrow', 5], ['OldGloves', 1, 'semirare'], ['PlaguedScale', 1, 'rare'], ['RedBookPreciseShot', 1, 'rare'], ['SilverMask', 1, 'rare']]], 
-["Bandit", "", "", 85, 30, [['Gold', 5], ['BreadPiece', 1], ['Knife', 1], ['ClothVest', 1], ['SimpleBag', 1], ['LeatherBoots', 1, 'semirare'], ['ClothPants', 1, 'rare']]], 
-["Banshee", "", "", 1000, 800, [['Gold', 25], ['Rose', 1], ['Nightshade', 1], ['RedBookSlow', 1, 'semirare'], ['ApplePie', 1, 'semirare'], ['BlueGem', 1, 'rare'], ['Bachall', 1, 'rare'], ['DruidCape', 1, 'rare']]], 
-["Battle Dummy", "", "", 32000, 0, []], 
-["Bear", "", "", 300, 130, [['WoodTwigs', 2], ['GameMeat', 2], ['Fur', 2], ['Rawhide', 2], ['Blueberries', 2], ['LeatherBoots', 1], ['LeatherBascinet', 1, 'semirare'], ['Scarf', 1, 'rare'], ['Strawberries', 1, 'veryrare']]], 
-["Bear", "", "", 300, 130, [['WoodTwigs', 2], ['GameMeat', 2], ['Fur', 2], ['Rawhide', 2], ['Blueberries', 2], ['LeatherBoots', 1], ['LeatherBascinet', 1, 'semirare'], ['Scarf', 1, 'rare'], ['Strawberries', 1, 'veryrare']]], 
-["Black Lamb", "", "", 25, 3, [['LambMeat', 1], ['EvilBookDarkBind', 1, 'veryrare']]], 
-["Black Sheep", "", "", 35, 6, [['LambMeat', 1], ['BlackWool', 1], ['EvilBookConjureDeath', 1, 'rare']]], 
-["Bone Eater", "", "", 425, 235, [['Gold', 3], ['LeatherBoots', 1], ['Crowbar', 1], ['Snapper', 1, 'semirare'], ['Garlic', 1, 'semirare'], ['BoneKnife', 1, 'rare'], ['GreenBookConjureArrow', 1, 'rare'], ['BrassShield', 1, 'rare']]], 
-["Capozzi The Bandit", "", "", 2500, 1000, [['Gold', 100], ['TofuBlock', 2], ['WoodenCup', 1], ['ManaPotion', 3], ['MerchantsBag', 1], ['GreenBookTaunt', 1], ['SilverDagger', 1], ['SilverMask', 1], ['CrystalRing', 1], ['EvilBookVampiricBite', 1], ['RoyalDagger', 1, 'semirare']]], 
-["Cave Spider", "", "", 100, 50, [['Gold', 2], ['TofuBlock', 1, 'semirare'], ['EmptyPot', 1, 'semirare'], ['SlimeEssence', 1, 'rare'], ['ClothPants', 1, 'rare'], ['SilverDagger', 1, 'rare']]], 
-["Cave Troll", "", "", 1000, 435, [['Gold', 12], ['RaggedCloth', 1], ['LambMeat', 2], ['SmallSkull', 1], ['LeatherBoots', 1], ['StuddedShield', 1], ['IronIngot', 1], ['Broadsword', 1, 'semirare'], ['OldBackpack', 1, 'semirare'], ['Gambeson', 1, 'semirare'], ['LeatherCollar', 1, 'rare'], ['BrassLegs', 1, 'rare'], ['BrassArmor', 1, 'rare'], ['RedBookRockThrow', 1, 'rare']]], 
-["Cold Baron", "", "", 550, 368, [['Gold', 10]]], 
-["Conquest Crow", "", "", 650, 400, [['Gold', 13], ['ScaleKilt', 1, 'semirare'], ['Orb', 1, 'semirare'], ['SilverMask', 1, 'rare'], ['Longsword', 1, 'rare'], ['AncientSword', 1, 'veryrare'], ['EvilBookDarkBind', 1, 'rare'], ['QuokiHeadgear', 1, 'rare'], ['DarkArmor', 1, 'veryrare']]], 
-["Conquest Fowler", "", "", 300, 170, [['Gold', 6], ['SmallBones', 2], ['SmallSkull', 1], ['BoneKnife', 1, 'semirare'], ['SandwormMeal', 1, 'rare'], ['RedBookPreciseShot', 1, 'rare'], ['Shovel', 1, 'rare'], ['IronIngot', 1, 'rare'], ['BoneBow', 1, 'rare'], ['QuokiHeadgear', 1, 'rare']]], 
-["Conquest Priestess", "", "", 400, 330, [['Gold', 13], ['ManaPotion', 2], ['ForsakenCross', 1], ['ColocasiaSeed', 1, 'semirare'], ['BigManaPotion', 1, 'rare'], ['Scarf', 1, 'rare'], ['BlackBag', 1, 'rare'], ['SilverDagger', 1, 'rare'], ['SilverAmulet', 1, 'rare'], ['CrystalAmulet', 1, 'rare'], ['BlueGem', 1, 'veryrare'], ['QuokiShoes', 1, 'veryrare']]], 
-["Crazed Occultist", "", "", 200, 190, [['Gold', 14], ['SimpleBag', 1], ['Torch', 2], ['IronPan', 1], ['HealthPotion', 2], ['LeatherCollar', 1, 'semirare'], ['CookedSnapper', 1, 'semirare'], ['RedBookBerserk', 1, 'rare'], ['RedOrb', 1, 'veryrare'], ['BrigandineLegs', 1, 'veryrare'], ['RedBookFireball', 1, 'veryrare']]], 
-["Cube Of Doom", "", "", 375, 200, [['Gold', 10], ['Arrow', 3], ['SlimeEssence', 1], ['KettleHelmet', 1], ['Ironsword', 1], ['WoodenBow', 1, 'semirare'], ['StuddedShield', 1, 'semirare'], ['GreenBag', 1, 'rare'], ['GarnetRing', 1, 'rare']]], 
-["Deadly Webcap", "", "", 3000, 2250, [['WhiteMushroom', 3], ['WoodTwigs', 2], ['WebcapEye', 1], ['WoodenStaff', 1], ['RegenRing', 1], ['RedBookCryingArrow', 1, 'semirare'], ['CrookedVest', 1, 'rare'], ['MagicianShoes', 1, 'rare'], ['DruidCape', 1, 'veryrare'], ['NightshadeRobe', 1, 'veryrare'], ['BlessedAmulet', 1, 'veryrare']]], 
-["Deer", "", "", 50, 10, [['GameMeat', 1], ['Fur', 1], ['Rawhide', 1], ['LeatherCloak', 1, 'rare']]], 
-["Devil Spider", "", "", 570, 475, [['Gold', 15], ['SlimeEssence', 1], ['SimpleGarnment', 1], ['TinIngot', 1, 'semirare'], ['RedBookConjureFire', 1, 'semirare'], ['HealthPotion', 1, 'semirare'], ['CattailFlower', 1, 'semirare'], ['BrassLegs', 1, 'rare'], ['EvilBookVampiricBite', 1, 'rare'], ['BrassArmor', 1, 'rare'], ['ZirconRing', 1, 'rare'], ['RedOrb', 1, 'veryrare']]], 
-["Digger", "", "", 255, 155, [['Gold', 9], ['SmallSkull', 1], ['Shovel', 1], ['IronIngot', 1], ['LeatherCuisse', 1, 'semirare'], ['CrystalRing', 1, 'rare'], ['RubyAmulet', 1, 'rare'], ['SteelIngot', 1, 'rare'], ['DiamondRing', 1, 'veryrare']]], 
-["Eye Of Pestilence", "", "", 1660, 1250, [['Gold', 45], ['WornPaper', 3], ['BigManaPotion', 1], ['PlaguedScale', 1], ['BreadLoaf', 1], ['Orb', 1], ['RubyAmulet', 1, 'semirare'], ['BlueBookManaShield', 1, 'semirare'], ['BlueBookMagicWall', 1, 'semirare'], ['CrystalStaff', 1, 'semirare'], ['MerchantsBag', 1, 'semirare'], ['DarkHood', 1, 'rare'], ['WizardRobe', 1, 'rare'], ['DarkRobe', 1, 'rare'], ['GreenOrb', 1, 'veryrare'], ['UnholyStaff', 1, 'veryrare'], ['WingedBoots', 1, 'veryrare']]], 
-["Fallen Wings", "", "", 550, 370, [['Gold', 10]]], 
-["Gaglio The Bandit", "", "", 4500, 1000, [['Gold', 50], ['CookedLamb', 2], ['LeatherBoots', 1], ['ClothVest', 1], ['LeatherCuisse', 1], ['IronIngot', 1], ['OldBackpack', 1], ['Gambeson', 1], ['LeatherCollar', 1], ['RedBookRockThrow', 1], ['BrassLegs', 1, 'semirare']]], 
-["Giant Rat", "", "", 195, 100, [['Gold', 7], ['SmallBones', 2], ['RatTail', 1], ['CheeseSlice', 2], ['ClothVest', 1], ['Spangenhelm', 1, 'rare'], ['YellowBeauty', 1, 'rare']]], 
-["Goblin", "", "", 90, 40, [['Gold', 5], ['RaggedCloth', 1], ['SimpleBag', 1], ['OldRing', 1, 'semirare'], ['LeatherBascinet', 1, 'semirare'], ['Rope', 1, 'rare']]], 
-["Great Lintwurm", "", "", 15000, 4000, [['Sandworm', 5], ['SmallBones', 3], ['Snapper', 3], ['TinIngot', 3], ['BoneKnife', 1], ['BoneBow', 1], ['SteelIngot', 2], ['RedBookQuickAttack', 1], ['BrassArmor', 1], ['BrassLegs', 1], ['MoonIngot', 1], ['VecanAxe', 1, 'semirare'], ['DiamondRing', 1, 'semirare'], ['CrookedVest', 1, 'semirare'], ['OnyxLegs', 1, 'rare']]], 
-["Grizzly Bear", "", "", 700, 300, [['Gold', 10], ['GameMeat', 1], ['SmallBones', 2], ['SmallSkull', 2], ['BoneKnife', 1], ['Spangenhelm', 1, 'semirare'], ['GreenBag', 1, 'semirare'], ['LeatherCoif', 1, 'semirare'], ['Crossbow', 1, 'semirare'], ['ScaleArmor', 1, 'rare'], ['BattleCloak', 1, 'veryrare']]], 
-["Imp", "", "", 300, 220, [['Gold', 7], ['SmallSkull', 1], ['CrystalShard', 1], ['Snapper', 1], ['CrystalAmulet', 1, 'rare'], ['DiamondRing', 1, 'rare'], ['CrystalStaff', 1, 'rare'], ['Longbow', 1, 'rare']]], 
+["Amphitere", "", "", 7500, 6000, [['Gold', 100], ['RedBreast', 1], ['Dragonfruit', 2], ['BrownBackpack', 1], ['LambMeat', 1], ['HookClaw', 1], ['LeatherCollar', 1, 'semirare'], ['ScaleKilt', 1, 'rare'], ['RedBookFireball', 1, 'rare'], ['MoonIngot', 1, 'rare'], ['NightshadeKilt', 1, 'rare'], ['SteelBracelet', 1, 'veryrare'], ['LineageShield', 1, 'veryrare'], ['Greatsword', 1, 'veryrare'], ['RoyalHelmet', 1, 'veryrare'], ['mystery', 1, 'mystery']]], 
+["Alpha Wolf", "", "", 4500, 1500, [['SmallBones', 4], ['HookClaw', 4], ['Fur', 5], ['GameMeat', 4], ['HealthPotion', 5], ['GreenBackpack', 1], ['Broadsword', 1], ['BattleCloak', 1, 'semirare'], ['LeafBlade', 1, 'semirare'], ['GoldenTorc', 1, 'rare']]], 
+["Ancient Snake", "", "", 450, 375, [['WoodTwigs', 1], ['SwampCod', 1, 'semirare'], ['CattailFlower', 1, 'semirare'], ['Arrow', 5, 'semirare'], ['OldGloves', 1, 'rare'], ['PlaguedScale', 1, 'rare'], ['RedBookPreciseShot', 1, 'rare'], ['SilverMask', 1, 'veryrare']]], 
+["Bandit", "", "", 85, 30, [['Gold', 5], ['BreadPiece', 1], ['Knife', 1, 'semirare'], ['ClothVest', 1, 'semirare'], ['SimpleBag', 1, 'semirare'], ['LeatherBoots', 1, 'rare'], ['ClothPants', 1, 'rare']]], 
+["Capozzi The Bandit", "", "", 2500, 1000, [['Gold', 100], ['TofuBlock', 2], ['WoodenCup', 1], ['ManaPotion', 3], ['MerchantsBag', 1], ['GreenBookTaunt', 1], ['SilverDagger', 1], ['SilverMask', 1, 'semirare'], ['CrystalRing', 1, 'semirare'], ['EvilBookVampiricBite', 1, 'semirare'], ['RoyalDagger', 1, 'rare']]], 
+["Gaglio The Bandit", "", "", 4500, 1000, [['Gold', 50], ['CookedLamb', 2], ['LeatherBoots', 1], ['ClothVest', 1], ['LeatherCuisse', 1], ['IronIngot', 1], ['OldBackpack', 1], ['Gambeson', 1, 'semirare'], ['LeatherCollar', 1, 'semirare'], ['RedBookRockThrow', 1, 'semirare'], ['BrassLegs', 1, 'rare']]], 
+["Mateo The Bandit", "", "", 3500, 1000, [['Gold', 15], ['BreadLoaf', 2], ['HealthPotion', 3], ['Ironsword', 1], ['Buckler', 1], ['KettleHelmet', 1], ['LeatherCloak', 1], ['RedBookFierceThrust', 1, 'semirare'], ['ChainMail', 1, 'semirare'], ['Epee', 1, 'semirare'], ['SailorBoots', 1, 'rare']]], 
+["Banshee", "", "", 950, 800, [['Gold', 25], ['Rose', 1], ['Nightshade', 1, 'semirare'], ['RedBookSlow', 1, 'rare'], ['ApplePie', 1, 'rare'], ['BlueGem', 1, 'veryrare'], ['Bachall', 1, 'veryrare'], ['DruidCape', 1, 'veryrare']]], 
+["The Blackhat", "", "", 7500, 2500, [['Gold', 150], ['WornPaper', 5], ['ManaPotion', 5], ['BreadLoaf', 3], ['RedBookEnergyBolt', 1], ['LeatherCloak', 1], ['TinIngot', 3], ['MerchantsBag', 1], ['Epee', 1], ['GoldenRing', 1], ['RubyAmulet', 1], ['EvilBookConjureDeath', 1, 'semirare'], ['BattleCloak', 1, 'rare']]], 
+["Black Lamb", "", "", 25, 3, [['LambMeat', 1], ['mystery', 1, 'mystery']]], 
+["Black Sheep", "", "", 35, 6, [['LambMeat', 1], ['BlackWool', 1], ['mystery', 1, 'mystery']]], 
+["Bone Eater", "", "", 425, 235, [['Gold', 3], ['LeatherBoots', 1, 'semirare'], ['Crowbar', 1, 'semirare'], ['Snapper', 1, 'rare'], ['Garlic', 1, 'rare'], ['BoneKnife', 1, 'rare'], ['GreenBookConjureArrow', 1, 'rare'], ['BrassShield', 1, 'veryrare']]], 
+["Cave Spider", "", "", 100, 50, [['Gold', 2], ['TofuBlock', 1, 'semirare'], ['EmptyPot', 1, 'semirare'], ['SlimeEssence', 1, 'rare'], ['ClothPants', 1, 'rare'], ['SilverDagger', 1, 'veryrare']]], 
+["Cave Troll", "", "", 1000, 435, [['Gold', 12], ['RaggedCloth', 1], ['LambMeat', 2], ['SmallSkull', 1], ['LeatherBoots', 1], ['StuddedShield', 1, 'semirare'], ['IronIngot', 1, 'semirare'], ['Broadsword', 1, 'semirare'], ['OldBackpack', 1, 'rare'], ['Gambeson', 1, 'rare'], ['LeatherCollar', 1, 'rare'], ['BrassLegs', 1, 'rare'], ['BrassArmor', 1, 'veryrare'], ['RedBookRockThrow', 1, 'veryrare']]], 
+["Conquest Crow", "", "", 650, 400, [['Gold', 13], ['ScaleKilt', 1, 'rare'], ['Orb', 1, 'rare'], ['SilverMask', 1, 'rare'], ['Longsword', 1, 'veryrare'], ['AncientSword', 1, 'veryrare'], ['EvilBookDarkBind', 1, 'veryrare'], ['QuokiHeadgear', 1, 'veryrare'], ['mystery', 1, 'mystery']]], 
+["Conquest Fowler", "", "", 300, 170, [['Gold', 6], ['SmallBones', 2], ['SmallSkull', 1], ['BoneKnife', 1, 'rare'], ['SandwormMeal', 1, 'rare'], ['RedBookPreciseShot', 1, 'rare'], ['Shovel', 1, 'rare'], ['IronIngot', 1, 'rare'], ['BoneBow', 1, 'veryrare'], ['QuokiHeadgear', 1, 'veryrare']]], 
+["Conquest Priestess", "", "", 400, 330, [['Gold', 13], ['ManaPotion', 2, 'semirare'], ['ForsakenCross', 1, 'semirare'], ['ColocasiaSeed', 1, 'semirare'], ['BigManaPotion', 1, 'rare'], ['Scarf', 1, 'rare'], ['BlackBag', 1, 'rare'], ['SilverDagger', 1, 'rare'], ['SilverAmulet', 1, 'rare'], ['CrystalAmulet', 1, 'veryrare'], ['mystery', 1, 'mystery']]], 
+["Crazed Occultist", "", "", 200, 190, [['Gold', 14], ['SimpleBag', 1], ['Torch', 2, 'semirare'], ['IronPan', 1, 'semirare'], ['HealthPotion', 2, 'semirare'], ['LeatherCollar', 1, 'rare'], ['CookedSnapper', 1, 'rare'], ['RedBookBerserk', 1, 'rare'], ['RedOrb', 1, 'veryrare'], ['BrigandineLegs', 1, 'ultrarare'], ['mystery', 1, 'mystery']]], 
+["Cube Of Doom", "", "", 375, 200, [['Gold', 10], ['Arrow', 3], ['SlimeEssence', 1], ['KettleHelmet', 1, 'semirare'], ['Ironsword', 1, 'semirare'], ['WoodenBow', 1, 'semirare'], ['StuddedShield', 1, 'rare'], ['GreenBag', 1, 'rare'], ['GarnetRing', 1, 'veryrare']]], 
+["Deadly Webcap", "", "", 3000, 2250, [['WhiteMushroom', 3], ['WoodTwigs', 2], ['WebcapEye', 1], ['WoodenStaff', 1], ['RegenRing', 1, 'semirare'], ['RedBookCryingArrow', 1, 'rare'], ['CrookedVest', 1, 'rare'], ['MagicianShoes', 1, 'veryrare'], ['DruidCape', 1, 'ultrarare'], ['NightshadeRobe', 1, 'ultrarare'], ['mystery', 1, 'mystery']]], 
+["Deer", "", "", 50, 10, [['GameMeat', 1], ['Fur', 1, 'semirare'], ['Rawhide', 1, 'semirare'], ['LeatherCloak', 1, 'veryrare']]], 
+["Devil Spider", "", "", 570, 475, [['Gold', 15], ['SlimeEssence', 1, 'semirare'], ['SimpleGarnment', 1, 'semirare'], ['TinIngot', 1, 'semirare'], ['RedBookConjureFire', 1, 'semirare'], ['HealthPotion', 1, 'semirare'], ['CattailFlower', 1, 'rare'], ['BrassLegs', 1, 'rare'], ['EvilBookVampiricBite', 1, 'rare'], ['BrassArmor', 1, 'rare'], ['ZirconRing', 1, 'veryrare'], ['RedOrb', 1, 'veryrare']]], 
+["Digger", "", "", 255, 155, [['Gold', 9], ['SmallSkull', 1], ['Shovel', 1, 'semirare'], ['IronIngot', 1, 'semirare'], ['LeatherCuisse', 1, 'rare'], ['CrystalRing', 1, 'veryrare'], ['RubyAmulet', 1, 'veryrare'], ['SteelIngot', 1, 'veryrare'], ['DiamondRing', 1, 'veryrare']]], 
+["Bear", "", "", 300, 130, [['WoodTwigs', 2], ['GameMeat', 2], ['Fur', 2], ['Rawhide', 2], ['Blueberries', 2, 'semirare'], ['LeatherBoots', 1, 'semirare'], ['LeatherBascinet', 1, 'rare'], ['Scarf', 1, 'veryrare'], ['Strawberries', 1, 'veryrare']]], 
+["Wolf", "", "", 65, 35, [['SmallBones', 2], ['Fur', 1, 'semirare'], ['GameMeat', 1, 'semirare'], ['HookClaw', 1, 'rare']]], 
+["Eye Of Pestilence", "", "", 1660, 1250, [['Gold', 45], ['WornPaper', 3], ['BigManaPotion', 1], ['PlaguedScale', 1, 'semirare'], ['BreadLoaf', 1, 'semirare'], ['Orb', 1, 'semirare'], ['RubyAmulet', 1, 'rare'], ['BlueBookManaShield', 1, 'rare'], ['BlueBookMagicWall', 1, 'rare'], ['CrystalStaff', 1, 'rare'], ['MerchantsBag', 1, 'rare'], ['DarkHood', 1, 'rare'], ['WizardRobe', 1, 'veryrare'], ['DarkRobe', 1, 'veryrare'], ['GreenOrb', 1, 'ultrarare'], ['mystery', 1, 'mystery']]], 
+["The Gardener", "", "", 5000, 2000, [['Gold', 100], ['HealthPotion', 6], ['SmallSkull', 5], ['Torch', 3], ['SpringStew', 4], ['RegenRing', 1], ['BlueBookLightMissile', 1], ['Orb', 1], ['DarkHood', 1], ['CrystalStaff', 1], ['DarkRobe', 1], ['EvilBookDarkBind', 1, 'semirare'], ['TalismanPouch', 1, 'rare']]], 
+["Giant Rat", "", "", 195, 100, [['Gold', 7], ['SmallBones', 2], ['RatTail', 1, 'semirare'], ['CheeseSlice', 2, 'semirare'], ['ClothVest', 1, 'semirare'], ['Spangenhelm', 1, 'rare'], ['YellowBeauty', 1, 'rare']]], 
+["Goblin", "", "", 90, 40, [['Gold', 5], ['RaggedCloth', 1, 'semirare'], ['SimpleBag', 1, 'semirare'], ['OldRing', 1, 'rare'], ['LeatherBascinet', 1, 'rare'], ['Rope', 1, 'rare']]], 
+["Great Lintwurm", "", "", 15000, 4000, [['Sandworm', 5], ['SmallBones', 3], ['Snapper', 3], ['TinIngot', 3], ['BoneKnife', 1, 'semirare'], ['BoneBow', 1, 'semirare'], ['SteelIngot', 2, 'semirare'], ['RedBookQuickAttack', 1, 'semirare'], ['BrassArmor', 1, 'semirare'], ['BrassLegs', 1, 'semirare'], ['MoonIngot', 1, 'semirare'], ['VecanAxe', 1, 'rare'], ['DiamondRing', 1, 'rare'], ['CrookedVest', 1, 'rare'], ['OnyxLegs', 1, 'veryrare']]], 
+["Grizzly Bear", "", "", 700, 300, [['Gold', 10], ['GameMeat', 1], ['SmallBones', 2], ['SmallSkull', 2, 'semirare'], ['BoneKnife', 1, 'semirare'], ['Spangenhelm', 1, 'rare'], ['GreenBag', 1, 'rare'], ['LeatherCoif', 1, 'rare'], ['Crossbow', 1, 'rare'], ['BrassLegs', 1, 'veryrare'], ['ScaleArmor', 1, 'ultrarare']]], 
+["Imp", "", "", 300, 220, [['Gold', 7], ['SmallSkull', 1], ['CrystalShard', 1, 'semirare'], ['Snapper', 1, 'semirare'], ['CrystalAmulet', 1, 'veryrare'], ['DiamondRing', 1, 'veryrare'], ['CrystalStaff', 1, 'veryrare'], ['Longbow', 1, 'veryrare']]], 
+["Pestilence Knight", "", "", 25000, 15000, [['Gold', 250], ['Gold', 250], ['PlaguedScale', 9], ['MoonIngot', 5], ['DarkLegs', 1, 'rare'], ['DarkArmor', 1, 'rare'], ['OnyxRing', 1, 'rare'], ['OnyxHelmet', 1, 'rare'], ['OnyxArmor', 1, 'rare'], ['OnyxBoots', 1, 'rare'], ['OnyxShield', 1, 'rare'], ['OnyxDagger', 1, 'rare'], ['PestilenceSword', 1, 'rare'], ['OnyxLegs', 1, 'rare'], ['mystery', 1, 'mystery']]], 
 ["Lamb", "", "", 20, 2, [['LambMeat', 1]]], 
-["Lintwurm", "", "", 250, 100, [['Gold', 7], ['SmallBones', 2], ['SimpleBag', 1], ['Snapper', 1], ['Sandworm', 1], ['TinIngot', 1, 'semirare'], ['BrassLegs', 1, 'veryrare'], ['BrassArmor', 1, 'veryrare']]], 
-["Mateo The Bandit", "", "", 3500, 1000, [['Gold', 15], ['BreadLoaf', 2], ['HealthPotion', 3], ['Ironsword', 1], ['Buckler', 1], ['KettleHelmet', 1], ['LeatherCloak', 1], ['RedBookFierceThrust', 1], ['ChainMail', 1], ['Epee', 1], ['SailorBoots', 1, 'semirare']]], 
-["Minotaur", "", "", 870, 570, [['Gold', 19], ['OldRing', 1], ['Torch', 1], ['Wheat', 1], ['IronIngot', 1], ['ChainMail', 1, 'semirare'], ['Spangenhelm', 1, 'semirare'], ['BattleAxe', 1, 'rare'], ['MerchantsBag', 1, 'rare'], ['GoldenRing', 1, 'rare'], ['BrassArmor', 1, 'rare'], ['TowerShield', 1, 'rare']]], 
-["Mireling", "", "", 150, 65, [['Gold', 5], ['SwampCod', 1], ['SmallSkull', 1], ['Torch', 1, 'semirare'], ['PlaguedScale', 1, 'rare'], ['GreenBookHaste', 1, 'rare']]], 
-["Mireling Noble", "", "", 375, 250, [['Gold', 15], ['Knife', 1], ['Torch', 1], ['SpicyStew', 1], ['GreenBookConjureArrow', 1, 'semirare'], ['PlaguedScale', 1, 'rare'], ['ScaleArmor', 1, 'veryrare'], ['BattleCloak', 1, 'veryrare']]], 
-["Monk", "", "", 275, 140, [['Gold', 5], ['BreadPiece', 2], ['Apple', 1], ['ClothPants', 1], ['NotebookYellow', 1], ['BrownBackpack', 1], ['ForsakenCross', 1], ['WoodenStaff', 1, 'semirare'], ['OldGloves', 1, 'semirare'], ['BlueBookHeal', 1, 'semirare'], ['Scarf', 1, 'rare']]], 
-["Necromancer", "", "", 660, 660, [['Gold', 30], ['SmallSkull', 1], ['ManaPotion', 1], ['Torch', 1], ['WoodenCup', 1], ['EvilBookConjureDeath', 1], ['Orb', 1, 'semirare'], ['YellowBookMagicGrowth', 1, 'rare'], ['CrystalStaff', 1, 'rare'], ['SkullRing', 1, 'rare'], ['RedOrb', 1, 'veryrare'], ['WingedBoots', 1, 'veryrare'], ['Bagnoff', 1, 'veryrare']]], 
+["Lintwurm", "", "", 250, 100, [['Gold', 7], ['SmallBones', 2], ['SimpleBag', 1, 'semirare'], ['Snapper', 1, 'semirare'], ['Sandworm', 1, 'semirare'], ['TinIngot', 1, 'rare'], ['ChainMail', 1, 'veryrare'], ['BrassShield', 1, 'veryrare']]], 
+["Minotaur", "", "", 870, 570, [['Gold', 19], ['OldRing', 1], ['Torch', 1], ['Wheat', 1, 'semirare'], ['IronIngot', 1, 'semirare'], ['ChainMail', 1, 'semirare'], ['Spangenhelm', 1, 'semirare'], ['BattleAxe', 1, 'rare'], ['MerchantsBag', 1, 'rare'], ['GoldenRing', 1, 'rare'], ['BrassArmor', 1, 'rare'], ['TowerShield', 1, 'veryrare']]], 
+["Mireling", "", "", 175, 65, [['Gold', 5], ['SwampCod', 1, 'semirare'], ['SmallSkull', 1, 'semirare'], ['Torch', 1, 'rare'], ['PlaguedScale', 1, 'rare'], ['GreenBookHaste', 1, 'veryrare']]], 
+["Mireling Noble", "", "", 400, 250, [['Gold', 15], ['Knife', 1, 'semirare'], ['Torch', 1, 'semirare'], ['SpicyStew', 1, 'semirare'], ['GreenBookConjureArrow', 1, 'rare'], ['PlaguedScale', 1, 'rare'], ['ScaleArmor', 1, 'veryrare'], ['mystery', 1, 'mystery']]], 
+["Monk", "", "", 275, 140, [['Gold', 5], ['BreadPiece', 2], ['Apple', 1], ['ClothPants', 1, 'semirare'], ['NotebookYellow', 1, 'semirare'], ['BrownBackpack', 1, 'semirare'], ['ForsakenCross', 1, 'semirare'], ['WoodenStaff', 1, 'rare'], ['OldGloves', 1, 'rare'], ['BlueBookHeal', 1, 'rare'], ['Scarf', 1, 'rare']]], 
+["Necromancer", "", "", 660, 660, [['Gold', 30], ['SmallSkull', 1], ['ManaPotion', 1], ['Torch', 1], ['WoodenCup', 1], ['EvilBookConjureDeath', 1, 'semirare'], ['Orb', 1, 'semirare'], ['YellowBookMagicGrowth', 1, 'rare'], ['CrystalStaff', 1, 'rare'], ['SkullRing', 1, 'veryrare'], ['RedOrb', 1, 'ultrarare'], ['WingedBoots', 1, 'ultrarare'], ['Bagnoff', 1, 'ultrarare']]], 
 ["Obelisk", "", "", 5000, 250, []], 
-["Occultist Acolyte", "", "", 155, 85, [['Gold', 5], ['WornPaper', 1], ['ForsakenCross', 1], ['ManaPotion', 1], ['Gambeson', 1, 'semirare'], ['EvilBookDarkBind', 1, 'semirare'], ['WoodenStaff', 2, 'rare'], ['RedBookEnergyBolt', 1, 'rare'], ['SilverAmulet', 1, 'rare'], ['DarkRobe', 1, 'rare']]], 
-["Occultist Apprentice", "", "", 95, 45, [['Gold', 4], ['WornPaper', 1], ['Blueberries', 2], ['ClothPants', 1], ['ForsakenCross', 1, 'semirare'], ['SilverDagger', 1, 'rare'], ['RedBookConjureFire', 1, 'rare'], ['SilverRing', 1, 'rare']]], 
-["Occultist Enforcer", "", "", 295, 210, [['Gold', 13], ['BreadLoaf', 1], ['HealthPotion', 1], ['ForsakenCross', 1], ['Ironsword', 1], ['Buckler', 1, 'semirare'], ['KettleHelmet', 1, 'semirare'], ['LeatherCloak', 1, 'semirare'], ['YellowBookShieldBlock', 1, 'rare'], ['ChainMail', 1, 'rare'], ['Epee', 1, 'rare']]], 
-["Occultist Scholar", "", "", 415, 390, [['Gold', 16], ['TofuBlock', 1], ['ForsakenCross', 1], ['ManaPotion', 1], ['SmallSkull', 1], ['SquareBag', 1, 'semirare'], ['EvilBookVampiricBite', 1, 'semirare'], ['SilverMask', 1, 'rare'], ['CrystalRing', 1, 'rare'], ['RedBookLightning', 1, 'rare'], ['WizardHat', 1, 'veryrare'], ['RedOrb', 1, 'veryrare']]], 
-["Orc Berserker", "", "", 750, 595, [['Gold', 14], ['CookedWhiteMushroom', 1], ['HealthPotion', 1], ['IronIngot', 1], ['Gambeson', 10, 'rare'], ['RedBookBerserk', 1, 'rare'], ['Cutlass', 1, 'rare'], ['BrigandineLegs', 1, 'veryrare'], ['VelvetPouch', 1, 'rare']]], 
-["Orc General", "", "", 1750, 995, [['Gold', 18], ['BrownBackpack', 1], ['Orange', 3], ['BreadLoaf', 1], ['MeatyStew', 1], ['PlatedHelmet', 1, 'semirare'], ['Longbow', 1, 'rare'], ['SteelIngot', 1, 'rare'], ['Longsword', 1, 'rare'], ['BlueBookAdjure', 1, 'rare'], ['Steelsword', 1, 'veryrare'], ['RoyalLegs', 1, 'veryrare'], ['RoyalDagger', 1, 'veryrare']]], 
-["Orc Infantry", "", "", 550, 360, [['Gold', 6], ['BreadPiece', 2], ['ClothPants', 1], ['Ironsword', 1], ['Rope', 1], ['Spangenhelm', 1, 'semirare'], ['RedBreast', 1, 'semirare'], ['BrigandineVest', 1, 'veryrare']]], 
-["Orc Shaman", "", "", 585, 625, [['Gold', 12], ['Apple', 2], ['SmallBones', 1], ['RatTail', 1], ['BoletusPiece', 1], ['EmptyPot', 1], ['WoodenBowl', 1], ['LeatherCloak', 1], ['BlackBag', 1, 'semirare'], ['MoonIngot', 1, 'veryrare'], ['NightshadeRobe', 1, 'veryrare'], ['StoneWand', 1, 'veryrare']]], 
-["Pestilence Knight", "", "", 25000, 15000, [['Gold', 250], ['Gold', 250], ['PlaguedScale', 9], ['MoonIngot', 5], ['DarkLegs', 1, 'rare'], ['DarkArmor', 1, 'rare'], ['OnyxRing', 1, 'rare'], ['OnyxHelmet', 1, 'rare'], ['OnyxArmor', 1, 'rare'], ['OnyxBoots', 1, 'rare'], ['OnyxShield', 1, 'rare'], ['OnyxDagger', 1, 'rare'], ['PestilenceSword', 1, 'rare'], ['SerpentSword', 1, 'rare'], ['OnyxLegs', 1, 'rare']]], 
-["Pestilence Plague", "", "", 1500, 650, [['RatTail', 1], ['HealthPotion', 1], ['ManaPotion', 1], ['PlaguedScale', 1, 'semirare'], ['LeatherCloak', 1, 'semirare'], ['OldGloves', 1, 'semirare'], ['Gambeson', 1, 'rare'], ['DarkRobe', 1, 'rare'], ['DarkHood', 1, 'rare'], ['VelvetPouch', 1, 'rare'], ['PlatedShield', 1, 'veryrare']]], 
-["Pestilence Spawn", "", "", 285, 175, [['Arrow', 6], ['Blueberries', 2], ['BugWings', 2], ['Rice', 1], ['PlaguedScale', 1, 'rare'], ['RegenRing', 1, 'rare'], ['GreenBookDash', 1, 'rare'], ['GreenOrb', 1, 'veryrare']]], 
-["Pestilence Stinger", "", "", 215, 165, [['Gold', 12], ['SmallBones', 4], ['SmallSkull', 1], ['Broadsword', 1, 'semirare'], ['SpicyStew', 1, 'semirare'], ['PlaguedScale', 1, 'rare'], ['RedBookFierceThrust', 1, 'rare'], ['TinIngot', 1, 'rare'], ['Pumpkin', 1, 'rare'], ['LeatherCoif', 1, 'rare'], ['LeatherGloves', 1, 'rare'], ['Crowbar', 1, 'rare']]], 
-["Plea", "", "", 155, 90, [['Gold', 6], ['SimpleBag', 1], ['RaggedCloth', 1], ['PleaToe', 2], ['Torch', 1], ['FishSteak', 1], ['RedBookThrash', 1, 'rare'], ['Broadsword', 1, 'rare'], ['StuddedShield', 1, 'rare'], ['LeatherCollar', 1, 'rare']]], 
-["Plea Occultist", "", "", 195, 150, [['Gold', 8], ['WornPaper', 2], ['Knife', 1], ['ForsakenCross', 1], ['GrayBackpack', 1], ['BoneKnife', 1, 'semirare'], ['RedBookConjureFire', 1, 'semirare'], ['DarkHood', 1, 'rare'], ['TinIngot', 1, 'rare'], ['EvilBookConjureDeath', 1, 'rare']]], 
-["Profaner", "", "", 1200, 450, [['Gold', 25], ['Torch', 1], ['ForsakenCross', 1, 'semirare'], ['Scarf', 1, 'rare'], ['Nightshade', 1, 'rare'], ['DarkHood', 1, 'rare'], ['DarkRobe', 1, 'rare'], ['RiceDish', 1, 'rare'], ['VelvetPouch', 1, 'veryrare'], ['RedBookSlow', 1, 'veryrare'], ['MoonIngot', 1, 'veryrare']]], 
-["Rat", "", "", 35, 10, [['Gold', 2], ['CheeseSlice', 1], ['RatTail', 1, 'semirare'], ['SimpleBag', 1, 'rare']]], 
-["Rat Shipper", "", "", 355, 15, [['Gold', 3], ['SimpleBag', 1], ['WornPaper', 2], ['RatTail', 1], ['ClothVest', 1], ['Torch', 1, 'semirare'], ['BrownBackpack', 1, 'semirare']]], 
-["Rubellus", "", "", 205, 145, [['Gold', 7], ['SmallSkull', 1], ['ManaPotion', 1], ['BlueGill', 1], ['Lantern', 1, 'semirare'], ['Tomatoes', 2, 'semirare'], ['LeatherBoots', 2, 'semirare'], ['WoodenBow', 1, 'rare'], ['SilverRing', 1, 'rare'], ['SailorBoots', 1, 'veryrare']]], 
+["Occultist Acolyte", "", "", 155, 85, [['Gold', 5], ['WornPaper', 1], ['ForsakenCross', 1, 'semirare'], ['ManaPotion', 1, 'semirare'], ['Gambeson', 1, 'rare'], ['EvilBookDarkBind', 1, 'rare'], ['WoodenStaff', 2, 'rare'], ['RedBookEnergyBolt', 1, 'rare'], ['SilverAmulet', 1, 'rare'], ['DarkRobe', 1, 'veryrare']]], 
+["Occultist Apprentice", "", "", 95, 45, [['Gold', 4], ['WornPaper', 1], ['Blueberries', 2, 'semirare'], ['ClothPants', 1, 'semirare'], ['ForsakenCross', 1, 'semirare'], ['SilverDagger', 1, 'rare'], ['RedBookConjureFire', 1, 'rare'], ['SilverRing', 1, 'veryrare']]], 
+["Occultist Enforcer", "", "", 295, 210, [['Gold', 13], ['BreadLoaf', 1], ['HealthPotion', 1], ['ForsakenCross', 1, 'semirare'], ['Ironsword', 1, 'semirare'], ['Buckler', 1, 'semirare'], ['KettleHelmet', 1, 'semirare'], ['LeatherCloak', 1, 'rare'], ['YellowBookShieldBlock', 1, 'rare'], ['ChainMail', 1, 'rare'], ['Epee', 1, 'rare']]], 
+["Occultist Scholar", "", "", 415, 390, [['Gold', 16], ['TofuBlock', 1], ['ForsakenCross', 1], ['ManaPotion', 1], ['SmallSkull', 1, 'semirare'], ['SquareBag', 1, 'rare'], ['EvilBookVampiricBite', 1, 'rare'], ['SilverMask', 1, 'rare'], ['CrystalRing', 1, 'veryrare'], ['RedBookLightning', 1, 'veryrare'], ['RedOrb', 1, 'veryrare'], ['mystery', 1, 'mystery']]], 
+["Orc Berserker", "", "", 750, 595, [['Gold', 14], ['CookedWhiteMushroom', 1], ['HealthPotion', 1, 'semirare'], ['IronIngot', 1, 'semirare'], ['Gambeson', 1, 'veryrare'], ['RedBookBerserk', 1, 'rare'], ['Cutlass', 1, 'veryrare'], ['BrigandineLegs', 1, 'veryrare'], ['VelvetPouch', 1, 'veryrare']]], 
+["Orc General", "", "", 1750, 995, [['Gold', 18], ['BrownBackpack', 1], ['Orange', 3], ['BreadLoaf', 1, 'semirare'], ['MeatyStew', 1, 'semirare'], ['PlatedHelmet', 1, 'rare'], ['Longbow', 1, 'rare'], ['SteelIngot', 1, 'rare'], ['Longsword', 1, 'veryrare'], ['BlueBookAdjure', 1, 'veryrare'], ['Steelsword', 1, 'veryrare'], ['RoyalLegs', 1, 'ultrarare'], ['RoyalDagger', 1, 'ultrarare']]], 
+["Orc Infantry", "", "", 550, 360, [['Gold', 6], ['BreadPiece', 2], ['ClothPants', 1], ['Ironsword', 1, 'semirare'], ['Rope', 1, 'semirare'], ['Spangenhelm', 1, 'semirare'], ['RedBreast', 1, 'semirare'], ['BrigandineVest', 1, 'veryrare']]], 
+["Orc Shaman", "", "", 585, 625, [['Gold', 12], ['Apple', 2], ['SmallBones', 1], ['RatTail', 1], ['BoletusPiece', 1, 'semirare'], ['EmptyPot', 1, 'semirare'], ['WoodenBowl', 1, 'semirare'], ['LeatherCloak', 1, 'semirare'], ['BlackBag', 1, 'rare'], ['MoonIngot', 1, 'veryrare'], ['NightshadeRobe', 1, 'veryrare'], ['mystery', 1, 'mystery']]], 
+["Pestilence Plague", "", "", 1500, 650, [['RatTail', 1], ['HealthPotion', 1], ['ManaPotion', 1], ['PlaguedScale', 1, 'rare'], ['LeatherCloak', 1, 'rare'], ['OldGloves', 1, 'rare'], ['Gambeson', 1, 'rare'], ['DarkRobe', 1, 'rare'], ['DarkHood', 1, 'rare'], ['VelvetPouch', 1, 'veryrare'], ['PlatedShield', 1, 'veryrare']]], 
+["Pestilence Spawn", "", "", 285, 175, [['Arrow', 6], ['Blueberries', 2], ['BugWings', 2], ['Rice', 1, 'semirare'], ['PlaguedScale', 1, 'rare'], ['RegenRing', 1, 'rare'], ['GreenBookDash', 1, 'veryrare'], ['GreenOrb', 1, 'ultrarare']]], 
+["Pestilence Stinger", "", "", 215, 165, [['Gold', 12], ['SmallBones', 4], ['SmallSkull', 1], ['Broadsword', 1, 'rare'], ['SpicyStew', 1, 'rare'], ['PlaguedScale', 1, 'rare'], ['RedBookFierceThrust', 1, 'rare'], ['TinIngot', 1, 'rare'], ['Pumpkin', 1, 'rare'], ['LeatherCoif', 1, 'veryrare'], ['LeatherGloves', 1, 'veryrare'], ['Crowbar', 1, 'veryrare']]], 
+["Plea", "", "", 155, 90, [['Gold', 6], ['SimpleBag', 1], ['RaggedCloth', 1], ['PleaToe', 2], ['Torch', 1], ['FishSteak', 1, 'semirare'], ['RedBookThrash', 1, 'rare'], ['Broadsword', 1, 'rare'], ['StuddedShield', 1, 'rare'], ['LeatherCollar', 1, 'rare']]], 
+["Plea Occultist", "", "", 195, 150, [['Gold', 8], ['WornPaper', 2], ['Knife', 1, 'semirare'], ['ForsakenCross', 1, 'semirare'], ['GrayBackpack', 1, 'semirare'], ['BoneKnife', 1, 'rare'], ['RedBookConjureFire', 1, 'rare'], ['DarkHood', 1, 'rare'], ['TinIngot', 1, 'rare'], ['EvilBookConjureDeath', 1, 'rare']]], 
+["Tock", "", "", 250, 25, [['Gold', 6], ['TockWigPiece', 1], ['PleaToe', 1, 'semirare'], ['OldAxe', 1, 'ultrarare']]], 
+["Profaner", "", "", 1200, 450, [['Gold', 25], ['Torch', 1, 'semirare'], ['ForsakenCross', 1, 'rare'], ['Scarf', 1, 'rare'], ['Nightshade', 1, 'rare'], ['DarkHood', 1, 'veryrare'], ['DarkRobe', 1, 'veryrare'], ['RiceDish', 1, 'rare'], ['VelvetPouch', 1, 'veryrare'], ['RedBookSlow', 1, 'veryrare'], ['MoonIngot', 1, 'veryrare']]], 
+["Rat", "", "", 35, 10, [['Gold', 2], ['CheeseSlice', 1, 'semirare'], ['RatTail', 1, 'rare'], ['SimpleBag', 1, 'veryrare']]], 
+["Rat Shipper", "", "", 355, 15, [['Gold', 3], ['SimpleBag', 1], ['WornPaper', 2], ['RatTail', 1, 'semirare'], ['ClothVest', 1, 'semirare'], ['Torch', 1, 'rare'], ['BrownBackpack', 1, 'rare']]], 
+["Rubellus", "", "", 205, 145, [['Gold', 7], ['SmallSkull', 1], ['ManaPotion', 1, 'semirare'], ['BlueGill', 1, 'semirare'], ['Lantern', 1, 'semirare'], ['Tomatoes', 2, 'rare'], ['LeatherBoots', 2, 'rare'], ['WoodenBow', 1, 'rare'], ['SilverRing', 1, 'veryrare'], ['SailorBoots', 1, 'ultrarare']]], 
 ["Sheep", "", "", 30, 4, [['Wool', 1], ['LambMeat', 1]]], 
-["Skeleton", "", "", 45, 20, [['Gold', 3], ['SmallBones', 2], ['SmallSkull', 1], ['Torch', 1], ['Ironsword', 1, 'rare'], ['Buckler', 1, 'rare'], ['Pumpkin', 1, 'rare']]], 
-["Sunskin", "", "", 375, 185, [['Gold', 5], ['BurlapWool', 1], ['Sandworm', 1], ['Rice', 1, 'semirare'], ['OldGloves', 1, 'rare'], ['OldBackpack', 1, 'rare'], ['BlackBag', 1, 'veryrare']]], 
-["Sunskin Enchanter", "", "", 550, 425, [['Gold', 18], ['Rope', 1], ['Sandworm', 2], ['ManaPotion', 1], ['WoodenBowl', 1], ['BlueBookHeal', 1, 'semirare'], ['RedBookEnergyBolt', 1, 'semirare'], ['BurlapHat', 1, 'rare'], ['BurlapSkirt', 1, 'rare'], ['SnakeOrb', 1, 'veryrare']]], 
-["Swamp Troll", "", "", 2350, 1500, [['Gold', 22], ['RaggedCloth', 2], ['SwampCod', 1], ['BrassLegs', 1, 'semirare'], ['PlaguedScale', 1, 'semirare'], ['GreenBookConjureArrow', 1, 'semirare'], ['SteelIngot', 1, 'rare'], ['BrigandineVest', 1, 'rare'], ['Steelsword', 1, 'veryrare'], ['PlatedBoots', 1, 'veryrare'], ['TowerShield', 1, 'veryrare']]], 
-["Terror Spider", "", "", 2800, 2000, [['Gold', 25], ['SlimeEssence', 1], ['Eggplant', 1], ['PlaguedScale', 1, 'semirare'], ['PlatedHelmet', 1, 'rare'], ['PlatedLegs', 1, 'rare'], ['YellowBookStarlight', 1, 'rare'], ['SteelBracelet', 1, 'veryrare'], ['RoyalArmor', 1, 'veryrare'], ['DruidHat', 1, 'veryrare']]], 
-["The Augur", "", "", 7500, 2000, [['Gold', 100], ['Rawhide', 4], ['CookedGameMeat', 4], ['Strawberries', 4], ['ManaPotion', 5], ['GreenBackpack', 1], ['LeatherCloak', 1], ['VanguardShield', 1], ['BattleAxe', 1], ['BattleCloak', 1, 'semirare'], ['Bachall', 1, 'rare']]], 
-["The Blackhat", "", "", 7500, 2500, [['Gold', 150], ['WornPaper', 5], ['ManaPotion', 5], ['BreadLoaf', 3], ['RedBookEnergyBolt', 1], ['LeatherCloak', 1], ['TinIngot', 3], ['MerchantsBag', 1], ['Epee', 1], ['GoldenRing', 1], ['RubyAmulet', 1], ['EvilBookConjureDeath', 1], ['BattleCloak', 1, 'semirare']]], 
-["The Broodmother", "", "", 5000, 1500, [['RatTail', 1], ['HealthPotion', 3], ['ManaPotion', 3], ['PlaguedScale', 1], ['LeatherCloak', 1], ['OldGloves', 1], ['Gambeson', 1], ['DarkRobe', 1], ['DarkHood', 1], ['VelvetPouch', 1, 'semirare'], ['PlatedShield', 1, 'semirare']]], 
-["The Gardener", "", "", 5000, 2000, [['Gold', 100], ['HealthPotion', 6], ['SmallSkull', 5], ['Torch', 3], ['SpringStew', 4], ['RegenRing', 1], ['BlueBookLightMissile', 1], ['Orb', 1], ['DarkHood', 1], ['CrystalStaff', 1], ['DarkRobe', 1], ['EvilBookDarkBind', 1], ['TalismanPouch', 1, 'semirare']]], 
-["Tock", "", "", 250, 25, [['Gold', 6], ['TockWigPiece', 1], ['PleaToe', 1], ['OldAxe', 1, 'veryrare']]], 
-["Tomb Diviner", "", "", 750, 600, [['Gold', 8], ['Apple', 3], ['SmallBones', 1], ['RatTail', 1], ['BoletusPiece', 1], ['EmptyPot', 1], ['WoodenBowl', 1], ['LeatherCloak', 1], ['BlackBag', 1, 'semirare'], ['MoonIngot', 1, 'veryrare'], ['NightshadeRobe', 1, 'veryrare'], ['StoneWand', 1, 'veryrare']]], 
-["Tomb Guardian", "", "", 800, 455, [['Gold', 25], ['RockCore', 1], ['PlatedLegs', 1, 'rare'], ['PlatedCuirass', 1, 'rare'], ['PlatedHelmet', 1, 'rare'], ['PlatedHelmet', 1, 'rare'], ['Longsword', 1, 'rare']]], 
-["Tomb Worker", "", "", 1000, 300, [['Gold', 15], ['RaggedCloth', 1], ['LambMeat', 2], ['SmallSkull', 1], ['LeatherBoots', 1], ['StuddedShield', 1], ['Broadsword', 1], ['IronIngot', 1], ['OldBackpack', 1, 'semirare'], ['Gambeson', 1, 'semirare'], ['LeatherCollar', 1, 'semirare'], ['BrassLegs', 1, 'semirare'], ['LeatherGloves', 1, 'rare'], ['PlatedHelmet', 1, 'rare'], ['BrassArmor', 1, 'rare'], ['RedBookRockThrow', 1, 'rare']]], 
-["Tundra Rat", "", "", 375, 250, [['Gold', 8], ['LeatherBoots', 1], ['CheeseSlice', 2], ['RatTail', 1], ['CrystalShard', 1, 'rare'], ['BlueBookIceBerserk', 1, 'rare'], ['LeatherGloves', 1, 'rare'], ['CrystalStaff', 1, 'rare']]], 
-["Viscid Goblin", "", "", 195, 125, [['Gold', 7], ['RaggedCloth', 1], ['BugWings', 1], ['Ironsword', 1], ['LeatherCuisse', 1, 'semirare'], ['SilverAmulet', 1, 'rare'], ['Nightshade', 1, 'rare'], ['MerchantsBag', 1, 'rare']]], 
-["Walking Boletus", "", "", 165, 75, [['WhiteMushroom', 2], ['BoletusPiece', 1], ['LeatherBoots', 1], ['GoldenRing', 1, 'rare']]], 
-["Wolf", "", "", 65, 35, [['SmallBones', 2], ['Fur', 1], ['GameMeat', 1], ['HookClaw', 1, 'rare']]], 
-["Wolf", "", "", 65, 35, [['SmallBones', 2], ['Fur', 1], ['GameMeat', 1], ['HookClaw', 1, 'rare']]], 
-["Young Amphitere", "", "", 1350, 770, [['Gold', 15], ['BlueGill', 1], ['Dragonfruit', 1], ['HookClaw', 1], ['ScaleArmor', 1, 'semirare'], ['RegenRing', 1, 'semirare'], ['LeatherCoif', 1, 'rare'], ['Epee', 1, 'rare'], ['BlueBookWindfall', 1, 'rare'], ['PlatedLegs', 1, 'rare'], ['PlatedShield', 1, 'rare']]], 
-
+["Skeleton", "", "", 45, 20, [['Gold', 3], ['SmallBones', 2], ['SmallSkull', 1], ['Torch', 1], ['Ironsword', 1, 'rare'], ['Buckler', 1, 'rare'], ['Pumpkin', 1, 'veryrare']]], 
+["Great Lintwurm (cave)", "", "", 20000, 3500, [['Sandworm', 5], ['SmallBones', 3], ['Snapper', 3], ['TinIngot', 3], ['BoneKnife', 1, 'semirare'], ['BoneBow', 1, 'semirare'], ['SteelIngot', 2, 'semirare'], ['RedBookQuickAttack', 1, 'semirare'], ['BrassArmor', 1, 'semirare'], ['BrassLegs', 1, 'semirare'], ['MoonIngot', 1, 'semirare'], ['DiamondRing', 1, 'rare'], ['VecanAxe', 1, 'rare'], ['CrookedVest', 1, 'rare']]], 
+["Sunskin", "", "", 375, 185, [['Gold', 5], ['BurlapWool', 1, 'semirare'], ['Sandworm', 1, 'semirare'], ['Rice', 1, 'rare'], ['OldGloves', 1, 'rare'], ['OldBackpack', 1, 'veryrare'], ['mystery', 1, 'mystery']]], 
+["Sunskin Enchanter", "", "", 550, 425, [['Gold', 18], ['Rope', 1, 'semirare'], ['Sandworm', 2, 'semirare'], ['ManaPotion', 1, 'semirare'], ['WoodenBowl', 1, 'semirare'], ['BlueBookHeal', 1, 'rare'], ['RedBookEnergyBolt', 1, 'rare'], ['BurlapHat', 1, 'rare'], ['BurlapSkirt', 1, 'rare'], ['SnakeOrb', 1, 'ultrarare']]], 
+["Swamp Troll", "", "", 2350, 1500, [['Gold', 22], ['RaggedCloth', 2], ['SwampCod', 1], ['BrassLegs', 1, 'semirare'], ['PlaguedScale', 1, 'rare'], ['GreenBookConjureArrow', 1, 'rare'], ['SteelIngot', 1, 'rare'], ['BrigandineVest', 1, 'veryrare'], ['Steelsword', 1, 'veryrare'], ['PlatedBoots', 1, 'ultrarare'], ['TowerShield', 1, 'ultrarare']]], 
+["Terror Spider", "", "", 2800, 2000, [['Gold', 25], ['SlimeEssence', 1, 'semirare'], ['Eggplant', 1, 'semirare'], ['PlaguedScale', 1, 'rare'], ['PlatedHelmet', 1, 'rare'], ['PlatedLegs', 1, 'veryrare'], ['YellowBookStarlight', 1, 'veryrare'], ['mystery', 1, 'mystery'], ['DruidHat', 1, 'ultrarare']]], 
+["The Augur", "", "", 7500, 2000, [['Gold', 100], ['Rawhide', 4], ['CookedGameMeat', 4], ['Strawberries', 4], ['ManaPotion', 5], ['GreenBackpack', 1], ['LeatherCloak', 1], ['VanguardShield', 1, 'semirare'], ['BattleAxe', 1, 'semirare'], ['BattleCloak', 1, 'rare'], ['Bachall', 1, 'rare']]], 
+["The Broodmother", "", "", 5000, 1500, [['RatTail', 1], ['HealthPotion', 3], ['ManaPotion', 3], ['PlaguedScale', 1], ['LeatherCloak', 1], ['OldGloves', 1], ['Gambeson', 1, 'semirare'], ['DarkRobe', 1, 'semirare'], ['DarkHood', 1, 'semirare'], ['VelvetPouch', 1, 'rare'], ['PlatedShield', 1, 'rare']]], 
+["Tomb Diviner", "", "", 750, 600, [['Gold', 8], ['Apple', 3], ['SmallBones', 1], ['RatTail', 1], ['BoletusPiece', 1, 'semirare'], ['EmptyPot', 1, 'semirare'], ['WoodenBowl', 1, 'semirare'], ['LeatherCloak', 1, 'semirare'], ['BlackBag', 1, 'rare'], ['MoonIngot', 1, 'veryrare'], ['NightshadeRobe', 1, 'veryrare'], ['mystery', 1, 'mystery']]], 
+["Tomb Guardian", "", "", 800, 455, [['Gold', 25], ['RockCore', 1, 'semirare'], ['PlatedLegs', 1, 'veryrare'], ['PlatedCuirass', 1, 'veryrare'], ['PlatedHelmet', 1, 'veryrare'], ['Longsword', 1, 'veryrare'], ['mystery', 1, 'mystery']]], 
+["Tomb Worker", "", "", 1000, 300, [['Gold', 15], ['RaggedCloth', 1], ['LambMeat', 2], ['SmallSkull', 1], ['LeatherBoots', 1], ['StuddedShield', 1, 'semirare'], ['Broadsword', 1, 'semirare'], ['IronIngot', 1, 'semirare'], ['OldBackpack', 1, 'rare'], ['Gambeson', 1, 'rare'], ['LeatherCollar', 1, 'rare'], ['BrassLegs', 1, 'rare'], ['LeatherGloves', 1, 'veryrare'], ['PlatedHelmet', 1, 'veryrare'], ['BrassArmor', 1, 'veryrare'], ['RedBookRockThrow', 1, 'veryrare']]], 
+["Tundra Rat", "", "", 375, 250, [['Gold', 8], ['LeatherBoots', 1], ['CheeseSlice', 2], ['RatTail', 1], ['CrystalShard', 1, 'rare'], ['BlueBookIceBerserk', 1, 'rare'], ['LeatherGloves', 1, 'veryrare'], ['CrystalStaff', 1, 'veryrare']]], 
+["Viscid Goblin", "", "", 195, 125, [['Gold', 7], ['RaggedCloth', 1], ['BugWings', 1], ['Ironsword', 1, 'semirare'], ['LeatherCuisse', 1, 'rare'], ['SilverAmulet', 1, 'rare'], ['Nightshade', 1, 'veryrare'], ['MerchantsBag', 1, 'veryrare']]], 
+["Walking Boletus", "", "", 165, 75, [['WhiteMushroom', 2], ['BoletusPiece', 1], ['LeatherBoots', 1], ['GoldenRing', 1, 'veryrare']]], 
+["Young Amphitere", "", "", 1350, 770, [['Gold', 15], ['BlueGill', 1], ['Dragonfruit', 1], ['HookClaw', 1, 'semirare'], ['ScaleArmor', 1, 'rare'], ['RegenRing', 1, 'rare'], ['LeatherCoif', 1, 'rare'], ['Epee', 1, 'rare'], ['BlueBookWindfall', 1, 'rare'], ['PlatedLegs', 1, 'rare'], ['PlatedShield', 1, 'rare']]], 
 
 ];
 
 let sortColumn = null;
 let sortDirection = 'asc';
+
+function getLevelStageMultiplier(level) {
+  if (level >= 1 && level <= 5) return 2.0; // 200%
+  if (level >= 6 && level <= 10) return 1.8; // 180%
+  if (level >= 11 && level <= 15) return 1.6; // 160%
+  if (level >= 16 && level <= 20) return 1.4; // 140%
+  if (level >= 21 && level <= 24) return 1.2; // 120%
+  if (level === 25) return 1.05; // 105%
+  if (level >= 26) return 1.0; // 100%
+  return 1.0; // fallback
+}
+
+function calculatePlayerXP(baseXP, level, faith) {
+  const faithMultiplier = faith / 100;
+  const baseMultiplier = 0.95;
+  const levelMultiplier = getLevelStageMultiplier(level);
+  
+  return Math.round(baseXP * faithMultiplier * baseMultiplier * levelMultiplier);
+}
+
+function updateXPCalculations() {
+  const level = parseInt(document.getElementById('characterLevel').value) || 1;
+  const faith = parseInt(document.getElementById('faithAmount').value) || 100;
+  
+  // Re-render the table with updated XP calculations
+  const sortedMonsters = sortMonsters(monsters, sortColumn, sortDirection);
+  renderMonstersTable(sortedMonsters, level, faith);
+}
 
 function sortMonsters(monsters, column, direction) {
   return monsters.slice().sort((a, b) => {
@@ -199,7 +273,7 @@ function sortMonsters(monsters, column, direction) {
   });
 }
 
-function renderMonstersTable(monsters) {
+function renderMonstersTable(monsters, level = 1, faith = 100) {
   function lootSort(a, b) {
     // a, b: [item, qty, rarity]
     const getPriority = (item, rarity) => {
@@ -208,7 +282,8 @@ function renderMonstersTable(monsters) {
       if (rarity === 'semirare') return 2;
       if (rarity === 'rare') return 3;
       if (rarity === 'veryrare') return 4;
-      return 5;
+      if (rarity === 'ultrarare') return 5;
+      return 6;
     };
     const pa = getPriority(a[0], a[2]);
     const pb = getPriority(b[0], b[2]);
@@ -227,7 +302,7 @@ function renderMonstersTable(monsters) {
         <th style="cursor:pointer;padding:2px;text-align:center;width:80px;" onclick="handleSort('hp')">
           HP ${sortColumn === 'hp' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
         </th>
-        <th style="cursor:pointer;padding:2px;text-align:center;width:100px;" onclick="handleSort('xp')">
+        <th style="cursor:pointer;padding:2px;text-align:center;width:80px;" onclick="handleSort('xp')">
           Base XP ${sortColumn === 'xp' ? (sortDirection === 'asc' ? '▲' : '▼') : ''}
         </th>
         <th style="padding:2px;text-align:center;width:100px;">Your XP</th>
@@ -239,11 +314,11 @@ function renderMonstersTable(monsters) {
     html += `<tr style="border-bottom:1px solid #555;">`;
     html += `<td class="monsterName">${m[0]}</td>`;
     videoFileName = m[0] ? m[0].replace('.png', '') : '';
-    videoFileName = videoFileName.replace(' ', '').replace(' ', '');
+    videoFileName = videoFileName.replace(' ', '').replace(' ', '').split('(')[0];
     html += `<td style="padding:2px;text-align:center;width:80px;">${m[0] ? `<video src='Monsters/${videoFileName}.mp4' style='height:64px;' autoplay loop muted></video>` : ''}</td>`;
-    html += `<td style="padding:2px;text-align:center;width:80px;">${m[3] ?? ''}</td>`;
-    html += `<td style="padding:2px;text-align:center;width:100px;">${m[4] ?? ''}${m[2] ?? ''}</td>`;
-    html += `<td style="padding:2px;text-align:center;width:100px;"> </td>`; // Your XP (to be calculated later)
+    html += `<td class="hp"">${m[3]+' HP' ?? ''}</td>`;
+    html += `<td class="xp">${m[4]+' XP' ?? ''}${m[2] ?? ''}</td>`;
+    html += `<td class="yourxp">${calculatePlayerXP(m[4] || 0, level, faith)} XP</td>`; // Your XP
     html += `<td style='vertical-align:middle;padding:2px;'>`;
     if (Array.isArray(m[5])) {
       // Sort loot array
@@ -289,8 +364,11 @@ function handleSort(column) {
     sortDirection = 'asc';
   }
   
+  const level = parseInt(document.getElementById('characterLevel').value) || 1;
+  const faith = parseInt(document.getElementById('faithAmount').value) || 100;
+  
   const sortedMonsters = sortMonsters(monsters, column, sortDirection);
-  renderMonstersTable(sortedMonsters);
+  renderMonstersTable(sortedMonsters, level, faith);
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -298,7 +376,11 @@ document.addEventListener('DOMContentLoaded', function() {
   sortColumn = 'xp';
   sortDirection = 'asc';
   const sortedMonsters = sortMonsters(monsters, sortColumn, sortDirection);
-  renderMonstersTable(sortedMonsters);
+  renderMonstersTable(sortedMonsters, 1, 100);
+  
+  // Add event listeners for automatic calculation when inputs change
+  document.getElementById('characterLevel').addEventListener('input', updateXPCalculations);
+  document.getElementById('faithAmount').addEventListener('input', updateXPCalculations);
 });
 </script>
     </body>
