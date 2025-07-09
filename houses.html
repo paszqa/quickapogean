@@ -266,7 +266,7 @@ houses.forEach(house => {
   if(name.includes("Outskirt") || name.includes("Village")) iconName = "Icons/housebrown.png";
   if(name.includes("Monastery") || name.includes("Mansion")) iconName = "Icons/houseblue.png";
   const fullDescription = '<span class="description">' + description + `</span>\n
-  Price per tile:<span class="price">${pricePerTile} gold</span>\n
+  Price per tile:<span class="price">${pricePerTile*3} gold</span>\n
   Size: <span class="tileSize">${tileCount} tiles</span>\n
   Rent: <span class="price">${Rent} gold</span>
   `;
