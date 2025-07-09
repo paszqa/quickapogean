@@ -55,11 +55,11 @@ body.article{
     width: 200px;
     background-color: #2e2e2e;
     float: left;
-    height: 100vh;
+    height: auto;
     padding: 10px;
     line-height: 0.6em;
     box-sizing: border-box;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 #sidebar h3 {

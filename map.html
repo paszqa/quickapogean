@@ -93,6 +93,7 @@ body, html {
   background: #1f1d1d;
   border-radius: 2px;
   border: 2px solid #000;
+  min-width: 160px;
 }
 
 .leaflet-popup-content {
@@ -100,6 +101,7 @@ body, html {
   color: rgb(255, 255, 255);
   margin: 5px;
   margin-top: 10px;
+  margin-bottom: 10px;
   padding: 0;
   text-shadow: none;
   font-family: 'Bedstead', Arial, sans-serif;
@@ -146,8 +148,9 @@ body, html {
     });
   
 // Remove tile grid code and use a single image overlay
-const imageUrl = 'Map/MapExport_2025jun27.png';
+const imageUrl = 'Map/MapExport_v2_2025jul9.png';
 const imageBounds = [[0, 0], [imageHeight, imageWidth]];
+
 L.imageOverlay(imageUrl, imageBounds).addTo(map);
 
 map.fitBounds(imageBounds);
@@ -231,9 +234,14 @@ function addCustomMarker(iconName, realX, realY, title, shortDesc, fullDesc) {
     description: fullDesc,
     coordinates: { x: realX, y: realY }
   };
+
+  // Add click event to show info panel directly
+  marker.on('click', function() {
+    showInfoPanel(infoKey);
+  });
   // Bind popup with short description and link
   marker.bindPopup(
-    `<b>${title}</b><br>${shortDesc}<br><a href='#' onclick="showInfoPanel('${infoKey}');return false;">More info</a>`
+    `<b>${title}</b><br>${shortDesc}<br>`
   );
 }
 /*

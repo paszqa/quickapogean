@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>2003 Style Website</title>
+        <link rel="stylesheet" href="style.css">
+        <!-- Leaflet CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <!-- Leaflet JS -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <!-- Houses data -->
+        <script src="houses.js"></script>
+        <style>
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Bedstead', Arial, sans-serif;
+  background-color: #1e1e1e;
+  color: #cfcfcf;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7), -2px -2px 2px rgba(0, 0, 0, 0.3), -2px 2px 2px rgba(0, 0, 0, 0.3), 2px -2px 2px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+@font-face{
+    font-family: 'Bedstead';
+    src: url('bedstead-extracondensed.otf') format('truetype');
+}
+
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+#top-panel {
+  width: 100vw;
+  height: 50px;
+  background: #222;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  font-size: 1.2em;
+  box-sizing: border-box;
+}
+#mouse-coords {
+  font-size: 1.5em;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+#main-panel {
+  display: flex;
+  width: 100vw;
+  height: 75%;
+}
+#map-container {
+  width: 70vw;
+  height: 100%;
+  position: relative;
+}
+#map {
+  width: 100% !important;
+  height: 100% !important;
+  background: black;
+}
+#info-panel {
+  width: 25vw;
+  height: 100%;
+  background: #222;
+  color: #fff;
+  padding: 24px 18px;
+  overflow-y: auto;
+  overflow: hidden;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+  display: block;
+  box-sizing: border-box;
+}
+#info-panel h2 {
+  margin-top: 0;
+}
+#info-panel p {
+  white-space: pre-line;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  width: auto;
+  box-sizing: border-box;
+}
+.leaflet-popup-content-wrapper{
+  background: #1f1d1d;
+  border-radius: 2px;
+  border: 2px solid #000;
+}
+
+.leaflet-popup-content {
+  background: #1f1d1d;
+  color: rgb(255, 255, 255);
+  margin: 5px;
+  margin-top: 10px;
+  padding: 0;
+  text-shadow: none;
+  font-family: 'Bedstead', Arial, sans-serif;
+  font-size: 1.2em;
+}
+.leaflet-container a.leaflet-popup-close-button{
+  color: rgb(255, 255, 255);
+  background: rgb(165, 45, 45);
+  border-radius: 2px;
+  border: 2px solid #000;
+  text-shadow: none;
+}
+.leaflet-container a.leaflet-popup-close-button:hover{
+  color: #fff;
+  text-shadow: none;
+}
+.leaflet-marker-icon.leaflet-zoom-animated.leaflet-interactive{
+  filter: drop-shadow(1px 1px 2px #ffffff) drop-shadow(-1px -1px 2px #ffffff);
+}
+.price{
+  color: #ffcc00;
+}
+.tileSize{
+  color: #34b8b1;
+}
+.description{
+  font-style: italic;
+}
+</style>
+    </head>
+<body class="small">
+<div id="top-panel">
+  <div id="map-desc">Map of properties that can be rented.</div>
+  <div id="mouse-coords">X: ---, Y: ---</div>
+</div>
+<div id="main-panel">
+  <div id="map-container">
+    <div id="map"></div>
+  </div>
+  <div id="info-panel"><em>Select a marker for details.</em></div>
+</div>
+
+<script>
+  // Image size in pixels (e.g., 4000x3000)
+  const imageWidth = 4000;
+  const imageHeight = 4000;
+    // Create the map and set the bounds
+    const map = L.map('map', {
+        crs: L.CRS.Simple,
+        minZoom: -5,
+        maxZoom: 2,
+        zoomSnap: 0.1,
+    });
+  
+// Remove tile grid code and use a single image overlay
+const imageUrl = 'Map/MapExport_v2_2025jul9.png';
+const imageBounds = [[0, 0], [imageHeight, imageWidth]];
+L.imageOverlay(imageUrl, imageBounds).addTo(map);
+
+map.fitBounds(imageBounds);
+
+// Add overlay window for mouse coordinates
+const overlayDiv = document.createElement('div');
+overlayDiv.style.position = 'fixed';
+overlayDiv.style.top = '10px';
+overlayDiv.style.right = '10px';
+overlayDiv.style.background = 'rgba(0,0,0,0.7)';
+overlayDiv.style.color = 'white';
+overlayDiv.style.padding = '6px 12px';
+overlayDiv.style.borderRadius = '6px';
+overlayDiv.style.fontSize = '14px';
+overlayDiv.style.zIndex = 1000;
+overlayDiv.style.display = 'none';
+overlayDiv.innerText = 'X: --, Y: --';
+document.body.appendChild(overlayDiv);
+
+map.on('mousemove', function(e) {
+  const x = Math.round(e.latlng.lng);
+  const y = Math.round(e.latlng.lat);
+  let realCoords = TranslateToReal(x, y);
+  overlayDiv.innerText = `X: ${realCoords.x}, Y: ${realCoords.y}`;
+});
+// Update mouse coordinates in top panel
+const mouseCoordsDiv = document.getElementById('mouse-coords');
+map.on('mousemove', function(e) {
+  // e.latlng gives [y, x] in map CRS
+  const mapX = Math.round(e.latlng.lng);
+  const mapY = Math.round(e.latlng.lat);
+  // Convert to real coords
+  const real = TranslateToReal(mapX, mapY);
+  mouseCoordsDiv.textContent = `X: ${real.x}, Y: ${real.y}`;
+});
+
+map.on('mouseout', function() {
+  //overlayDiv.innerText = 'X: --, Y: --';
+});
+
+function TranslateToReal(x, y) {
+  const realX = Math.round(x * 0.1810 - 409);
+  const realY = Math.round(y * 0.159 - 282);
+  return { x: realX, y: realY };
+}
+
+function TranslateToMap(x, y) {
+  const mapX = Math.round((x + 409) / 0.1810);
+  const mapY = Math.round((y + 282) / 0.159);
+  return { x: mapX, y: mapY };
+}
+
+// Example info data
+const infoData = {
+};
+
+function showInfoPanel(key) {
+  const info = infoData[key];
+  if (!info) return;
+  const panel = document.getElementById('info-panel');
+  // Replace newlines with <br> for proper line breaks
+  const descHtml = info.description.replace(/\n/g, '<br>');
+  panel.innerHTML = `
+  <h2>${info.title}</h2>
+  <p style="white-space:pre-line;">${descHtml}</p>
+  <p><b>Coordinates:</b> 
+  ${info.coordinates.x}, ${info.coordinates.y}</p>`;
+}
+function addCustomMarker(iconName, realX, realY, title, shortDesc, fullDesc) {
+  //Tranform real Coords to map Coords
+  const mapCoords = TranslateToMap(realX, realY);
+  // Create custom icon
+  const icon = L.icon({
+    iconUrl: iconName,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+  // Add marker
+  const marker = L.marker([mapCoords.y, mapCoords.x], { icon }).addTo(map);
+  // Store info for the panel
+  const infoKey = `${title}_${realX}_${realY}`;
+  infoData[infoKey] = {
+    title: title,
+    description: fullDesc,
+    coordinates: { x: realX, y: realY }
+  };
+  // Bind popup with short description and link
+  marker.bindPopup(
+    `<b>${title}</b><br>${shortDesc}<br>`
+  );
+  
+  // Add click event to show info panel directly
+  marker.on('click', function() {
+    showInfoPanel(infoKey);
+  });
+}
+// Load houses data and add markers for each house
+houses.forEach(house => {
+  const [id, name, description, pricePerTile, x, y, tileCount, Rent] = house;
+  iconName = "Icons/house.png"; // Default icon for houses
+  if(name.includes("Swamp") || name.includes("Violet")) iconName = "Icons/housegreen.png";
+  if(name.includes("Vecan") || name.includes("Desert")) iconName = "Icons/houseyellow.png";
+  if(name.includes("Nordha") || name.includes("North")) iconName = "Icons/housewhite.png";
+  if(name.includes("Outskirt") || name.includes("Village")) iconName = "Icons/housebrown.png";
+  if(name.includes("Monastery") || name.includes("Mansion")) iconName = "Icons/houseblue.png";
+  const fullDescription = '<span class="description">' + description + `</span>\n
+  Price per tile:<span class="price">${pricePerTile} gold</span>\n
+  Size: <span class="tileSize">${tileCount} tiles</span>\n
+  Rent: <span class="price">${Rent} gold</span>
+  `;
+  addCustomMarker(iconName, x-409, y-404, name, description, fullDescription);
+});
+</script>
+<script src="houses.js"></script>
+</body>
+</html>
