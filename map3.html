@@ -11,8 +11,9 @@
 <body>
   <script type="module">
     import * as THREE from 'https://unpkg.com/three@0.160.1/build/three.module.js';
+    import { OrbitControls } from 'https://unpkg.com/three@0.160.1/examples/jsm/controls/OrbitControls.js';
 
-    const IMAGE_URL = 'knight.png'; // <-- Change this to your actual PNG path
+    const IMAGE_URL = '/Icons/armor.png'; // <-- Change this to your actual PNG path
 
     // Setup scene
     const scene = new THREE.Scene();
@@ -21,6 +22,8 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
 
     const light = new THREE.AmbientLight(0xffffff, 1);
     scene.add(light);
@@ -78,7 +81,7 @@
 
     function animate() {
       requestAnimationFrame(animate);
-      //controls.update();
+      controls.update();
       renderer.render(scene, camera);
     }
   </script>
