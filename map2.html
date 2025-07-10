@@ -237,13 +237,13 @@ body, html {
         <option value="7">Floor Y7</option>
         <option value="8">Floor Y8</option>
         <option value="9">Floor Y9</option>
-        <option value="10" selected>Floor Y10 (Main)</option>
+        <option value="10">Floor Y10</option>
         <option value="11">Floor Y11</option>
         <option value="12">Floor Y12</option>
         <option value="13">Floor Y13</option>
         <option value="14">Floor Y14</option>
         <option value="15">Floor Y15</option>
-        <option value="16">Floor Y16</option>
+        <option value="16" selected>Floor Y16</option>
         <option value="17">Floor Y17</option>
         <option value="18">Floor Y18</option>
         <option value="19">Floor Y19</option>
@@ -262,22 +262,22 @@ body, html {
       </select>
       <div id="dim-strength-container">
         <label id="dim-strength-label" for="dim-strength-slider">Dim Strength:</label>
-        <input type="range" id="dim-strength-slider" min="0" max="4" step="0.1" value="2">
-        <div id="dim-strength-value">2 (10% per level below)</div>
+        <input type="range" id="dim-strength-slider" min="0" max="4" step="0.1" value="0.5">
+        <div id="dim-strength-value">0.5 (10% per level below)</div>
       </div>
       <div id="offset-controls">
         <div class="offset-item">
           <label class="offset-label" for="horizontal-offset-slider">Horizontal Offset:</label>
-          <input type="range" class="offset-slider" id="horizontal-offset-slider" min="-0.5" max="0.5" step="0.01" value="0">
-          <div class="offset-value" id="horizontal-offset-value">0.00</div>
+          <input type="range" class="offset-slider" id="horizontal-offset-slider" min="-0.5" max="0.5" step="0.01" value="-0.25">
+          <div class="offset-value" id="horizontal-offset-value">-0.25</div>
         </div>
         <div class="offset-item">
           <label class="offset-label" for="vertical-offset-slider">Vertical Offset:</label>
-          <input type="range" class="offset-slider" id="vertical-offset-slider" min="-0.5" max="0" step="0.01" value="0">
-          <div class="offset-value" id="vertical-offset-value">0.00</div>
+          <input type="range" class="offset-slider" id="vertical-offset-slider" min="-0.5" max="0" step="0.01" value="-0.25">
+          <div class="offset-value" id="vertical-offset-value">-0.25</div>
         </div>
       </div>
-      <div id="floor-info">Current: Floor Y10. Lower floors are dimmed, higher floors are hidden.</div>
+      <div id="floor-info">Current: Floor Y16. Lower floors are dimmed, higher floors are hidden.</div>
     </div>
     <div id="marker-info"><em>Select a marker for details.</em></div>
   </div>
@@ -299,10 +299,10 @@ body, html {
 const floors = {};
 const imageBounds = [[0, 0], [imageHeight, imageWidth]];
 let markers = [];
-let currentSelectedFloor = 10;
-let dimStrength = 2; // Default dim strength
-let horizontalOffsetMultiplier = 0; // 0 to 0.5
-let verticalOffsetMultiplier = 0; // 0 to 0.5
+let currentSelectedFloor = 16;
+let dimStrength = 0.5; // Default dim strength
+let horizontalOffsetMultiplier = -0.25; // 0 to 0.5
+let verticalOffsetMultiplier = -0.25; // 0 to 0.5
 
 // Calculate floor bounds with configurable offsets
 function calculateFloorBounds(floorNum) {
@@ -312,7 +312,7 @@ function calculateFloorBounds(floorNum) {
   
   // Scale the offset from source image (800px) to map coordinates (4000px)
   const scaleFactor = imageHeight / 800; // 4000 / 800 = 5
-  const baseVerticalOffset = sourceImageVerticalOffset * scaleFactor * -0.5;
+  const baseVerticalOffset = 0;//sourceImageVerticalOffset * scaleFactor * -0.5;
   
   // Apply configurable offsets
   const totalVerticalOffset = baseVerticalOffset + (sourceImageVerticalOffset * verticalOffsetMultiplier * scaleFactor);
