@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Voxel Image in 3D</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.160.1/build/three.module.js';
+
+    const IMAGE_URL = 'knight.png'; // <-- Change this to your actual PNG path
+
+    // Setup scene
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+
+    const light = new THREE.AmbientLight(0xffffff, 1);
+    scene.add(light);
+
+    camera.position.set(0, 100, 150);
+    camera.lookAt(0, 0, 0);
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous'; // Only necessary if image is served from another domain
+    img.src = IMAGE_URL;
+
+    img.onload = () => {
+      console.log("Image loaded:", img.width, img.height);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      const imageData = ctx.getImageData(0, 0, img.width, img.height).data;
+      console.log("Got image data", imageData.length);
+
+      const cubeSize = 1;
+      const offsetX = -img.width / 2;
+      const offsetZ = -img.height / 2;
+
+      for (let y = 0; y < img.height; y++) {
+        for (let x = 0; x < img.width; x++) {
+          const index = (y * img.width + x) * 4;
+          const r = imageData[index];
+          const g = imageData[index + 1];
+          const b = imageData[index + 2];
+          const a = imageData[index + 3];
+
+          if (a < 10) continue; // skip transparent pixels
+
+          const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+          const color = new THREE.Color(r / 255, g / 255, b / 255);
+          const material = new THREE.MeshStandardMaterial({ color });
+          const cube = new THREE.Mesh(geometry, material);
+
+          cube.position.set(x + offsetX, 0, y + offsetZ);
+          scene.add(cube);
+        }
+      }
+
+      console.log("Finished building cubes");
+      animate();
+    };
+
+    img.onerror = (e) => {
+      console.error("Image load failed", e);
+    };
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+  </script>
+</body>
+</html>
