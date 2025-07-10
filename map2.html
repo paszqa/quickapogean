@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>2003 Style Website</title>
+        <link rel="stylesheet" href="style.css">
+        <!-- Leaflet CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <!-- Leaflet JS -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <style>
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Bedstead', Arial, sans-serif;
+  background-color: #1e1e1e;
+  color: #cfcfcf;
+  text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7), -2px -2px 2px rgba(0, 0, 0, 0.3), -2px 2px 2px rgba(0, 0, 0, 0.3), 2px -2px 2px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+@font-face{
+    font-family: 'Bedstead';
+    src: url('bedstead-extracondensed.otf') format('truetype');
+}
+
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+#top-panel {
+  width: 100vw;
+  height: 50px;
+  background: #222;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  font-size: 1.2em;
+  box-sizing: border-box;
+}
+#mouse-coords {
+  font-size: 1.5em;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+#main-panel {
+  display: flex;
+  width: 100vw;
+  height: 75%;
+}
+#map-container {
+  width: 70vw;
+  height: 100%;
+  position: relative;
+}
+#map {
+  width: 100% !important;
+  height: 100% !important;
+  background: black;
+}
+#info-panel {
+  width: 25vw;
+  height: 100%;
+  background: #222;
+  color: #fff;
+  padding: 24px 18px;
+  overflow-y: auto;
+  overflow: hidden;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+  display: block;
+  box-sizing: border-box;
+}
+#floor-controls {
+  background: #333;
+  border: 2px solid #555;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 20px;
+}
+#floor-controls h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.1em;
+  color: #fff;
+}
+#floor-selector {
+  width: 100%;
+  padding: 8px;
+  background: #444;
+  color: #fff;
+  border: 1px solid #666;
+  border-radius: 3px;
+  font-family: 'Bedstead', Arial, sans-serif;
+  font-size: 1em;
+}
+#floor-selector option {
+  background: #444;
+  color: #fff;
+}
+#dim-strength-container {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #555;
+}
+#dim-strength-label {
+  color: #fff;
+  font-size: 0.9em;
+  margin-bottom: 6px;
+  display: block;
+}
+#dim-strength-slider {
+  width: 100%;
+  margin-bottom: 6px;
+}
+#dim-strength-value {
+  color: #ccc;
+  font-size: 0.8em;
+  font-style: italic;
+}
+#offset-controls {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #555;
+}
+.offset-item {
+  margin-bottom: 10px;
+}
+.offset-label {
+  color: #fff;
+  font-size: 0.9em;
+  margin-bottom: 4px;
+  display: block;
+}
+.offset-slider {
+  width: 100%;
+  margin-bottom: 4px;
+}
+.offset-value {
+  color: #ccc;
+  font-size: 0.8em;
+  font-style: italic;
+}
+#floor-info {
+  margin-top: 8px;
+  font-size: 0.9em;
+  color: #ccc;
+  font-style: italic;
+}
+#info-panel h2 {
+  margin-top: 0;
+}
+#info-panel p {
+  white-space: pre-line;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  width: auto;
+  box-sizing: border-box;
+}
+.leaflet-popup-content-wrapper{
+  background: #1f1d1d;
+  border-radius: 2px;
+  border: 2px solid #000;
+  min-width: 160px;
+}
+
+.leaflet-popup-content {
+  background: #1f1d1d;
+  color: rgb(255, 255, 255);
+  margin: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 0;
+  text-shadow: none;
+  font-family: 'Bedstead', Arial, sans-serif;
+  font-size: 1.2em;
+}
+.leaflet-container a.leaflet-popup-close-button{
+  color: rgb(255, 255, 255);
+  background: rgb(165, 45, 45);
+  border-radius: 2px;
+  border: 2px solid #000;
+  text-shadow: none;
+}
+.leaflet-container a.leaflet-popup-close-button:hover{
+  color: #fff;
+  text-shadow: none;
+}
+.leaflet-marker-icon.leaflet-zoom-animated.leaflet-interactive{
+  filter: drop-shadow(1px 1px 2px #ffffff) drop-shadow(-1px -1px 2px #ffffff);
+}
+
+/* Disable image blurring for sharp pixel rendering */
+.leaflet-image-layer, .leaflet-layer img {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+/* Additional targeting for Leaflet's image overlays */
+.leaflet-overlay-pane img {
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+</style>
+    </head>
+<body class="small">
+<div id="top-panel">
+  <div id="map-desc">Welcome to the Apogea Map! Explore locations and click markers for details.</div>
+  <div id="mouse-coords">X: ---, Y: ---</div>
+</div>
+<div id="main-panel">
+  <div id="map-container">
+    <div id="map"></div>
+  </div>
+  <div id="info-panel">
+    <div id="floor-controls">
+      <h3>Floor Selection</h3>
+      <select id="floor-selector">
+        <option value="0">Floor Y0</option>
+        <option value="1">Floor Y1</option>
+        <option value="2">Floor Y2</option>
+        <option value="3">Floor Y3</option>
+        <option value="4">Floor Y4</option>
+        <option value="5">Floor Y5</option>
+        <option value="6">Floor Y6</option>
+        <option value="7">Floor Y7</option>
+        <option value="8">Floor Y8</option>
+        <option value="9">Floor Y9</option>
+        <option value="10" selected>Floor Y10 (Main)</option>
+        <option value="11">Floor Y11</option>
+        <option value="12">Floor Y12</option>
+        <option value="13">Floor Y13</option>
+        <option value="14">Floor Y14</option>
+        <option value="15">Floor Y15</option>
+        <option value="16">Floor Y16</option>
+        <option value="17">Floor Y17</option>
+        <option value="18">Floor Y18</option>
+        <option value="19">Floor Y19</option>
+        <option value="20">Floor Y20</option>
+        <option value="21">Floor Y21</option>
+        <option value="22">Floor Y22</option>
+        <option value="23">Floor Y23</option>
+        <option value="24">Floor Y24</option>
+        <option value="25">Floor Y25</option>
+        <option value="26">Floor Y26</option>
+        <option value="27">Floor Y27</option>
+        <option value="28">Floor Y28</option>
+        <option value="29">Floor Y29</option>
+        <option value="30">Floor Y30</option>
+        <option value="31">Floor Y31</option>
+      </select>
+      <div id="dim-strength-container">
+        <label id="dim-strength-label" for="dim-strength-slider">Dim Strength:</label>
+        <input type="range" id="dim-strength-slider" min="0" max="4" step="0.1" value="2">
+        <div id="dim-strength-value">2 (10% per level below)</div>
+      </div>
+      <div id="offset-controls">
+        <div class="offset-item">
+          <label class="offset-label" for="horizontal-offset-slider">Horizontal Offset:</label>
+          <input type="range" class="offset-slider" id="horizontal-offset-slider" min="-0.5" max="0.5" step="0.01" value="0">
+          <div class="offset-value" id="horizontal-offset-value">0.00</div>
+        </div>
+        <div class="offset-item">
+          <label class="offset-label" for="vertical-offset-slider">Vertical Offset:</label>
+          <input type="range" class="offset-slider" id="vertical-offset-slider" min="-0.5" max="0" step="0.01" value="0">
+          <div class="offset-value" id="vertical-offset-value">0.00</div>
+        </div>
+      </div>
+      <div id="floor-info">Current: Floor Y10. Lower floors are dimmed, higher floors are hidden.</div>
+    </div>
+    <div id="marker-info"><em>Select a marker for details.</em></div>
+  </div>
+</div>
+
+<script>
+  // Image size in pixels (e.g., 4000x3000)
+  const imageWidth = 4000;
+  const imageHeight = 4000;
+    // Create the map and set the bounds
+    const map = L.map('map', {
+        crs: L.CRS.Simple,
+        minZoom: -5,
+        maxZoom: 2,
+        zoomSnap: 0.1,
+    });
+
+// Floor management
+const floors = {};
+const imageBounds = [[0, 0], [imageHeight, imageWidth]];
+let markers = [];
+let currentSelectedFloor = 10;
+let dimStrength = 2; // Default dim strength
+let horizontalOffsetMultiplier = 0; // 0 to 0.5
+let verticalOffsetMultiplier = 0; // 0 to 0.5
+
+// Calculate floor bounds with configurable offsets
+function calculateFloorBounds(floorNum) {
+  // Calculate vertical offset: layer 16 is baseline (0 offset), others offset by 1 pixel per layer difference
+  const baselineLayer = 16;
+  const sourceImageVerticalOffset = parseInt(floorNum) - baselineLayer; // 1px offset in source image coordinates
+  
+  // Scale the offset from source image (800px) to map coordinates (4000px)
+  const scaleFactor = imageHeight / 800; // 4000 / 800 = 5
+  const baseVerticalOffset = sourceImageVerticalOffset * scaleFactor * -0.5;
+  
+  // Apply configurable offsets
+  const totalVerticalOffset = baseVerticalOffset + (sourceImageVerticalOffset * verticalOffsetMultiplier * scaleFactor);
+  const horizontalOffset = sourceImageVerticalOffset * horizontalOffsetMultiplier * scaleFactor;
+  
+  // Adjust image bounds with offsets
+  return [
+    [0 - totalVerticalOffset, 0 + horizontalOffset], 
+    [imageHeight - totalVerticalOffset, imageWidth + horizontalOffset]
+  ];
+}
+
+// Update all floor positions
+function updateFloorPositions() {
+  Object.keys(floors).forEach(floorNum => {
+    const overlay = floors[floorNum];
+    const newBounds = calculateFloorBounds(floorNum);
+    overlay.setBounds(newBounds);
+  });
+}
+
+// Initialize all floor overlays
+function initializeFloors() {
+  const floorNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31'];
+  
+  // Sort floors by number to ensure proper stacking order
+  floorNumbers.sort((a, b) => parseInt(a) - parseInt(b));
+  
+  floorNumbers.forEach((floorNum, index) => {
+    const imageUrl = `Map/Levels/combined_y${floorNum}_minimap.png`;
+    const floorBounds = calculateFloorBounds(floorNum);
+    
+    const overlay = L.imageOverlay(imageUrl, floorBounds, {
+      opacity: 1.0,  // Full opacity, we'll use CSS filters for dimming
+      interactive: false,
+      zIndex: parseInt(floorNum) + 100  // Ensure proper stacking
+    });
+    
+    floors[floorNum] = overlay;
+    
+    // Set z-index after adding to map
+    overlay.on('add', function() {
+      setTimeout(() => {
+        const element = overlay.getElement();
+        if (element) {
+          element.style.zIndex = parseInt(floorNum) + 100;
+          element.setAttribute('data-floor', floorNum);
+        }
+      }, 10);
+    });
+  });
+  
+  // Initial floor setup
+  updateFloorVisibility(currentSelectedFloor);
+}
+
+// Update floor visibility based on selected floor
+function updateFloorVisibility(selectedFloor) {
+  const selectedFloorNum = parseInt(selectedFloor);
+  
+  Object.keys(floors).forEach(floorNum => {
+    const floorNumber = parseInt(floorNum);
+    const overlay = floors[floorNum];
+    
+    if (floorNumber > selectedFloorNum) {
+      // Hide floors above selected floor
+      if (map.hasLayer(overlay)) {
+        map.removeLayer(overlay);
+      }
+    } else {
+      // Show floors at or below selected floor
+      if (!map.hasLayer(overlay)) {
+        overlay.addTo(map);
+      }
+      
+      // Apply dimming to floors below selected floor
+      setTimeout(() => {
+        const element = overlay.getElement();
+        if (element) {
+          if (floorNumber < selectedFloorNum) {
+            const levelDifference = dimStrength * 1 + (selectedFloorNum - floorNumber) * dimStrength;
+            const darkeningAmount = Math.min(levelDifference * 10, 90); // 10% per level, max 90%
+            element.style.filter = `brightness(${100 - darkeningAmount}%)`;
+          } else {
+            // Selected floor - no dimming
+            element.style.filter = 'brightness(100%)';
+          }
+        }
+      }, 10);
+    }
+  });
+  
+  // Update info text
+  const floorInfo = document.getElementById('floor-info');
+  floorInfo.textContent = `Current: Floor Y${selectedFloor}. Lower floors are dimmed, higher floors are hidden.`;
+  
+  currentSelectedFloor = selectedFloorNum;
+}
+
+// Initialize floors
+initializeFloors();
+
+// Set up floor selector event handler
+document.getElementById('floor-selector').addEventListener('change', function(e) {
+  updateFloorVisibility(e.target.value);
+});
+
+// Set up dim strength slider event handler
+document.getElementById('dim-strength-slider').addEventListener('input', function(e) {
+  dimStrength = parseFloat(e.target.value);
+  document.getElementById('dim-strength-value').textContent = `${dimStrength} (${(dimStrength + 1) * 10}% per level below)`;
+  // Refresh the current floor visibility to apply new dim strength
+  updateFloorVisibility(currentSelectedFloor);
+});
+
+// Set up offset slider event handlers
+document.getElementById('horizontal-offset-slider').addEventListener('input', function(e) {
+  horizontalOffsetMultiplier = parseFloat(e.target.value);
+  document.getElementById('horizontal-offset-value').textContent = horizontalOffsetMultiplier.toFixed(2);
+  updateFloorPositions();
+});
+
+document.getElementById('vertical-offset-slider').addEventListener('input', function(e) {
+  verticalOffsetMultiplier = parseFloat(e.target.value);
+  document.getElementById('vertical-offset-value').textContent = verticalOffsetMultiplier.toFixed(2);
+  updateFloorPositions();
+});
+
+// Show all markers (they'll be on top of all floor layers)
+markers.forEach(marker => {
+  if (!map.hasLayer(marker)) {
+    map.addLayer(marker);
+  }
+});
+
+map.fitBounds(imageBounds);
+
+// Keyboard controls
+let keysPressed = {};
+
+// WASD movement - smooth continuous movement
+const moveSpeed = 2; // pixels per frame
+let animationId = null;
+
+function smoothMovement() {
+  let moveX = 0;
+  let moveY = 0;
+  
+  if (keysPressed['w']) moveY += moveSpeed;
+  if (keysPressed['s']) moveY -= moveSpeed;
+  if (keysPressed['a']) moveX -= moveSpeed;
+  if (keysPressed['d']) moveX += moveSpeed;
+  
+  if (moveX !== 0 || moveY !== 0) {
+    const center = map.getCenter();
+    const newCenter = [center.lat + moveY, center.lng + moveX];
+    map.panTo(newCenter, { animate: false, duration: 0 });
+  }
+  
+  // Continue animation if any movement keys are pressed
+  if (keysPressed['w'] || keysPressed['s'] || keysPressed['a'] || keysPressed['d']) {
+    animationId = requestAnimationFrame(smoothMovement);
+  } else {
+    animationId = null;
+  }
+}
+
+// Start smooth movement when movement keys are pressed
+document.addEventListener('keydown', function(e) {
+  const key = e.key.toLowerCase();
+  const wasMoving = keysPressed['w'] || keysPressed['s'] || keysPressed['a'] || keysPressed['d'];
+  
+  keysPressed[key] = true;
+  
+  // Start animation if movement key pressed and not already moving
+  if ((key === 'w' || key === 's' || key === 'a' || key === 'd') && !wasMoving && !animationId) {
+    animationId = requestAnimationFrame(smoothMovement);
+  }
+  
+  // Floor selection controls (unchanged)
+  if (key === 'q') {
+    const currentFloor = parseInt(document.getElementById('floor-selector').value);
+    const newFloor = Math.max(0, currentFloor - 1);
+    if (newFloor !== currentFloor) {
+      document.getElementById('floor-selector').value = newFloor;
+      updateFloorVisibility(newFloor);
+    }
+    e.preventDefault();
+  } else if (key === 'e') {
+    const currentFloor = parseInt(document.getElementById('floor-selector').value);
+    const newFloor = Math.min(31, currentFloor + 1);
+    if (newFloor !== currentFloor) {
+      document.getElementById('floor-selector').value = newFloor;
+      updateFloorVisibility(newFloor);
+    }
+    e.preventDefault();
+  }
+});
+
+document.addEventListener('keyup', function(e) {
+  keysPressed[e.key.toLowerCase()] = false;
+});
+
+// Add overlay window for mouse coordinates
+const overlayDiv = document.createElement('div');
+overlayDiv.style.position = 'fixed';
+overlayDiv.style.top = '10px';
+overlayDiv.style.right = '10px';
+overlayDiv.style.background = 'rgba(0,0,0,0.7)';
+overlayDiv.style.color = 'white';
+overlayDiv.style.padding = '6px 12px';
+overlayDiv.style.borderRadius = '6px';
+overlayDiv.style.fontSize = '14px';
+overlayDiv.style.zIndex = 1000;
+overlayDiv.style.display = 'none';
+overlayDiv.innerText = 'X: --, Y: --';
+document.body.appendChild(overlayDiv);
+
+map.on('mousemove', function(e) {
+  const x = Math.round(e.latlng.lng);
+  const y = Math.round(e.latlng.lat);
+  let realCoords = TranslateToReal(x, y);
+  overlayDiv.innerText = `X: ${realCoords.x}, Y: ${realCoords.y}`;
+});
+// Update mouse coordinates in top panel
+const mouseCoordsDiv = document.getElementById('mouse-coords');
+map.on('mousemove', function(e) {
+  // e.latlng gives [y, x] in map CRS
+  const mapX = Math.round(e.latlng.lng);
+  const mapY = Math.round(e.latlng.lat);
+  // Convert to real coords
+  const real = TranslateToReal(mapX, mapY);
+  mouseCoordsDiv.textContent = `X: ${real.x}, Y: ${real.y}`;
+});
+
+map.on('mouseout', function() {
+  //overlayDiv.innerText = 'X: --, Y: --';
+});
+
+function TranslateToReal(x, y) {
+  const realX = Math.round(x / 5 - 395);//0.1810 - 409);
+  const realY = Math.round(y / 5 - 400);//0.159 - 282);
+  return { x: realX, y: realY };
+}
+
+function TranslateToMap(x, y) {
+  const mapX = Math.round((x + 405) * 5);//409) / 0.1810);
+  const mapY = Math.round((y + 400) * 5);//282) / 0.159);
+  return { x: mapX, y: mapY };
+}
+
+// Example info data
+const infoData = {
+};
+
+function showInfoPanel(key) {
+  const info = infoData[key];
+  if (!info) return;
+  const panel = document.getElementById('marker-info');
+  // Replace newlines with <br> for proper line breaks
+  const descHtml = info.description.replace(/\n/g, '<br>');
+  panel.innerHTML = `<h2>${info.title}</h2><p style="white-space:pre-line;">${descHtml}</p><p><b>Coordinates:</b> ${info.coordinates.x}, ${info.coordinates.y}</p>`;
+}
+function addCustomMarker(iconName, realX, realY, title, shortDesc, fullDesc) {
+  //Tranform real Coords to map Coords
+  const mapCoords = TranslateToMap(realX, realY);
+  // Create custom icon
+  const icon = L.icon({
+    iconUrl: iconName,
+    iconSize: [32, 32],
+    iconAnchor: [16, 32],
+    popupAnchor: [0, -32]
+  });
+  // Add marker
+  const marker = L.marker([mapCoords.y, mapCoords.x], { icon }).addTo(map);
+  
+  // Track marker in the global markers array
+  markers.push(marker);
+  
+  // Store info for the panel
+  const infoKey = `${title}_${realX}_${realY}`;
+  infoData[infoKey] = {
+    title: title,
+    description: fullDesc,
+    coordinates: { x: realX, y: realY }
+  };
+
+  // Add click event to show info panel directly
+  marker.on('click', function() {
+    showInfoPanel(infoKey);
+  });
+  // Bind popup with short description and link
+  marker.bindPopup(
+    `<b>${title}</b><br>${shortDesc}<br>`
+  );
+}
+addCustomMarker("Icons/skull.png", -3, 84, 'Abandoned Mine North', 'Abandoned Mine North.', " ");
+addCustomMarker("Icons/skull.png", -3, 26, 'Abandoned Mine South', 'Abandoned Mine South.', " ");
+
+
+</script>
+</body>
+</html>
