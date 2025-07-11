@@ -1,7 +1,8 @@
-// Item data for Quick Apogean
-// Format: [Name, Type, Subtype, Cost, Damage, Range, etc...]
+// Item data
 const items = [
-    ["Ancient Staff","hand","staff",210,56,16,,26,-1,3,,,,,,8,,,"","AncientStaff.png","rare"],
+["Ale Mug","food","Drinks",35,,,,,,,,,,,,,,,"","AleMug.png",""],
+["Ancient Staff","hand","staff",240,53,14,,24,-2,2,,,,,,8,,,"","AncientStaff.png","uncommon"],
+["Ancient Staff","hand","staff",210,56,16,,26,-1,3,,,,,,8,,,"","AncientStaff.png","rare"],
 ["Ancient Staff","hand","staff",300,47,12,,20,-2,2,,,,,,8,,,"","AncientStaff.png",""],
 ["Ancient Sword","hand","largesword",420,3,37,,,,-1,,10,,-1,,8,,,"A bright sword.","AncientSword.png","rare"],
 ["Ancient Sword","hand","largesword",480,3,34,,,,-2,,9,,-1,,8,,,"A bright sword.","AncientSword.png","uncommon"],
@@ -64,7 +65,7 @@ const items = [
 ["Brass Plate","chest","heavychest",632,,,,,,,12,,,,,,,,"","BrassPlate.png","uncommon"],
 ["Brass Plate","chest","heavychest",790,,,,,,,10,,,,,,,,"","BrassPlate.png",""],
 ["Brass Shield","hand","lightshield",120,,,,,,,,18,,,,3,,,"A light shield.","BrassShield.png","epic"],
-["Brass Shield","hand","lightshield",120,,,,,,,,21,,,,3,,,"A light shield.","BrassShield.png","legendary"],
+["Brass Shield","hand","lightshield",120,,,,,,,,19,,,,3,,,"A light shield.","BrassShield.png","legendary"],
 ["Brass Shield","hand","lightshield",140,,,,,,,,16,,,,3,,,"A light shield.","BrassShield.png","rare"],
 ["Brass Shield","hand","shield",200,,,,,,,,13,,,,3,,,"A light shield.","BrassShield.png",""],
 ["Bread Bowl Stew","food","SpecialFood",120,,,,,3,,,,,,,,,,"A massive bread bowl filled with stew.","BreadBowlStew.png",""],
@@ -99,8 +100,8 @@ const items = [
 ["Burlap Hat","head","lighthelmet",100,,,,50,-2,-2,1,,,,,,,,"","BurlapHat.png",""],
 ["Burlap Skirt","legs","lightlegs",140,,,,130,-4,-4,4,,,,,,,,"","BurlapSkirt.png","rare"],
 ["Burlap Skirt","legs","lightlegs",160,,,,120,-5,-5,3,,,,,,,,"","BurlapSkirt.png","uncommon"],
-["Burlap Skirt","head","lighthelmet",200,,,,100,-5,-5,3,,,,,,,,"","BurlapSkirt.png",""],
-["Burlap Wool","","DesertProducts",20,,,,,,,,,,,,,,,"","BurlapWool.png",""],
+["Burlap Skirt","head","lightlegs",200,,,,100,-5,-5,3,,,,,,,,"","BurlapSkirt.png",""],
+["Burlap Wool","","lightlegs",20,,,,,,,,,,,,,,,"","BurlapWool.png",""],
 ["Candle","","LightSources",20,,,,,,,,,,,,,,,"","Candle.png",""],
 ["Cattail Flower","","Flowers",8,,,,,,,,,,,,,,,"","CattailFlower.png",""],
 ["Chain Mail","chest","heavychest",405,,,,,,,11,,,,,,,,"","ChainMail.png","legendary"],
@@ -256,7 +257,7 @@ const items = [
 ["Leather Coif","head","lighthead",70,,5,,,,,6,,,,,,,,"","LeatherCoif.png","legendary"],
 ["Leather Coif","head","lighthead",98,,3,,,,,5,,,,,,,,"","LeatherCoif.png","rare"],
 ["Leather Coif","head","lighthead",112,,2,,,,,4,,,,,,,,"","LeatherCoif.png","uncommon"],
-["Leather Coif","head","lighthelmet",140,,2,,,,,4,,,,,,,,"","LeatherCoif.png",""],
+["Leather Coif","head","lighthead",140,,2,,,,,4,,,,,,,,"","LeatherCoif.png",""],
 ["Leather Collar","neck","lightneck",120,,,,,,,3,,,,,,,,"","LeatherCollar.png","epic"],
 ["Leather Collar","neck","lightneck",140,,,,,,,3,,,,,,,,"","LeatherCollar.png","rare"],
 ["Leather Collar","neck","lightneck",160,,,,,,,2,,,,,,,,"","LeatherCollar.png","uncommon"],
@@ -272,7 +273,6 @@ const items = [
 ["Leather Gloves","hand","gloves",150,,3,,,4,,1,,,,,1,,,"","LeatherGloves.png",""],
 ["Lineage Shield","hand","shield",300,,,-25,-25,,,,28,,,,4,,,"A carving on the shield reads: Family, honor and blood.","LineageShield.png",""],
 ["Longbow","hand","bow",296,64,24,,,,,,,,-1,,9,,,"","Longbow.png","uncommon"],
-
 ["Longbow","hand","bow",370,57,20,,,,,,,,-1,,9,,,"","Longbow.png",""],
 ["Longsword","hand","largesword",686,7,48,,,,,,13,,-1,,8,,,"","Longsword.png","rare"],
 ["Longsword","hand","largesword",784,7,44,,,,,,12,,-2,,8,,,"","Longsword.png","uncommon"],
@@ -517,15 +517,15 @@ const items = [
 ["Zircon Ring","ring","ring",8,,,,,,,,,,2,,,,,"","ZirconRing.png","rare"],
 ["Zircon Ring","ring","ring",10,,,,,,,,,,2,,,,,"","ZirconRing.png","uncommon"],
 ["Zircon Ring","ring","ring",12,,,,,,,,,,1,,,,,"","ZirconRing.png",""],
-    // Add the rest of your items here...
+
 ];
 
-// Make items available globally
+// Make items available GLOBAL
 if (typeof window !== 'undefined') {
     window.items = items;
 }
 
-// For module systems (if needed later)
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = items;
 }
