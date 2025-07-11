@@ -269,15 +269,15 @@ body, html {
         <div class="offset-item">
           <label class="offset-label" for="horizontal-offset-slider">Horizontal Offset:</label>
           <input type="range" class="offset-slider" id="horizontal-offset-slider" min="-0.5" max="0.5" step="0.01" value="-0.25">
-          <div class="offset-value" id="horizontal-offset-value">-0.25</div>
+          <div class="offset-value" id="horizontal-offset-value">-0.5</div>
         </div>
         <div class="offset-item">
           <label class="offset-label" for="vertical-offset-slider">Vertical Offset:</label>
-          <input type="range" class="offset-slider" id="vertical-offset-slider" min="-0.5" max="0" step="0.01" value="-0.25">
-          <div class="offset-value" id="vertical-offset-value">-0.25</div>
+          <input type="range" class="offset-slider" id="vertical-offset-slider" min="-0.9" max="0.9" step="0.01" value="-0.25">
+          <div class="offset-value" id="vertical-offset-value">-0.5</div>
         </div>
       </div>
-      <div id="floor-info">Current: Floor Y16. Lower floors are dimmed, higher floors are hidden.</div>
+      <div id="floor-info">Current: Floor Y16. Perspective view: showing layers 0-16 + preview of Y17.</div>
     </div>
     <div id="marker-info"><em>Select a marker for details.</em></div>
   </div>
@@ -297,12 +297,13 @@ body, html {
 
 // Floor management
 const floors = {};
+const floorCopies = {}; // Copies without offset for perspective effect
 const imageBounds = [[0, 0], [imageHeight, imageWidth]];
 let markers = [];
 let currentSelectedFloor = 16;
 let dimStrength = 0.5; // Default dim strength
-let horizontalOffsetMultiplier = -0.25; // 0 to 0.5
-let verticalOffsetMultiplier = -0.25; // 0 to 0.5
+let horizontalOffsetMultiplier = -0.5; // 0 to 0.5
+let verticalOffsetMultiplier = -0.5; // 0 to 0.5
 
 // Calculate floor bounds with configurable offsets
 function calculateFloorBounds(floorNum) {
@@ -332,6 +333,14 @@ function updateFloorPositions() {
     const newBounds = calculateFloorBounds(floorNum);
     overlay.setBounds(newBounds);
   });
+  // Floor copies use the offset of one level lower
+  Object.keys(floorCopies).forEach(floorNum => {
+    const overlay = floorCopies[floorNum];
+    const floorNumber = parseInt(floorNum);
+    const lowerLevelOffset = floorNumber - 1;
+    const copyBounds = calculateFloorBounds(lowerLevelOffset);
+    overlay.setBounds(copyBounds);
+  });
 }
 
 // Initialize all floor overlays
@@ -345,21 +354,44 @@ function initializeFloors() {
     const imageUrl = `Map/Levels/combined_y${floorNum}_minimap.png`;
     const floorBounds = calculateFloorBounds(floorNum);
     
+    // Create main floor overlay (with offset)
     const overlay = L.imageOverlay(imageUrl, floorBounds, {
       opacity: 1.0,  // Full opacity, we'll use CSS filters for dimming
       interactive: false,
-      zIndex: parseInt(floorNum) + 100  // Ensure proper stacking
+      zIndex: parseInt(floorNum) * 10  // Main floors: 0,10,20,30...
     });
     
     floors[floorNum] = overlay;
     
-    // Set z-index after adding to map
+    // Create copy overlay (with offset of one level lower) for perspective effect
+    const copyOverlay = L.imageOverlay(imageUrl, calculateFloorBounds(parseInt(floorNum) - 1), {
+      opacity: 1.0,
+      interactive: false,
+      zIndex: parseInt(floorNum) * 10 + 5  // Interleave z-indexes: main=10,20,30... copy=15,25,35...
+    });
+    
+    floorCopies[floorNum] = copyOverlay;
+    
+    // Set z-index after adding to map for main floors
     overlay.on('add', function() {
       setTimeout(() => {
         const element = overlay.getElement();
         if (element) {
-          element.style.zIndex = parseInt(floorNum) + 100;
+          element.style.zIndex = parseInt(floorNum) * 10;
           element.setAttribute('data-floor', floorNum);
+          element.setAttribute('data-type', 'main');
+        }
+      }, 10);
+    });
+    
+    // Set z-index after adding to map for copy floors
+    copyOverlay.on('add', function() {
+      setTimeout(() => {
+        const element = copyOverlay.getElement();
+        if (element) {
+          element.style.zIndex = parseInt(floorNum) * 10 + 5;
+          element.setAttribute('data-floor', floorNum);
+          element.setAttribute('data-type', 'copy');
         }
       }, 10);
     });
@@ -373,33 +405,73 @@ function initializeFloors() {
 function updateFloorVisibility(selectedFloor) {
   const selectedFloorNum = parseInt(selectedFloor);
   
+  // Remove all layers first
+  Object.keys(floors).forEach(floorNum => {
+    const overlay = floors[floorNum];
+    const copyOverlay = floorCopies[floorNum];
+    if (map.hasLayer(overlay)) {
+      map.removeLayer(overlay);
+    }
+    if (map.hasLayer(copyOverlay)) {
+      map.removeLayer(copyOverlay);
+    }
+  });
+  
+  // Add layers according to perspective rules
   Object.keys(floors).forEach(floorNum => {
     const floorNumber = parseInt(floorNum);
     const overlay = floors[floorNum];
+    const copyOverlay = floorCopies[floorNum];
     
-    if (floorNumber > selectedFloorNum) {
-      // Hide floors above selected floor
-      if (map.hasLayer(overlay)) {
-        map.removeLayer(overlay);
-      }
-    } else {
-      // Show floors at or below selected floor
-      if (!map.hasLayer(overlay)) {
-        overlay.addTo(map);
-      }
+    if (floorNumber <= selectedFloorNum) {
+      // Show main version (with its own offset)
+      overlay.addTo(map);
       
-      // Apply dimming to floors below selected floor
       setTimeout(() => {
         const element = overlay.getElement();
         if (element) {
           if (floorNumber < selectedFloorNum) {
             const levelDifference = dimStrength * 1 + (selectedFloorNum - floorNumber) * dimStrength;
-            const darkeningAmount = Math.min(levelDifference * 10, 90); // 10% per level, max 90%
+            const darkeningAmount = Math.min(levelDifference * 10, 90);
             element.style.filter = `brightness(${100 - darkeningAmount}%)`;
           } else {
-            // Selected floor - no dimming
             element.style.filter = 'brightness(100%)';
           }
+          // Set z-index for proper stacking - main floors
+          element.style.zIndex = floorNumber * 10;
+        }
+      }, 10);
+      
+      // Show copy version (with offset of one level lower) for layers 1 and above
+      if (floorNumber >= 1) {
+        copyOverlay.addTo(map);
+        
+        setTimeout(() => {
+          const element = copyOverlay.getElement();
+          if (element) {
+            if (floorNumber < selectedFloorNum) {
+              const levelDifference = dimStrength * 1 + (selectedFloorNum - floorNumber) * dimStrength;
+              const darkeningAmount = Math.min(levelDifference * 10, 90);
+              element.style.filter = `brightness(${100 - darkeningAmount}%)`;
+            } else {
+              element.style.filter = 'brightness(100%)';
+            }
+            // Set z-index for proper stacking - copy layers between main layers
+            element.style.zIndex = floorNumber * 10 + 5;
+          }
+        }, 10);
+      }
+    }
+    
+    // Show the copy of the layer one level above the selected layer
+    if (floorNumber === selectedFloorNum + 1) {
+      copyOverlay.addTo(map);
+      
+      setTimeout(() => {
+        const element = copyOverlay.getElement();
+        if (element) {
+          element.style.filter = 'brightness(100%)';
+          element.style.zIndex = floorNumber * 10 + 5;
         }
       }, 10);
     }
@@ -407,7 +479,7 @@ function updateFloorVisibility(selectedFloor) {
   
   // Update info text
   const floorInfo = document.getElementById('floor-info');
-  floorInfo.textContent = `Current: Floor Y${selectedFloor}. Lower floors are dimmed, higher floors are hidden.`;
+  floorInfo.textContent = `Current: Floor Y${selectedFloor}. Perspective view: showing layers ${selectedFloorNum === 0 ? '0' : '0-' + selectedFloorNum} + preview of Y${selectedFloorNum + 1}.`;
   
   currentSelectedFloor = selectedFloorNum;
 }
