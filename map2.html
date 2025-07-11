@@ -481,7 +481,46 @@ function updateFloorVisibility(selectedFloor) {
   const floorInfo = document.getElementById('floor-info');
   floorInfo.textContent = `Current: Floor Y${selectedFloor}. Perspective view: showing layers ${selectedFloorNum === 0 ? '0' : '0-' + selectedFloorNum} + preview of Y${selectedFloorNum + 1}.`;
   
-  currentSelectedFloor = selectedFloorNum;
+  currentSelectedFloor = selectedFloor;
+  // Update marker visibility for the new floor
+  updateMarkerVisibility(currentSelectedFloor);
+}
+
+// Update marker visibility based on selected floor
+function updateMarkerVisibility(selectedFloor) {
+  const selectedFloorNum = parseInt(selectedFloor);
+  
+  markers.forEach(marker => {
+    const floorDifference = selectedFloorNum - marker.floorNumber;
+    
+    if (floorDifference >= 0 && floorDifference <= 6) {
+      // Show markers for current floor and up to 3 levels below
+      if (!map.hasLayer(marker)) {
+        map.addLayer(marker);
+      }
+      
+      // Apply fading based on floor difference
+      const markerElement = marker.getElement();
+      if (markerElement) {
+        if (floorDifference === 0) {
+          // Current floor - full opacity
+          markerElement.style.opacity = '1.0';
+          markerElement.style.filter = 'none';
+        } else {
+          // Lower floors - fade out progressively
+          const opacity = 1.0 - (floorDifference * 0.11); // 12% reduction per level
+          const brightness = 100 - (floorDifference * 11); // 12% darker per level
+          markerElement.style.opacity = opacity.toString();
+          markerElement.style.filter = `brightness(${brightness}%)`;
+        }
+      }
+    } else {
+      // Hide markers from other floors
+      if (map.hasLayer(marker)) {
+        map.removeLayer(marker);
+      }
+    }
+  });
 }
 
 // Initialize floors
@@ -513,12 +552,8 @@ document.getElementById('vertical-offset-slider').addEventListener('input', func
   updateFloorPositions();
 });
 
-// Show all markers (they'll be on top of all floor layers)
-markers.forEach(marker => {
-  if (!map.hasLayer(marker)) {
-    map.addLayer(marker);
-  }
-});
+// Initialize marker visibility for the current floor
+updateMarkerVisibility(currentSelectedFloor);
 
 map.fitBounds(imageBounds);
 
@@ -646,11 +681,14 @@ function showInfoPanel(key) {
   const panel = document.getElementById('marker-info');
   // Replace newlines with <br> for proper line breaks
   const descHtml = info.description.replace(/\n/g, '<br>');
-  panel.innerHTML = `<h2>${info.title}</h2><p style="white-space:pre-line;">${descHtml}</p><p><b>Coordinates:</b> ${info.coordinates.x}, ${info.coordinates.y}</p>`;
+  panel.innerHTML = `<h2>${info.title}</h2><p style="white-space:pre-line;">${descHtml}</p><p><b>Coordinates:</b> X: ${info.coordinates.x}, Y: ${info.coordinates.y}, Z: ${info.coordinates.z}<br><b>Floor:</b> Y${info.coordinates.floor}</p>`;
 }
-function addCustomMarker(iconName, realX, realY, title, shortDesc, fullDesc) {
+function addCustomMarker(iconName, realX, realY, realZ, title, shortDesc, fullDesc) {
   //Tranform real Coords to map Coords
-  const mapCoords = TranslateToMap(realX, realY);
+  const mapCoords = TranslateToMap(realX, realZ);
+  // Convert realY to floor number (Y=0 is floor Y14)
+  const floorNumber = realY + 14;
+  
   // Create custom icon
   const icon = L.icon({
     iconUrl: iconName,
@@ -659,7 +697,11 @@ function addCustomMarker(iconName, realX, realY, title, shortDesc, fullDesc) {
     popupAnchor: [0, -32]
   });
   // Add marker
-  const marker = L.marker([mapCoords.y, mapCoords.x], { icon }).addTo(map);
+  const marker = L.marker([mapCoords.y, mapCoords.x], { icon });
+  
+  // Store floor information with the marker
+  marker.floorNumber = floorNumber;
+  marker.realCoords = { x: realX, y: realY, z: realZ };
   
   // Track marker in the global markers array
   markers.push(marker);
@@ -669,7 +711,7 @@ function addCustomMarker(iconName, realX, realY, title, shortDesc, fullDesc) {
   infoData[infoKey] = {
     title: title,
     description: fullDesc,
-    coordinates: { x: realX, y: realY }
+    coordinates: { x: realX, y: realY, z: realZ, floor: floorNumber }
   };
 
   // Add click event to show info panel directly
@@ -681,8 +723,125 @@ function addCustomMarker(iconName, realX, realY, title, shortDesc, fullDesc) {
     `<b>${title}</b><br>${shortDesc}<br>`
   );
 }
-addCustomMarker("Icons/skull.png", -3, 84, 'Abandoned Mine North', 'Abandoned Mine North.', " ");
-addCustomMarker("Icons/skull.png", -3, 26, 'Abandoned Mine South', 'Abandoned Mine South.', " ");
+addCustomMarker("Icons/skull.png",-3,-4,84, 'Abandoned Mine North', 'Abandoned Mine North.'," ");
+addCustomMarker("Icons/skull.png",-3,-4,26, 'Abandoned Mine South', 'Abandoned Mine South.'," ");
+addCustomMarker("Icons/skull.png",-9,-2,0, 'Abandoned Village', 'Abandoned Village.'," ");
+addCustomMarker("Icons/skull.png",-52,-4,96, 'Bandit Outpost', 'Bandit Outpost.'," ");
+addCustomMarker("Icons/house.png",-286,-1,130, 'Basile Inn', 'Basile Inn.'," ");
+addCustomMarker("Icons/cross.png",-272,-1,287, 'Basile\'s Temple', 'Basile\'s Temple.'," ");
+addCustomMarker("Icons/hammer.png",-259,-2,164, 'The Blacksmith', 'The Blacksmith.'," ");
+addCustomMarker("Icons/arrowpurple.png",57,-2,7, 'Blue Tunnel Entrance', 'Blue Tunnel Entrance.'," ");
+addCustomMarker("Icons/arrowpurple.png",168,0,-46, 'Blue Tunnel Exit', 'Blue Tunnel Exit.'," ");
+addCustomMarker("Icons/house.png",191,1,-64, 'Botanist\'s Guild', 'Botanist\'s Guild.'," ");
+addCustomMarker("Icons/house.png",-145,-2,21, 'Branor\'s Farm', 'Branor\'s Farm.'," ");
+addCustomMarker("Icons/housegreen.png",-113,0,75, 'The Caravan', 'The Caravan.'," ");
+addCustomMarker("Icons/bag.png",-125,0,59, 'Burl, trades ale.', 'Burl, trades ale..'," ");
+addCustomMarker("Icons/bag.png",-116,0,80, 'Dewey, trades food.', 'Dewey, trades food..'," ");
+addCustomMarker("Icons/bag.png",-116,0,69, 'Erastus, trades archer stuff.', 'Erastus, trades archer stuff..'," ");
+addCustomMarker("Icons/bag.png",-107,0,82, 'Gavin, trades rare stuff.', 'Gavin, trades rare stuff..'," ");
+addCustomMarker("Icons/bag.png",-129,0,70, 'Hester, trades general goods.', 'Hester, trades general goods..'," ");
+addCustomMarker("Icons/bag.png",-126,0,80, 'Opal, trades equipment.', 'Opal, trades equipment..'," ");
+addCustomMarker("Icons/bag.png",-139,0,78, 'Otis, trades fish.', 'Otis, trades fish..'," ");
+addCustomMarker("Icons/bag.png",-104,0,61, 'Zebulon, trades magic.', 'Zebulon, trades magic..'," ");
+addCustomMarker("Icons/castle.png",-273,-2,161, 'Basile Castle', 'Basile Castle.'," ");
+addCustomMarker("Icons/house.png",-332,-4,-223, 'Clothier Square', 'Clothier Square.'," ");
+addCustomMarker("Icons/house.png",214,-1,-70, 'Clovi\'s Hut', 'Clovi\'s Hut.'," ");
+addCustomMarker("Icons/skull.png",15,-2,2, 'Cursed Straight', 'Cursed Straight.'," ");
+addCustomMarker("Icons/skull.png",-142,-6,-136, 'Death Valley', 'Death Valley.'," ");
+addCustomMarker("Icons/box.png",-186,0,146, 'The Depot', 'The Depot.'," ");
+addCustomMarker("Icons/skull.png",33,-4,100, 'Destroyed Outpost', 'Destroyed Outpost.'," ");
+addCustomMarker("Icons/skull.png",-80,-4,204, 'Destroyed Village', 'Destroyed Village.'," ");
+addCustomMarker("Icons/house.png",-184,-3,206, 'The Docks', 'The Docks.'," ");
+addCustomMarker("Icons/warning2.png",117,-2,-17, 'Dorosam, the Swamp', 'Dorosam, the Swamp.'," ");
+addCustomMarker("Icons/arrowgreen.png",38,-4,65, 'Dorosam Hidden Passage', 'Dorosam Hidden Passage.'," ");
+addCustomMarker("Icons/dot.png",147,-2,44, 'Dorosam Port', 'Dorosam Port.'," ");
+addCustomMarker("Icons/cross.png",180,0,48, 'Dorosam\'s Temple', 'Dorosam\'s Temple.'," ");
+addCustomMarker("Icons/castle.png",-145,-1,186, 'Eastern Gate', 'Eastern Gate.'," ");
+addCustomMarker("Icons/dot.png",14,-4,30, 'Occultists East', 'Occultists East.'," ");
+addCustomMarker("Icons/arrowred.png",-26,-4,-12, 'Passage to the East', 'Passage to the East.'," ");
+addCustomMarker("Icons/castle.png",-137,7,167, 'East Tower', 'East Tower.'," ");
+addCustomMarker("Icons/houseblue.png",-76,-2,29, 'Edmund\'s Cottage', 'Edmund\'s Cottage.'," ");
+addCustomMarker("Icons/house.png",-180,-2,-40, 'El Chad Village', 'El Chad Village.'," ");
+addCustomMarker("Icons/house.png",-61,-2,58, 'Eofor\'s Hut', 'Eofor\'s Hut.'," ");
+addCustomMarker("Icons/housegreen.png",42,-3,-29, 'Forsaken Village', 'Forsaken Village.'," ");
+addCustomMarker("Icons/dot.png",-82,-3,94, 'The Garden', 'The Garden.'," ");
+addCustomMarker("Icons/dot.png",-27,0,26, 'Goblin Hills', 'Goblin Hills.'," ");
+addCustomMarker("Icons/cross.png",-313,0,-232, 'Vecan Hospital', 'Vecan Hospital.'," ");
+addCustomMarker("Icons/dot.png",195,-3,-109, 'Jebidiah\'s Hut', 'Jebidiah\'s Hut.'," ");
+addCustomMarker("Icons/castle.png",-273,5,191, 'King\'s Chamber', 'King\'s Chamber.'," ");
+addCustomMarker("Icons/bag.png",122,-4,45, 'Jebidiah Ambush 1', 'Jebidiah Ambush 1.'," ");
+addCustomMarker("Icons/dot.png",192,-5,-2, 'Jebidiah Ambush 2', 'Jebidiah Ambush 2.'," ");
+addCustomMarker("Icons/dot.png",177,-2,21, 'Jebidiah Ambush 3', 'Jebidiah Ambush 3.'," ");
+addCustomMarker("Icons/dot.png",-227,-4,206, 'Lurleen\'s Flower Shop', 'Lurleen\'s Flower Shop.'," ");
+addCustomMarker("Icons/cross.png",-273,-4,128, 'Main Square', 'Main Square.'," ");
+addCustomMarker("Icons/dot.png",135,-4,-44, 'Mary And Sal\'s', 'Mary And Sal\'s.'," ");
+addCustomMarker("Icons/boletus.png",-265,-4,-244, 'Merchant Square', 'Merchant Square.'," ");
+addCustomMarker("Icons/mountain.png",-272,-2,234, 'The Monastery', 'The Monastery.'," ");
+addCustomMarker("Icons/house.png",-17,-4,-64, 'Mosquito Marches', 'Mosquito Marches.'," ");
+addCustomMarker("Icons/dot.png",91,-4,-21, 'Mushroom Fields', 'Mushroom Fields.'," ");
+addCustomMarker("Icons/housegreen.png",186,-4,-65, 'Bones Lever', 'Bones Lever.'," ");
+addCustomMarker("Icons/skull.png",-17,1,79, 'Amphitere Peak', 'Amphitere Peak.'," ");
+addCustomMarker("Icons/cross.png",-131,-1,209, 'Northern Outpost', 'Northern Outpost.'," ");
+addCustomMarker("Icons/dot.png",-32,0,-2, 'Old Bridge', 'Old Bridge.'," ");
+addCustomMarker("Icons/dot.png",98,-2,41, 'Old Village', 'Old Village.'," ");
+addCustomMarker("Icons/dot.png",-54,-3,209, 'Orc Camp', 'Orc Camp.'," ");
+addCustomMarker("Icons/dot.png",-66,-2,-2, 'Plain\'s Cathedral', 'Plain\'s Cathedral.'," ");
+addCustomMarker("Icons/dot.png",-173,-1,231, 'Rasobar\'s Ship', 'Rasobar\'s Ship.'," ");
+addCustomMarker("Icons/arrowwhite.png",-323,-2,207, 'Residency Square', 'Residency Square.'," ");
+addCustomMarker("Icons/dot.png",-165,0,70, 'Road To Basile', 'Road To Basile.'," ");
+addCustomMarker("Icons/bag.png",-227,0,255, 'Sabrina\'s Hut', 'Sabrina\'s Hut.'," ");
+addCustomMarker("Icons/castle.png",-48,-4,-29, 'Sentinel\'s Guild', 'Sentinel\'s Guild.'," ");
+addCustomMarker("Icons/box.png",-243,-4,142, 'The Sewers', 'The Sewers.'," ");
+addCustomMarker("Icons/mountain.png",-79,-2,-13, 'Seymour\'s Mausoleum', 'Seymour\'s Mausoleum.'," ");
+addCustomMarker("Icons/dot.png",-211,-4,169, 'Sigurd\'s Pub', 'Sigurd\'s Pub.'," ");
+addCustomMarker("Icons/dot.png",-174,-4,125, 'South Gate', 'South Gate.'," ");
+addCustomMarker("Icons/dot.png",-287,-2,-176, 'Storage Square', 'Storage Square.'," ");
+addCustomMarker("Icons/arrowpurple.png",-235,4,-74, 'Sunskin Mountain', 'Sunskin Mountain.'," ");
+addCustomMarker("Icons/dot.png",188,0,-78, 'Tansy\'s House', 'Tansy\'s House.'," ");
+addCustomMarker("Icons/cross.png",-257,-4,122, 'Basile\'s Market', 'Basile\'s Market.'," ");
+addCustomMarker("Icons/castle.png",-203,-3,190, 'Trader\'s Square', 'Trader\'s Square.'," ");
+addCustomMarker("Icons/dot.png",179,-2,15, 'Trident Passage', 'Trident Passage.'," ");
+addCustomMarker("Icons/castle.png",-215,-4,-175, 'Vecan, the Desert.', 'Vecan, the Desert..'," ");
+addCustomMarker("Icons/castle.png",173,6,-9, 'Violet\'s Witch House', 'Violet\'s Witch House.'," ");
+addCustomMarker("Icons/dot.png",-254,-4,-134, 'West Exit', 'West Exit.'," ");
+addCustomMarker("Icons/dot.png",-202,-3,3, 'West Garden', 'West Garden.'," ");
+addCustomMarker("Icons/grave.png",-273,-2,106, 'West Gate', 'West Gate.'," ");
+addCustomMarker("Icons/dot.png",-341,4,260, 'West Tower', 'West Tower.'," ");
+addCustomMarker("Icons/dot.png",-122,-2,21, 'Wheat Fields', 'Wheat Fields.'," ");
+addCustomMarker("Icons/hammer.png",-299,-4,-217, 'Work Square', 'Work Square.'," ");
+addCustomMarker("Icons/dot.png",-100,-2,-19, 'Yordin\'s Cemetery', 'Yordin\'s Cemetery.'," ");
+addCustomMarker("Icons/dot.png",191,4,266, 'Ancient Tombs', 'Ancient Tombs.'," ");
+addCustomMarker("Icons/bag.png",143,-2,252, 'Ancient Tree', 'Ancient Tree.'," ");
+addCustomMarker("Icons/dot.png",-32,-2,139, 'Blacksmith Brean', 'Blacksmith Brean.'," ");
+addCustomMarker("Icons/dot.png",189,-4,197, 'Colman\'s Kitchen', 'Colman\'s Kitchen.'," ");
+addCustomMarker("Icons/dot.png",106,-4,176, 'Desecrated Church', 'Desecrated Church.'," ");
+addCustomMarker("Icons/dot.png",-64,-4,115, 'Dionel Pub', 'Dionel Pub.'," ");
+addCustomMarker("Icons/dot.png",174,-4,193, 'East Nordha', 'East Nordha.'," ");
+addCustomMarker("Icons/houseyellow.png",148,-4,161, 'East Nordha Mines', 'East Nordha Mines.'," ");
+addCustomMarker("Icons/skull.png",219,-2,204, 'Ferag Courier Stable', 'Ferag Courier Stable.'," ");
+addCustomMarker("Icons/bag.png",-8,-3,160, 'Fergus\' Longhouse', 'Fergus\' Longhouse.'," ");
+addCustomMarker("Icons/skull.png",72,231,-2, 'Forgotten Caves', 'Forgotten Caves.'," ");
+addCustomMarker("Icons/dot.png",-90,-2,139, 'Frances\' Farms', 'Frances\' Farms.'," ");
+addCustomMarker("Icons/bag.png",173,-2,225, 'Ghost Town', 'Ghost Town.'," ");
+addCustomMarker("Icons/dot.png",-31,-4,163, 'Hoder\'s Tool Shop', 'Hoder\'s Tool Shop.'," ");
+addCustomMarker("Icons/box.png",223,-6,166, 'The Lintcaves', 'The Lintcaves.'," ");
+addCustomMarker("Icons/dot.png",173,1,160, 'Loke\'s Home', 'Loke\'s Home.'," ");
+addCustomMarker("Icons/dot.png",13,0,208, 'Morrigan\'s Boutique', 'Morrigan\'s Boutique.'," ");
+addCustomMarker("Icons/bag.png",31,0,158, 'Mother Shrine', 'Mother Shrine.'," ");
+addCustomMarker("Icons/mountain.png",231,-2,228, 'Nordha Depot', 'Nordha Depot.'," ");
+addCustomMarker("Icons/dot.png",3,0,144, 'Flower Spire', 'Flower Spire.'," ");
+addCustomMarker("Icons/dot.png",77,-4,159, 'Nordha Labirynth', 'Nordha Labirynth.'," ");
+addCustomMarker("Icons/dot.png",-34,-3,149, 'Nordha Market & Center', 'Nordha Market & Center.'," ");
+addCustomMarker("Icons/castle.png",51,2,214, 'Nordha Mountain Path', 'Nordha Mountain Path.'," ");
+addCustomMarker("Icons/dot.png",57,-4,137, 'Nordha Outlaws', 'Nordha Outlaws.'," ");
+addCustomMarker("Icons/bag.png",190,-3,146, 'East Nordha Port', 'East Nordha Port.'," ");
+addCustomMarker("Icons/bag.png",218,-4,187, 'Nordha Residency Village', 'Nordha Residency Village.'," ");
+addCustomMarker("Icons/mountain.png",-34,-3,149, 'Nordha Town Center', 'Nordha Town Center.'," ");
+addCustomMarker("Icons/dot.png",-45,-4,105, 'Plains Road', 'Plains Road.'," ");
+addCustomMarker("Icons/bag.png",-48,-2,156, 'Rosel Potion Shop', 'Rosel Potion Shop.'," ");
+addCustomMarker("Icons/bag.png",239,-4,202, 'Salazar Shop', 'Salazar Shop.'," ");
+addCustomMarker("Icons/mountain.png",61,0,225, 'Snowy Mountains', 'Snowy Mountains.'," ");
+addCustomMarker("Icons/dot.png",-36,-4,154, 'West Nordha', 'West Nordha.'," ");
 
 
 </script>
