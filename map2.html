@@ -9,6 +9,8 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <!-- Leaflet JS -->
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <!-- Monster Data -->
+        <script src="monsterdata.js"></script>
         <style>
 body {
   margin: 0;
@@ -35,25 +37,75 @@ body, html {
 }
 #top-panel {
   width: 100vw;
-  height: 50px;
+  height: 60px;
   background: #222;
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 32px;
-  font-size: 1.2em;
+  padding: 0 16px;
+  font-size: 0.9em;
   box-sizing: border-box;
+  gap: 16px;
 }
+
+#top-nav-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  font-size: 0.85em;
+}
+
+#coords-display {
+  font-weight: bold;
+  color: #fff;
+  min-width: 120px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.nav-label {
+  color: #ccc;
+  font-size: 0.9em;
+}
+
+.nav-select {
+  background: #444;
+  color: #fff;
+  border: 1px solid #666;
+  border-radius: 2px;
+  font-family: 'Bedstead', Arial, sans-serif;
+  font-size: 0.8em;
+  padding: 2px 4px;
+  min-width: 50px;
+}
+
+.nav-slider {
+  width: 60px;
+  height: 16px;
+}
+
+.nav-checkbox {
+  transform: scale(1.1);
+}
+
 #mouse-coords {
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-weight: bold;
   letter-spacing: 1px;
+  min-width: 150px;
+  text-align: right;
 }
 #main-panel {
   display: flex;
   width: 100vw;
-  height: 75%;
+  height: calc(100vh - 60px);
 }
 #map-container {
   width: 70vw;
@@ -78,140 +130,28 @@ body, html {
   display: block;
   box-sizing: border-box;
 }
-#floor-controls {
-  background: #333;
-  border: 2px solid #555;
-  border-radius: 4px;
-  padding: 12px;
-  margin-bottom: 20px;
-}
-#floor-controls h3 {
-  margin: 0 0 10px 0;
-  font-size: 1.1em;
-  color: #fff;
-}
-
-/* First row: Floor Selection and Dim Strength */
-.control-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 12px;
-}
-.control-item {
-  flex: 1;
-  min-width: 0; /* Allow shrinking */
-}
-.control-item h4 {
-  margin: 0 0 6px 0;
-  font-size: 0.9em;
-  color: #fff;
-  font-weight: normal;
-}
-
-#floor-selector {
-  width: 100%;
-  padding: 6px;
-  background: #444;
-  color: #fff;
-  border: 1px solid #666;
-  border-radius: 3px;
-  font-family: 'Bedstead', Arial, sans-serif;
-  font-size: 0.9em;
-}
-#floor-selector option {
-  background: #444;
-  color: #fff;
-}
-
-#dim-strength-slider {
-  width: 100%;
-  margin-bottom: 4px;
-}
-#dim-strength-value {
-  color: #ccc;
-  font-size: 0.7em;
-  font-style: italic;
-}
-
-/* Second row: Offset controls */
-#offset-controls {
-  display: flex;
-  gap: 10px;
-  padding-top: 8px;
-  border-top: 1px solid #555;
-}
-.offset-item {
-  flex: 1;
-  min-width: 0;
-}
-.offset-label {
-  color: #fff;
-  font-size: 0.8em;
-  margin-bottom: 3px;
-  display: block;
-}
-.offset-slider {
-  width: 100%;
-  margin-bottom: 3px;
-}
-.offset-value {
-  color: #ccc;
-  font-size: 0.7em;
-  font-style: italic;
-}
-
-/* Third row: Marker controls */
-#marker-controls {
-  display: flex;
-  gap: 8px;
-  padding-top: 8px;
-  border-top: 1px solid #555;
-}
-.marker-toggle {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 60px;
-}
-.marker-toggle label {
-  color: #fff;
-  font-size: 0.7em;
-  margin-bottom: 2px;
-  text-align: center;
-}
-.marker-toggle input[type="checkbox"] {
-  margin: 0;
-  transform: scale(1.2);
-}
-.marker-item {
-  flex: 1;
-  min-width: 0;
-}
-.marker-label {
-  color: #fff;
-  font-size: 0.7em;
-  margin-bottom: 2px;
-  display: block;
-}
-.marker-slider {
-  width: 100%;
-  margin-bottom: 2px;
-}
-.marker-value {
-  color: #ccc;
-  font-size: 0.6em;
-  font-style: italic;
-}
-
-#floor-info {
-  margin-top: 8px;
-  font-size: 0.9em;
-  color: #ccc;
-  font-style: italic;
-}
 #info-panel h2 {
   margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.2em;
+  color: #fff;
+}
+#floor-info {
+  margin-bottom: 16px;
+  font-size: 0.9em;
+  color: #ccc;
+  font-style: italic;
+  padding: 12px;
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 4px;
+}
+#marker-info {
+  padding: 12px;
+  background: #333;
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: #ccc;
 }
 #info-panel p {
   white-space: pre-line;
@@ -220,6 +160,57 @@ body, html {
   max-width: 100%;
   width: auto;
   box-sizing: border-box;
+}
+
+#marker-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#marker-info h2 {
+  margin: 0;
+  font-size: 1.1em;
+  color: #fff;
+}
+
+.marker-content {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.marker-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.marker-right {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marker-right video,
+.marker-right img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.creature-stats {
+  font-size: 0.9em;
+  margin-bottom: 8px;
+}
+
+.coordinates {
+  font-size: 0.8em;
+  color: #aaa;
+  margin-top: 8px;
 }
 .leaflet-popup-content-wrapper{
   background: #1f1d1d;
@@ -273,102 +264,151 @@ body, html {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
+
+.preview-icon{
+   width:80px;
+   height:80px;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+
+
+}
 </style>
     </head>
 <body class="small">
 <div id="top-panel">
-  <div id="map-desc">Welcome to the Apogea Map! Explore locations and click markers for details.</div>
-  <div id="mouse-coords">X: ---, Y: ---</div>
+  <div id="top-nav-container">
+    <div id="coords-display">Coords: ---, ---, ---</div>
+    
+    <div class="nav-item">
+      <span class="nav-label">Floor:</span>
+      <select id="floor-selector-top" class="nav-select">
+        <option value="0">Y0</option>
+        <option value="1">Y1</option>
+        <option value="2">Y2</option>
+        <option value="3">Y3</option>
+        <option value="4">Y4</option>
+        <option value="5">Y5</option>
+        <option value="6">Y6</option>
+        <option value="7">Y7</option>
+        <option value="8">Y8</option>
+        <option value="9">Y9</option>
+        <option value="10">Y10</option>
+        <option value="11">Y11</option>
+        <option value="12">Y12</option>
+        <option value="13">Y13</option>
+        <option value="14">Y14</option>
+        <option value="15">Y15</option>
+        <option value="16" selected>Y16</option>
+        <option value="17">Y17</option>
+        <option value="18">Y18</option>
+        <option value="19">Y19</option>
+        <option value="20">Y20</option>
+        <option value="21">Y21</option>
+        <option value="22">Y22</option>
+        <option value="23">Y23</option>
+        <option value="24">Y24</option>
+        <option value="25">Y25</option>
+        <option value="26">Y26</option>
+        <option value="27">Y27</option>
+        <option value="28">Y28</option>
+        <option value="29">Y29</option>
+        <option value="30">Y30</option>
+        <option value="31">Y31</option>
+      </select>
+    </div>
+    
+    <div class="nav-item">
+      <span class="nav-label">Dim:</span>
+      <input type="range" class="nav-slider" id="dim-strength-slider-top" min="0" max="4" step="0.1" value="0.5">
+    </div>
+    
+    <div class="nav-item">
+      <span class="nav-label">Horiz. Offset:</span>
+      <input type="range" class="nav-slider" id="horizontal-offset-slider-top" min="-0.5" max="0.5" step="0.01" value="-0.25">
+    </div>
+    
+    <div class="nav-item">
+      <span class="nav-label">Vert. Offset:</span>
+      <input type="range" class="nav-slider" id="vertical-offset-slider-top" min="-0.9" max="0.9" step="0.01" value="-0.25">
+    </div>
+    
+    <div class="nav-item">
+      <span class="nav-label">Markers:</span>
+      <input type="checkbox" class="nav-checkbox" id="markers-enabled-top" checked>
+    </div>
+    
+    <div class="nav-item">
+      <span class="nav-label">Fade Out:</span>
+      <input type="range" class="nav-slider" id="marker-fade-slider-top" min="0" max="1" step="0.1" value="0.25">
+    </div>
+    
+    <div class="nav-item">
+      <span class="nav-label">Icon Scale:</span>
+      <input type="range" class="nav-slider" id="marker-scale-slider-top" min="0.5" max="2" step="0.1" value="1.0">
+    </div>
+  </div>
+  
 </div>
 <div id="main-panel">
   <div id="map-container">
     <div id="map"></div>
   </div>
   <div id="info-panel">
-    <div id="floor-controls">
-      <h3>Navigation Controls</h3>
-      
-      <!-- First row: Floor Selection and Dim Strength -->
-      <div class="control-row">
-        <div class="control-item">
-          <h4>Floor Selection</h4>
-          <select id="floor-selector">
-            <option value="0">Floor Y0</option>
-            <option value="1">Floor Y1</option>
-            <option value="2">Floor Y2</option>
-            <option value="3">Floor Y3</option>
-            <option value="4">Floor Y4</option>
-            <option value="5">Floor Y5</option>
-            <option value="6">Floor Y6</option>
-            <option value="7">Floor Y7</option>
-            <option value="8">Floor Y8</option>
-            <option value="9">Floor Y9</option>
-            <option value="10">Floor Y10</option>
-            <option value="11">Floor Y11</option>
-            <option value="12">Floor Y12</option>
-            <option value="13">Floor Y13</option>
-            <option value="14">Floor Y14</option>
-            <option value="15">Floor Y15</option>
-            <option value="16" selected>Floor Y16</option>
-            <option value="17">Floor Y17</option>
-            <option value="18">Floor Y18</option>
-            <option value="19">Floor Y19</option>
-            <option value="20">Floor Y20</option>
-            <option value="21">Floor Y21</option>
-            <option value="22">Floor Y22</option>
-            <option value="23">Floor Y23</option>
-            <option value="24">Floor Y24</option>
-            <option value="25">Floor Y25</option>
-            <option value="26">Floor Y26</option>
-            <option value="27">Floor Y27</option>
-            <option value="28">Floor Y28</option>
-            <option value="29">Floor Y29</option>
-            <option value="30">Floor Y30</option>
-            <option value="31">Floor Y31</option>
-          </select>
-        </div>
-        <div class="control-item">
-          <h4>Dim Strength</h4>
-          <input type="range" id="dim-strength-slider" min="0" max="4" step="0.1" value="0.5">
-          <div id="dim-strength-value">0.5 (10% per level below)</div>
-        </div>
-      </div>
-      
-      <!-- Second row: Offset controls -->
-      <div id="offset-controls">
-        <div class="offset-item">
-          <label class="offset-label" for="horizontal-offset-slider">Horizontal Offset:</label>
-          <input type="range" class="offset-slider" id="horizontal-offset-slider" min="-0.5" max="0.5" step="0.01" value="-0.25">
-          <div class="offset-value" id="horizontal-offset-value">-0.5</div>
-        </div>
-        <div class="offset-item">
-          <label class="offset-label" for="vertical-offset-slider">Vertical Offset:</label>
-          <input type="range" class="offset-slider" id="vertical-offset-slider" min="-0.9" max="0.9" step="0.01" value="-0.25">
-          <div class="offset-value" id="vertical-offset-value">-0.5</div>
-        </div>
-      </div>
-      
-      <!-- Third row: Marker controls -->
-      <div id="marker-controls">
-        <div class="marker-toggle">
-          <label for="markers-enabled">Show Markers</label>
-          <input type="checkbox" id="markers-enabled" checked>
-        </div>
-        <div class="marker-item">
-          <label class="marker-label" for="marker-fade-slider">Fade Strength:</label>
-          <input type="range" class="marker-slider" id="marker-fade-slider" min="0" max="1" step="0.1" value="0.25">
-          <div class="marker-value" id="marker-fade-value">0.25</div>
-        </div>
-        <div class="marker-item">
-          <label class="marker-label" for="marker-scale-slider">Icon Scale:</label>
-          <input type="range" class="marker-slider" id="marker-scale-slider" min="0.5" max="2" step="0.1" value="1.0">
-          <div class="marker-value" id="marker-scale-value">1.0</div>
-        </div>
-      </div>
-      
-      <div id="floor-info">Current: Floor Y16. Perspective view: showing layers 0-16 + preview of Y17.</div>
-    </div>
+    <h2>Map Information</h2>
+    <div id="floor-info">Use Q and E to change floors. Use WASD to pan the map.</div>
     <div id="marker-info"><em>Select a marker for details.</em></div>
+    
+    <!-- Hidden controls for sync functionality -->
+    <div style="display: none;">
+      <select id="floor-selector">
+        <option value="0">Floor Y0</option>
+        <option value="1">Floor Y1</option>
+        <option value="2">Floor Y2</option>
+        <option value="3">Floor Y3</option>
+        <option value="4">Floor Y4</option>
+        <option value="5">Floor Y5</option>
+        <option value="6">Floor Y6</option>
+        <option value="7">Floor Y7</option>
+        <option value="8">Floor Y8</option>
+        <option value="9">Floor Y9</option>
+        <option value="10">Floor Y10</option>
+        <option value="11">Floor Y11</option>
+        <option value="12">Floor Y12</option>
+        <option value="13">Floor Y13</option>
+        <option value="14">Floor Y14</option>
+        <option value="15">Floor Y15</option>
+        <option value="16" selected>Floor Y16</option>
+        <option value="17">Floor Y17</option>
+        <option value="18">Floor Y18</option>
+        <option value="19">Floor Y19</option>
+        <option value="20">Floor Y20</option>
+        <option value="21">Floor Y21</option>
+        <option value="22">Floor Y22</option>
+        <option value="23">Floor Y23</option>
+        <option value="24">Floor Y24</option>
+        <option value="25">Floor Y25</option>
+        <option value="26">Floor Y26</option>
+        <option value="27">Floor Y27</option>
+        <option value="28">Floor Y28</option>
+        <option value="29">Floor Y29</option>
+        <option value="30">Floor Y30</option>
+        <option value="31">Floor Y31</option>
+      </select>
+      <input type="range" id="dim-strength-slider" min="0" max="4" step="0.1" value="0.5">
+      <div id="dim-strength-value">0.5 (10% per level below)</div>
+      <input type="range" id="horizontal-offset-slider" min="-0.5" max="0.5" step="0.01" value="-0.25">
+      <div id="horizontal-offset-value">-0.5</div>
+      <input type="range" id="vertical-offset-slider" min="-0.9" max="0.9" step="0.01" value="-0.25">
+      <div id="vertical-offset-value">-0.5</div>
+      <input type="checkbox" id="markers-enabled" checked>
+      <input type="range" id="marker-fade-slider" min="0" max="1" step="0.1" value="0.25">
+      <div id="marker-fade-value">0.25</div>
+      <input type="range" id="marker-scale-slider" min="0.5" max="2" step="0.1" value="1.0">
+      <div id="marker-scale-value">1.0</div>
+    </div>
   </div>
 </div>
 
@@ -587,7 +627,7 @@ function updateFloorVisibility(selectedFloor) {
   
   // Update info text
   const floorInfo = document.getElementById('floor-info');
-  floorInfo.textContent = '';//`Current: Floor Y${selectedFloor}. Perspective view: showing layers ${selectedFloorNum === 0 ? '0' : '0-' + selectedFloorNum} + preview of Y${selectedFloorNum + 1}.`;
+  //floorInfo.textContent = '';//`Current: Floor Y${selectedFloor}. Perspective view: showing layers ${selectedFloorNum === 0 ? '0' : '0-' + selectedFloorNum} + preview of Y${selectedFloorNum + 1}.`;
   
   currentSelectedFloor = selectedFloor;
   // Update marker visibility for the new floor
@@ -644,18 +684,34 @@ function updateMarkerVisibility(selectedFloor) {
 // Initialize floors
 initializeFloors();
 
-// Set up floor selector event handler
-document.getElementById('floor-selector').addEventListener('change', function(e) {
-  updateFloorVisibility(e.target.value);
-});
+// Set up floor selector event handlers (both top panel and info panel)
+function setupFloorSelectorHandler(selectorId) {
+  document.getElementById(selectorId).addEventListener('change', function(e) {
+    updateFloorVisibility(e.target.value);
+    // Sync both selectors
+    const otherSelector = selectorId === 'floor-selector' ? 'floor-selector-top' : 'floor-selector';
+    document.getElementById(otherSelector).value = e.target.value;
+  });
+}
+setupFloorSelectorHandler('floor-selector');
+setupFloorSelectorHandler('floor-selector-top');
 
-// Set up dim strength slider event handler
-document.getElementById('dim-strength-slider').addEventListener('input', function(e) {
-  dimStrength = parseFloat(e.target.value);
-  document.getElementById('dim-strength-value').textContent = `${dimStrength} (${(dimStrength + 1) * 10}% per level below)`;
-  // Refresh the current floor visibility to apply new dim strength
-  updateFloorVisibility(currentSelectedFloor);
-});
+// Set up dim strength slider event handlers (both top panel and info panel)
+function setupDimStrengthHandler(sliderId, valueId) {
+  document.getElementById(sliderId).addEventListener('input', function(e) {
+    dimStrength = parseFloat(e.target.value);
+    if (valueId) {
+      document.getElementById(valueId).textContent = `${dimStrength} (${(dimStrength + 1) * 10}% per level below)`;
+    }
+    // Sync both sliders
+    const otherSlider = sliderId === 'dim-strength-slider' ? 'dim-strength-slider-top' : 'dim-strength-slider';
+    document.getElementById(otherSlider).value = dimStrength;
+    // Refresh the current floor visibility to apply new dim strength
+    updateFloorVisibility(currentSelectedFloor);
+  });
+}
+setupDimStrengthHandler('dim-strength-slider', 'dim-strength-value');
+setupDimStrengthHandler('dim-strength-slider-top', null);
 
 // Update all marker positions based on current floor offsets
 function updateAllMarkerPositions() {
@@ -676,41 +732,82 @@ function updateAllMarkerPositions() {
   });
 }
 
-// Set up offset slider event handlers
-document.getElementById('horizontal-offset-slider').addEventListener('input', function(e) {
-  horizontalOffsetMultiplier = parseFloat(e.target.value);
-  document.getElementById('horizontal-offset-value').textContent = horizontalOffsetMultiplier.toFixed(2);
-  updateFloorPositions();
-  updateAllMarkerPositions();
-});
+// Set up offset slider event handlers (both top panel and info panel)
+function setupOffsetHandler(sliderId, valueId, property) {
+  document.getElementById(sliderId).addEventListener('input', function(e) {
+    const value = parseFloat(e.target.value);
+    if (property === 'horizontal') {
+      horizontalOffsetMultiplier = value;
+    } else {
+      verticalOffsetMultiplier = value;
+    }
+    
+    if (valueId) {
+      document.getElementById(valueId).textContent = value.toFixed(2);
+    }
+    
+    // Sync both sliders
+    const otherSlider = sliderId.includes('-top') ? 
+      sliderId.replace('-top', '') : 
+      sliderId + '-top';
+    document.getElementById(otherSlider).value = value;
+    
+    updateFloorPositions();
+    updateAllMarkerPositions();
+  });
+}
 
-document.getElementById('vertical-offset-slider').addEventListener('input', function(e) {
-  verticalOffsetMultiplier = parseFloat(e.target.value);
-  document.getElementById('vertical-offset-value').textContent = verticalOffsetMultiplier.toFixed(2);
-  updateFloorPositions();
-  updateAllMarkerPositions();
-});
+setupOffsetHandler('horizontal-offset-slider', 'horizontal-offset-value', 'horizontal');
+setupOffsetHandler('horizontal-offset-slider-top', null, 'horizontal');
+setupOffsetHandler('vertical-offset-slider', 'vertical-offset-value', 'vertical');
+setupOffsetHandler('vertical-offset-slider-top', null, 'vertical');
 
-// Set up marker control slider event handlers
-document.getElementById('markers-enabled').addEventListener('change', function(e) {
-  markersEnabled = e.target.checked;
-  // Refresh marker visibility to show/hide all markers
-  updateMarkerVisibility(currentSelectedFloor);
-});
+// Set up marker control event handlers (both top panel and info panel)
+function setupMarkerToggleHandler(checkboxId) {
+  document.getElementById(checkboxId).addEventListener('change', function(e) {
+    markersEnabled = e.target.checked;
+    // Sync both checkboxes
+    const otherCheckbox = checkboxId === 'markers-enabled' ? 'markers-enabled-top' : 'markers-enabled';
+    document.getElementById(otherCheckbox).checked = markersEnabled;
+    // Refresh marker visibility to show/hide all markers
+    updateMarkerVisibility(currentSelectedFloor);
+  });
+}
 
-document.getElementById('marker-fade-slider').addEventListener('input', function(e) {
-  markerFadeStrength = parseFloat(e.target.value);
-  document.getElementById('marker-fade-value').textContent = markerFadeStrength.toFixed(1);
-  // Refresh marker visibility to apply new fade strength
-  updateMarkerVisibility(currentSelectedFloor);
-});
+function setupMarkerSliderHandler(sliderId, valueId, property) {
+  document.getElementById(sliderId).addEventListener('input', function(e) {
+    const value = parseFloat(e.target.value);
+    
+    if (property === 'fade') {
+      markerFadeStrength = value;
+      if (valueId) {
+        document.getElementById(valueId).textContent = value.toFixed(1);
+      }
+      // Sync both sliders
+      const otherSlider = sliderId === 'marker-fade-slider' ? 'marker-fade-slider-top' : 'marker-fade-slider';
+      document.getElementById(otherSlider).value = value;
+      // Refresh marker visibility to apply new fade strength
+      updateMarkerVisibility(currentSelectedFloor);
+    } else if (property === 'scale') {
+      markerIconScale = value;
+      if (valueId) {
+        document.getElementById(valueId).textContent = value.toFixed(1);
+      }
+      // Sync both sliders
+      const otherSlider = sliderId === 'marker-scale-slider' ? 'marker-scale-slider-top' : 'marker-scale-slider';
+      document.getElementById(otherSlider).value = value;
+      // Update all marker scales
+      updateAllMarkerScales();
+    }
+  });
+}
 
-document.getElementById('marker-scale-slider').addEventListener('input', function(e) {
-  markerIconScale = parseFloat(e.target.value);
-  document.getElementById('marker-scale-value').textContent = markerIconScale.toFixed(1);
-  // Update all marker scales
-  updateAllMarkerScales();
-});
+setupMarkerToggleHandler('markers-enabled');
+setupMarkerToggleHandler('markers-enabled-top');
+setupMarkerSliderHandler('marker-fade-slider', 'marker-fade-value', 'fade');
+setupMarkerSliderHandler('marker-fade-slider-top', null, 'fade');
+setupMarkerSliderHandler('marker-scale-slider', 'marker-scale-value', 'scale');
+setupMarkerSliderHandler('marker-scale-slider-top', null, 'scale');
 
 // Function to update all marker icon scales
 function updateAllMarkerScales() {
@@ -826,7 +923,7 @@ map.on('mousemove', function(e) {
   overlayDiv.innerText = `X: ${realCoords.x}, Y: ${realCoords.y}`;
 });
 // Update mouse coordinates in top panel
-const mouseCoordsDiv = document.getElementById('mouse-coords');
+const mouseCoordsDiv = document.getElementById('coords-display');
 map.on('mousemove', function(e) {
   // e.latlng gives [y, x] in map CRS
   const mapX = Math.round(e.latlng.lng);
@@ -865,16 +962,55 @@ function showInfoPanel(key) {
   const info = infoData[key];
   if (!info) return;
   const panel = document.getElementById('marker-info');
-  // Replace newlines with <br> for proper line breaks
-  const descHtml = info.description.replace(/\n/g, '<br>');
-  let mp4html = "";
-  if (info.shortDesc.includes("monster")){
-    mp4html = `<video width="80" height="80" autoplay nocontrols loop muted>
-      <source src="Monsters/${info.title.replace(" ","")}.mp4" type="video/mp4">
+  
+  // Check if this is a monster and lookup data
+  let monsterData = null;
+  if (info.shortDesc.includes("monster") && window.monsters) {
+    monsterData = window.monsters.find(monster => 
+      monster[1].toLowerCase() === info.title.toLowerCase()
+    );
+  }
+  
+  // Create preview content
+  let previewHtml = "";
+  if (info.shortDesc.includes("monster")) {
+    previewHtml = `<video width="80" height="80" autoplay nocontrols loop muted>
+      <source src="Monsters/${info.title.replace(/ /g,"")}.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>`;
+  } else {
+    previewHtml = `<img src="${info.iconName}" alt="${info.title}" class="preview-icon">`;
   }
-  panel.innerHTML = `<h2>${info.title}</h2>${mp4html}<p style="white-space:pre-line;">${descHtml}</p><p><b>Coordinates:</b>${info.coordinates.x}, ${info.coordinates.y}, ${info.coordinates.z}<br>${info.fullDesc || ""}</p>`;
+  
+  // Create creature stats if monster data is available
+  let statsHtml = "";
+  if (monsterData) {
+    const hp = monsterData[4];
+    const xp = monsterData[5];
+    statsHtml = `<div class="creature-stats"><strong>HP:</strong> ${hp}<br><strong>XP:</strong> ${xp}</div>`;
+  }
+  
+  // Create coordinates
+  const coordinatesHtml = `<div class="coordinates"><strong>Coordinates:</strong> ${info.coordinates.x}, ${info.coordinates.y}, ${info.coordinates.z}</div>`;
+  
+  // Replace newlines with <br> for proper line breaks
+  const descHtml = info.description.replace(/\n/g, '<br>');
+  
+  // Build the panel content with two-column layout
+  panel.innerHTML = `
+    <h2>${info.title}</h2>
+    <div class="marker-content">
+      <div class="marker-left">
+        ${statsHtml}
+        <div style="white-space:pre-line;">${descHtml}</div>
+        ${coordinatesHtml}
+        ${info.fullDesc ? `<div style="margin-top: 8px;">${info.fullDesc}</div>` : ""}
+      </div>
+      <div class="marker-right">
+        ${previewHtml}
+      </div>
+    </div>
+  `;
 }
 function addCustomMarker(iconName, realX, realY, realZ, title, shortDesc, fullDesc) {
   //Tranform real Coords to map Coords
@@ -892,7 +1028,7 @@ function addCustomMarker(iconName, realX, realY, realZ, title, shortDesc, fullDe
   };
   
   // Debug: Log the coordinates to see what's happening
-  console.log(`Marker ${title}: realCoords(${realX},${realY},${realZ}) -> baseMap(${baseMapCoords.x},${baseMapCoords.y}) -> offset(${floorOffset.x},${floorOffset.y}) -> final(${adjustedMapCoords.x},${adjustedMapCoords.y}) floor:${floorNumber}`);
+  //console.log(`Marker ${title}: realCoords(${realX},${realY},${realZ}) -> baseMap(${baseMapCoords.x},${baseMapCoords.y}) -> offset(${floorOffset.x},${floorOffset.y}) -> final(${adjustedMapCoords.x},${adjustedMapCoords.y}) floor:${floorNumber}`);
   
   // Create custom icon with configurable scale
   const scaledSize = Math.round(32 * markerIconScale);
@@ -920,6 +1056,7 @@ function addCustomMarker(iconName, realX, realY, realZ, title, shortDesc, fullDe
   const infoKey = `${title}_${realX}_${realY}`;
   infoData[infoKey] = {
     title: title,
+    iconName: iconName,
     shortDesc: shortDesc,
     description: fullDesc,
     coordinates: { x: realX, y: realY, z: realZ, floor: floorNumber }
@@ -1703,7 +1840,7 @@ addCustomMarker("MonsterIcons/Sunskin.png", -286, 17, -92, 'Sunskin', '940 (mons
 addCustomMarker("MonsterIcons/Skeleton.png", -283, 16, -85, 'Skeleton', '435 (monster).', " ");
 addCustomMarker("MonsterIcons/Skeleton.png", -278, 16, -85, 'Skeleton', '435 (monster).', " ");
 addCustomMarker("MonsterIcons/Sunskin.png", -276, 17, -92, 'Sunskin', '940 (monster).', " ");
-addCustomMarker("Icons/target.png", -274, 14, 167, 'Unknown(660)', '660 (unknown).', " ");
+addCustomMarker("Icons/npc.png", -274, 14, 167, 'Merida', '660 (npc).', " ");
 addCustomMarker("Icons/dummy.png", -286, 14, 181, 'Battle Dummy', '1042 (dummy).', " ");
 addCustomMarker("Icons/dummy.png", -286, 14, 184, 'Battle Dummy', '1042 (dummy).', " ");
 addCustomMarker("Icons/dummy.png", -286, 14, 187, 'Battle Dummy', '1042 (dummy).', " ");
@@ -1813,7 +1950,7 @@ addCustomMarker("MonsterIcons/ViscidGoblin.png", -297, 1, 120, 'Viscid Goblin', 
 addCustomMarker("MonsterIcons/Rat.png", -292, 8, 121, 'Rat', '434 (monster).', " ");
 addCustomMarker("MonsterIcons/Rat.png", -290, 8, 119, 'Rat', '434 (monster).', " ");
 addCustomMarker("MonsterIcons/Rat.png", -290, 8, 122, 'Rat', '434 (monster).', " ");
-addCustomMarker("Icons/target.png", -293, 14, 138, 'Unknown(1035)', '1035 (unknown).', " ");
+addCustomMarker("Icons/npc.png", -293, 14, 138, 'Margery', '1035 (npc).', " ");
 addCustomMarker("MonsterIcons/Goblin.png", -290, 6, 131, 'Goblin', '432 (monster).', " ");
 addCustomMarker("MonsterIcons/ViscidGoblin.png", -297, 5, 147, 'Viscid Goblin', '467 (monster).', " ");
 addCustomMarker("MonsterIcons/Plea.png", -9, 2, -2, 'Plea', '96 (monster).', " ");
@@ -3483,7 +3620,7 @@ addCustomMarker("MonsterIcons/Profaner.png", 146, 6, 115, 'Profaner', '988 (mons
 addCustomMarker("MonsterIcons/Minotaur.png", 152, 2, 113, 'Minotaur', '438 (monster).', " ");
 addCustomMarker("MonsterIcons/Digger.png", 159, 2, 132, 'Digger', '439 (monster).', " ");
 addCustomMarker("MonsterIcons/CaveTroll.png", 146, 6, 156, 'Cave Troll', '464 (monster).', " ");
-
+updateFloorVisibility(16);
 </script>
 </body>
 </html>
