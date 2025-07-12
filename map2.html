@@ -138,7 +138,7 @@ body, html {
 }
 #floor-info {
   margin-bottom: 16px;
-  font-size: 0.9em;
+  font-size: 1.5em;
   color: #ccc;
   font-style: italic;
   padding: 12px;
@@ -839,12 +839,18 @@ map.fitBounds(imageBounds);
 let keysPressed = {};
 
 // WASD movement - smooth continuous movement
-const moveSpeed = 2; // pixels per frame
+const baseMoveSpeed = 2; // base pixels per frame
 let animationId = null;
 
 function smoothMovement() {
   let moveX = 0;
   let moveY = 0;
+  
+  // Adjust movement speed based on zoom level
+  // At lower zoom levels (zoomed out), we need smaller movements
+  const currentZoom = map.getZoom();
+  const zoomFactor = Math.pow(2, currentZoom - 10); // Normalize around zoom level 10
+  const moveSpeed = baseMoveSpeed / Math.max(zoomFactor, 0.1); // Prevent division by zero
   
   if (keysPressed['w']) moveY += moveSpeed;
   if (keysPressed['s']) moveY -= moveSpeed;
