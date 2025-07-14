@@ -47,6 +47,10 @@ body, html {
   font-size: 0.9em;
   box-sizing: border-box;
   gap: 16px;
+  position: relative;
+  z-index: 10000;
+  top: 0;
+  left: 0;
 }
 
 #top-nav-container {
@@ -105,12 +109,16 @@ body, html {
 #main-panel {
   display: flex;
   width: 100vw;
-  height: calc(100vh - 60px);
+  height: 100vh;
+  padding-top: 60px;
+  box-sizing: border-box;
+  position: relative;
 }
 #map-container {
   width: 70vw;
   height: 100%;
   position: relative;
+  z-index: 1;
 }
 #map {
   width: 100% !important;
@@ -249,6 +257,103 @@ body, html {
   image-rendering: crisp-edges;
 }
 
+/* Performance optimizations for Chrome/Opera */
+.leaflet-layer {
+  will-change: transform;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+.leaflet-tile-container {
+  transform: translateZ(0);
+}
+
+.leaflet-marker-icon {
+  transform: translateZ(0);
+  will-change: opacity, filter;
+}
+
+/* Reduce repaints and reflows */
+#map {
+  contain: layout style paint;
+}
+
+/* Hardware acceleration for smoother animations */
+.leaflet-zoom-animated {
+  transform: translateZ(0);
+}
+
+/* Chrome/Opera specific fixes */
+#top-panel * {
+  z-index: inherit;
+}
+
+/* Ensure top panel stays above all Leaflet elements */
+.leaflet-pane {
+  z-index: 1 !important;
+}
+
+.leaflet-map-pane {
+  z-index: 1 !important;
+}
+
+.leaflet-control-container {
+  z-index: 100 !important;
+}
+
+.leaflet-control {
+  z-index: 100 !important;
+}
+
+/* Fix for iframe compatibility in Chrome/Opera */
+body {
+  position: relative;
+  z-index: 1;
+}
+
+#top-panel {
+  position: fixed !important;
+  z-index: 999999 !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 60px !important;
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Additional z-index protection for all top panel elements */
+#top-panel,
+#top-panel *,
+#top-nav-container,
+#top-nav-container *,
+.nav-item,
+.nav-item *,
+.nav-label,
+.nav-slider,
+.nav-checkbox,
+.nav-value {
+  z-index: 999999 !important;
+  position: relative;
+}
+
+/* Prevent any interference with top panel visibility */
+#top-panel {
+  transform: none !important;
+  clip: none !important;
+  clip-path: none !important;
+  mask: none !important;
+  filter: none !important;
+}
+
+/* Ensure map doesn't interfere with top panel */
+#map {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
 /* Disable image blurring for sharp pixel rendering */
 .leaflet-image-layer, .leaflet-layer img {
   image-rendering: -moz-crisp-edges;
@@ -349,6 +454,12 @@ body, html {
       <span class="nav-label">Icon Scale:</span>
       <input type="range" class="nav-slider" id="marker-scale-slider-top" min="0.5" max="2" step="0.1" value="1.0">
     </div>
+    
+    <div class="nav-item">
+      <span class="nav-label">Marker Range:</span>
+      <input type="range" class="nav-slider" id="max-floors-slider-top" min="0" max="6" step="1" value="1">
+      <span class="nav-value" id="max-floors-value-top">1 marker floor below</span>
+    </div>
   </div>
   
 </div>
@@ -408,11 +519,99 @@ body, html {
       <div id="marker-fade-value">0.25</div>
       <input type="range" id="marker-scale-slider" min="0.5" max="2" step="0.1" value="1.0">
       <div id="marker-scale-value">1.0</div>
+      <input type="range" id="max-floors-slider" min="0" max="6" step="1" value="1">
+      <div id="max-floors-value">1 marker floor below</div>
     </div>
   </div>
 </div>
 
 <script>
+  // Define critical functions first to avoid undefined errors
+  function ensureTopPanelVisibility() {
+    // Fix iframe height if we're in an iframe
+    if (window.self !== window.top) {
+      try {
+        const iframe = window.parent.document.getElementById('content-frame');
+        if (iframe) {
+          // Force iframe height to 100vh
+          iframe.style.height = '100vh';
+          console.log('Fixed iframe height to 100vh');
+        }
+      } catch (e) {
+        // Cross-origin restriction, try alternative approach
+        console.log('Cross-origin iframe detected, using alternative approach');
+        // Send message to parent to fix iframe height
+        window.parent.postMessage({
+          type: 'fix-iframe-height',
+          iframeId: 'content-frame'
+        }, '*');
+      }
+    }
+    
+    const topPanel = document.getElementById('top-panel');
+    if (topPanel) {
+      // Check current position before fixing
+      const rect = topPanel.getBoundingClientRect();
+      const computedStyle = getComputedStyle(topPanel);
+      
+      // Log detailed positioning info if panel is not at top-left
+      if (rect.top !== 0 || rect.left !== 0) {
+        console.log('Top panel position issue detected:', {
+          rect: { top: rect.top, left: rect.left, width: rect.width, height: rect.height },
+          style: {
+            position: computedStyle.position,
+            top: computedStyle.top,
+            left: computedStyle.left,
+            transform: computedStyle.transform,
+            zIndex: computedStyle.zIndex
+          }
+        });
+      }
+      
+      // Force the panel to stay within viewport bounds
+      topPanel.style.position = 'fixed';
+      topPanel.style.zIndex = '2147483647';
+      topPanel.style.top = '0px';
+      topPanel.style.left = '0px';
+      topPanel.style.right = 'auto';
+      topPanel.style.bottom = 'auto';
+      topPanel.style.display = 'flex';
+      topPanel.style.visibility = 'visible';
+      topPanel.style.opacity = '1';
+      topPanel.style.pointerEvents = 'auto';
+      topPanel.style.width = '100vw';
+      topPanel.style.height = '60px';
+      topPanel.style.transform = 'none';
+      topPanel.style.margin = '0';
+      topPanel.style.padding = '0 16px';
+      topPanel.style.background = '#222';
+      topPanel.style.color = '#fff';
+    } else {
+      console.warn('Top panel element not found!');
+    }
+  }
+
+  // Browser detection and performance optimization
+  const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+  const isOpera = (!!window.opr && !!opr.addons) || !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+  const isFirefox = typeof InstallTrigger !== 'undefined';
+  
+  // Performance mode for Chrome/Opera
+  const usePerformanceMode = isChrome || isOpera;
+  
+  // Adjust rendering settings based on browser
+  let renderingConfig = {
+    useRequestAnimationFrame: true,
+    batchDOMUpdates: usePerformanceMode,
+    throttleAnimations: usePerformanceMode,
+    debounceTime: usePerformanceMode ? 16 : 10,
+    maxConcurrentOperations: usePerformanceMode ? 10 : 20
+  };
+  
+  console.log(`Browser detected: ${isChrome ? 'Chrome' : isOpera ? 'Opera' : isFirefox ? 'Firefox' : 'Other'}, Performance mode: ${usePerformanceMode}`);
+  console.log('User agent:', navigator.userAgent);
+  console.log('Vendor:', navigator.vendor);
+
   // Image size in pixels (e.g., 4000x3000)
   const imageWidth = 4000;
   const imageHeight = 4000;
@@ -436,6 +635,7 @@ let verticalOffsetMultiplier = -0.5; // 0 to 0.5
 let markerFadeStrength = 0.25; // Default marker fade strength (25% per level)
 let markerIconScale = 1.0; // Default marker icon scale (100%)
 let markersEnabled = true; // Whether markers are shown at all
+let maxFloorsBelow = 1; // Maximum number of floors below current to show MARKERS (performance setting)
 
 // Calculate floor bounds with configurable offsets
 function calculateFloorBounds(floorNum) {
@@ -550,84 +750,98 @@ function initializeFloors() {
 }
 
 // Update floor visibility based on selected floor
+let updateFloorVisibilityTimeout = null;
 function updateFloorVisibility(selectedFloor) {
+  // Debounce rapid calls to prevent performance issues in Chrome/Opera
+  if (updateFloorVisibilityTimeout) {
+    clearTimeout(updateFloorVisibilityTimeout);
+  }
+  
+  updateFloorVisibilityTimeout = setTimeout(() => {
+    updateFloorVisibilityImmediate(selectedFloor);
+  }, renderingConfig.debounceTime); // Use configurable debounce time
+}
+
+function updateFloorVisibilityImmediate(selectedFloor) {
   const selectedFloorNum = parseInt(selectedFloor);
+  
+  // Batch DOM operations for better performance
+  const layersToAdd = [];
+  const layersToRemove = [];
+  const styleUpdates = [];
   
   // Remove all layers first
   Object.keys(floors).forEach(floorNum => {
     const overlay = floors[floorNum];
     const copyOverlay = floorCopies[floorNum];
     if (map.hasLayer(overlay)) {
-      map.removeLayer(overlay);
+      layersToRemove.push(overlay);
     }
     if (map.hasLayer(copyOverlay)) {
-      map.removeLayer(copyOverlay);
+      layersToRemove.push(copyOverlay);
     }
   });
   
-  // Add layers according to perspective rules
+  // Remove layers in batch
+  layersToRemove.forEach(layer => map.removeLayer(layer));
+  
+  // Prepare layers to add and their styles
   Object.keys(floors).forEach(floorNum => {
     const floorNumber = parseInt(floorNum);
     const overlay = floors[floorNum];
     const copyOverlay = floorCopies[floorNum];
     
     if (floorNumber <= selectedFloorNum) {
-      // Show main version (with its own offset)
-      overlay.addTo(map);
+      // Main version
+      layersToAdd.push(overlay);
       
-      setTimeout(() => {
-        const element = overlay.getElement();
-        if (element) {
-          if (floorNumber < selectedFloorNum) {
-            const levelDifference = dimStrength * 1 + (selectedFloorNum - floorNumber) * dimStrength;
-            const darkeningAmount = Math.min(levelDifference * 10, 90);
-            element.style.filter = `brightness(${100 - darkeningAmount}%)`;
-          } else {
-            element.style.filter = 'brightness(100%)';
-          }
-          // Set z-index for proper stacking - main floors
-          element.style.zIndex = floorNumber * 10;
-        }
-      }, 10);
+      const brightness = floorNumber < selectedFloorNum ? 
+        Math.max(10, 100 - Math.min((dimStrength * 1 + (selectedFloorNum - floorNumber) * dimStrength) * 10, 90)) :
+        100;
       
-      // Show copy version (with offset of one level lower) for layers 1 and above
+      styleUpdates.push({
+        overlay: overlay,
+        filter: `brightness(${brightness}%)`,
+        zIndex: floorNumber * 10
+      });
+      
+      // Copy version for layers 1 and above
       if (floorNumber >= 1) {
-        copyOverlay.addTo(map);
-        
-        setTimeout(() => {
-          const element = copyOverlay.getElement();
-          if (element) {
-            if (floorNumber < selectedFloorNum) {
-              const levelDifference = dimStrength * 1 + (selectedFloorNum - floorNumber) * dimStrength;
-              const darkeningAmount = Math.min(levelDifference * 10, 90);
-              element.style.filter = `brightness(${100 - darkeningAmount}%)`;
-            } else {
-              element.style.filter = 'brightness(100%)';
-            }
-            // Set z-index for proper stacking - copy layers between main layers
-            element.style.zIndex = floorNumber * 10 + 5;
-          }
-        }, 10);
+        layersToAdd.push(copyOverlay);
+        styleUpdates.push({
+          overlay: copyOverlay,
+          filter: `brightness(${brightness}%)`,
+          zIndex: floorNumber * 10 + 5
+        });
       }
     }
     
     // Show the copy of the layer one level above the selected layer
     if (floorNumber === selectedFloorNum + 1) {
-      copyOverlay.addTo(map);
-      
-      setTimeout(() => {
-        const element = copyOverlay.getElement();
-        if (element) {
-          element.style.filter = 'brightness(100%)';
-          element.style.zIndex = floorNumber * 10 + 5;
-        }
-      }, 10);
+      layersToAdd.push(copyOverlay);
+      styleUpdates.push({
+        overlay: copyOverlay,
+        filter: 'brightness(100%)',
+        zIndex: floorNumber * 10 + 5
+      });
     }
   });
   
-  // Update info text
-  const floorInfo = document.getElementById('floor-info');
-  //floorInfo.textContent = '';//`Current: Floor Y${selectedFloor}. Perspective view: showing layers ${selectedFloorNum === 0 ? '0' : '0-' + selectedFloorNum} + preview of Y${selectedFloorNum + 1}.`;
+  // Add layers in batch
+  layersToAdd.forEach(layer => layer.addTo(map));
+  
+  // Apply styles using requestAnimationFrame for better performance
+  if (styleUpdates.length > 0) {
+    requestAnimationFrame(() => {
+      styleUpdates.forEach(update => {
+        const element = update.overlay.getElement();
+        if (element) {
+          element.style.filter = update.filter;
+          element.style.zIndex = update.zIndex;
+        }
+      });
+    });
+  }
   
   currentSelectedFloor = selectedFloor;
   // Update marker visibility for the new floor
@@ -635,50 +849,88 @@ function updateFloorVisibility(selectedFloor) {
 }
 
 // Update marker visibility based on selected floor
+let updateMarkerVisibilityTimeout = null;
 function updateMarkerVisibility(selectedFloor) {
+  // Debounce rapid calls
+  if (updateMarkerVisibilityTimeout) {
+    clearTimeout(updateMarkerVisibilityTimeout);
+  }
+  
+  updateMarkerVisibilityTimeout = setTimeout(() => {
+    updateMarkerVisibilityImmediate(selectedFloor);
+  }, renderingConfig.debounceTime);
+}
+
+function updateMarkerVisibilityImmediate(selectedFloor) {
   const selectedFloorNum = parseInt(selectedFloor);
+  
+  // Batch operations for better performance
+  const markersToAdd = [];
+  const markersToRemove = [];
+  const markerStyleUpdates = [];
   
   markers.forEach(marker => {
     const floorDifference = selectedFloorNum - marker.floorNumber;
     
-    if (markersEnabled && floorDifference >= 0 && floorDifference <= 6) {
-      // Show markers for current floor and up to 3 levels below
+    if (markersEnabled && floorDifference >= 0 && floorDifference <= maxFloorsBelow) {
+      // Show markers for current floor and up to maxFloorsBelow levels below
       if (!map.hasLayer(marker)) {
-        map.addLayer(marker);
+        markersToAdd.push(marker);
       }
       
-      // Apply fading based on floor difference
-      const markerElement = marker.getElement();
-      if (markerElement) {
-        markerElement.style.filter = '';
-        if (floorDifference === 0) {
-          // Current floor - full opacity
-          markerElement.style.opacity = '1.0';
-          markerElement.style.filter = ' drop-shadow(1px 1px 2px #ffffff) drop-shadow(-1px -1px 2px #ffffff)';
+      // Prepare style updates
+      let opacity, filter;
+      if (floorDifference === 0) {
+        // Current floor - full opacity
+        opacity = '1.0';
+        filter = 'drop-shadow(1px 1px 2px #ffffff) drop-shadow(-1px -1px 2px #ffffff)';
+      } else {
+        // Lower floors - fade out progressively using configurable fade strength
+        const calculatedOpacity = 1.0 - (floorDifference * markerFadeStrength);
+        const brightness = 100 - (floorDifference * (markerFadeStrength * 100));
+        opacity = Math.max(0.1, calculatedOpacity).toString();
+        
+        let saturation;
+        if (floorDifference > 1) {
+          saturation = 'saturate(0%)';
+        } else if (floorDifference == 1) {
+          saturation = 'saturate(50%)';
         } else {
-          // Lower floors - fade out progressively using configurable fade strength
-          const opacity = 1.0 - (floorDifference * markerFadeStrength);
-          const brightness = 100 - (floorDifference * (markerFadeStrength * 100));
-          markerElement.style.opacity = Math.max(0.1, opacity).toString(); // Minimum 10% opacity
-          markerElement.style.filter = `brightness(${Math.max(20, brightness)}%) drop-shadow(1px 1px 2px #ffffff) drop-shadow(-1px -1px 2px #ffffff)`;
-          if(floorDifference > 1){
-            markerElement.style.filter += ` saturate(0%) drop-shadow(1px 1px 2px #ffffff)`; // Contrast reduction
-          }
-          else if(floorDifference == 1){
-            markerElement.style.filter += ` saturate(50%) drop-shadow(1px 1px 2px #ffffff)`; // Contrast reduction
-          }
-          else{
-            markerElement.style.filter += ` saturate(100%)`; // Saturation reduction
-          }
+          saturation = 'saturate(100%)';
         }
+        
+        filter = `brightness(${Math.max(20, brightness)}%) ${saturation} drop-shadow(1px 1px 2px #ffffff) drop-shadow(-1px -1px 2px #ffffff)`;
       }
+      
+      markerStyleUpdates.push({
+        marker: marker,
+        opacity: opacity,
+        filter: filter
+      });
     } else {
       // Hide markers from other floors
       if (map.hasLayer(marker)) {
-        map.removeLayer(marker);
+        markersToRemove.push(marker);
       }
     }
   });
+  
+  // Apply changes in batches
+  markersToAdd.forEach(marker => map.addLayer(marker));
+  markersToRemove.forEach(marker => map.removeLayer(marker));
+  
+  // Apply style updates using requestAnimationFrame
+  if (markerStyleUpdates.length > 0) {
+    requestAnimationFrame(() => {
+      markerStyleUpdates.forEach(update => {
+        const markerElement = update.marker.getElement();
+        if (markerElement) {
+          markerElement.style.opacity = update.opacity;
+          markerElement.style.filter = update.filter;
+        }
+      });
+    });
+  }
 }
 
 // Initialize floors
@@ -712,6 +964,30 @@ function setupDimStrengthHandler(sliderId, valueId) {
 }
 setupDimStrengthHandler('dim-strength-slider', 'dim-strength-value');
 setupDimStrengthHandler('dim-strength-slider-top', null);
+
+// Set up max floors slider event handlers (for marker visibility range)
+function setupMaxFloorsHandler(sliderId, valueId) {
+  document.getElementById(sliderId).addEventListener('input', function(e) {
+    maxFloorsBelow = parseInt(e.target.value);
+    if (valueId) {
+      document.getElementById(valueId).textContent = `${maxFloorsBelow} marker floors below`;
+    }
+    // Sync both sliders
+    const otherSlider = sliderId === 'max-floors-slider' ? 'max-floors-slider-top' : 'max-floors-slider';
+    document.getElementById(otherSlider).value = maxFloorsBelow;
+    // Update value display for top slider
+    const otherValueId = sliderId === 'max-floors-slider' ? 'max-floors-value-top' : 'max-floors-value';
+    const otherValueElement = document.getElementById(otherValueId);
+    if (otherValueElement) {
+      otherValueElement.textContent = maxFloorsBelow;
+    }
+    // Refresh marker visibility to apply new range setting
+    updateMarkerVisibility(currentSelectedFloor);
+    console.log(`Marker visibility range set to: ${maxFloorsBelow} floors below current floor`);
+  });
+}
+setupMaxFloorsHandler('max-floors-slider', 'max-floors-value');
+setupMaxFloorsHandler('max-floors-slider-top', 'max-floors-value-top');
 
 // Update all marker positions based on current floor offsets
 function updateAllMarkerPositions() {
@@ -833,7 +1109,17 @@ function updateAllMarkerScales() {
 // Initialize marker visibility for the current floor
 updateMarkerVisibility(currentSelectedFloor);
 
-map.fitBounds(imageBounds);
+// Set initial view - more zoomed in for Chrome/Opera performance
+if (usePerformanceMode) {
+  // For Chrome/Opera: Start zoomed in 5-6 levels for better performance
+  const centerX = imageWidth / 2;
+  const centerY = imageHeight / 2;
+  map.setView([centerY, centerX], 1); // Zoom level 1 for significantly more zoomed in view
+  console.log('Performance mode: Starting with highly zoomed-in view for better Chrome/Opera performance');
+} else {
+  // For Firefox: Use normal fit bounds
+  map.fitBounds(imageBounds);
+}
 
 // Keyboard controls
 let keysPressed = {};
@@ -841,8 +1127,25 @@ let keysPressed = {};
 // WASD movement - smooth continuous movement
 const baseMoveSpeed = 2; // base pixels per frame
 let animationId = null;
+let lastMoveTime = 0;
+const moveThrottleMs = renderingConfig.debounceTime; // Use configurable throttling
 
 function smoothMovement() {
+  const currentTime = performance.now();
+  
+  // Throttle movement for better performance in Chrome/Opera
+  if (currentTime - lastMoveTime < moveThrottleMs) {
+    // Continue animation if any movement keys are pressed
+    if (keysPressed['w'] || keysPressed['s'] || keysPressed['a'] || keysPressed['d']) {
+      animationId = requestAnimationFrame(smoothMovement);
+    } else {
+      animationId = null;
+    }
+    return;
+  }
+  
+  lastMoveTime = currentTime;
+  
   let moveX = 0;
   let moveY = 0;
   
@@ -947,8 +1250,19 @@ map.on('mouseout', function() {
   //overlayDiv.innerText = 'X: --, Y: --';
 });
 
+// Prevent map click events from interfering with top panel
+const mapContainer = document.getElementById('map');
+if (mapContainer) {
+  mapContainer.addEventListener('click', function(e) {
+    // Ensure top panel remains visible after map clicks
+    setTimeout(ensureTopPanelVisibility, 5);
+  });
+}
+
+// Additional defensive measure - prevent map container from interfering
+
 function TranslateToReal(x, y) {
-  console.log(currentSelectedFloor);
+  //console.log(currentSelectedFloor);
   const realX = Math.round((x / 5 - 400) );//0.1810 - 409);
   const realY = Math.round((y / 5 - 400) );//0.159 - 282);
   return { x: realX, y: realY };
@@ -3626,7 +3940,76 @@ addCustomMarker("MonsterIcons/Profaner.png", 146, 6, 115, 'Profaner', '988 (mons
 addCustomMarker("MonsterIcons/Minotaur.png", 152, 2, 113, 'Minotaur', '438 (monster).', " ");
 addCustomMarker("MonsterIcons/Digger.png", 159, 2, 132, 'Digger', '439 (monster).', " ");
 addCustomMarker("MonsterIcons/CaveTroll.png", 146, 6, 156, 'Cave Troll', '464 (monster).', " ");
+
 updateFloorVisibility(16);
+updateMarkerVisibility(16);
+
+/*
+// Performance monitoring and cleanup for Chrome/Opera
+if (usePerformanceMode) {
+  // Periodically suggest garbage collection for better memory management
+  setInterval(() => {
+    if (window.gc && typeof window.gc === 'function') {
+      window.gc();
+    }
+  }, 30000); // Every 30 seconds
+  
+  // Add memory usage monitoring in development
+  if (window.performance && window.performance.memory) {
+    const memoryMonitor = () => {
+      const memory = window.performance.memory;
+      if (memory.usedJSHeapSize / memory.totalJSHeapSize > 0.8) {
+        console.warn('High memory usage detected:', {
+          used: Math.round(memory.usedJSHeapSize / 1048576) + 'MB',
+          total: Math.round(memory.totalJSHeapSize / 1048576) + 'MB',
+          limit: Math.round(memory.jsHeapSizeLimit / 1048576) + 'MB'
+        });
+      }
+    };
+    setInterval(memoryMonitor, 10000); // Check every 10 seconds
+  }
+}
+
+// All ensureTopPanelVisibility logic is now handled at the top of the script
+
+// Run check periodically for all browsers
+setInterval(ensureTopPanelVisibility, 1000);
+
+// Monitor iframe height more frequently (since this seems to be the root cause)
+setInterval(ensureIframeHeight, 250);
+
+// Run check after any map interaction
+map.on('click zoomend moveend', function() {
+  ensureIframeHeight(); // Check iframe height immediately
+  ensureTopPanelVisibility();
+});
+
+// Prevent any accidental hiding of the top panel
+document.addEventListener('click', function(e) {
+  setTimeout(function() {
+    ensureIframeHeight();
+    ensureTopPanelVisibility();
+  }, 10);
+});
+
+// Additional defensive measure - prevent map container from interfering
+document.addEventListener('DOMContentLoaded', function() {
+  ensureTopPanelVisibility();
+});
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+  }
+  if (updateFloorVisibilityTimeout) {
+    clearTimeout(updateFloorVisibilityTimeout);
+  }
+  if (updateMarkerVisibilityTimeout) {
+    clearTimeout(updateMarkerVisibilityTimeout);
+  }
+});
+*/
 </script>
 </body>
 </html>
