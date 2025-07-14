@@ -109,7 +109,7 @@ body, html {
 #main-panel {
   display: flex;
   width: 100vw;
-  height: 100vh;
+  height: 80vh;
   padding-top: 60px;
   box-sizing: border-box;
   position: relative;
@@ -534,8 +534,8 @@ body {
         const iframe = window.parent.document.getElementById('content-frame');
         if (iframe) {
           // Force iframe height to 100vh
-          iframe.style.height = '100vh';
-          console.log('Fixed iframe height to 100vh');
+          iframe.style.height = '90vh';
+          //console.log('Fixed iframe height to 100vh');
         }
       } catch (e) {
         // Cross-origin restriction, try alternative approach
