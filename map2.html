@@ -1114,7 +1114,7 @@ if (usePerformanceMode) {
   // For Chrome/Opera: Start zoomed in 5-6 levels for better performance
   const centerX = imageWidth / 2;
   const centerY = imageHeight / 2;
-  map.setView([centerY, centerX], 1); // Zoom level 1 for significantly more zoomed in view
+  map.setView([centerY+500, centerX-800], 0); 
   console.log('Performance mode: Starting with highly zoomed-in view for better Chrome/Opera performance');
 } else {
   // For Firefox: Use normal fit bounds
@@ -1243,7 +1243,7 @@ map.on('mousemove', function(e) {
   let constYoffset = (currentSelectedFloor-16) * verticalOffsetMultiplier;
   let roundedX = Math.floor(real.x + constXoffset);
   let roundedY = Math.floor(real.y + constYoffset);
-  mouseCoordsDiv.textContent = `X: ${roundedX}, Y: ${currentSelectedFloor}, Z: ${roundedY}`;
+  mouseCoordsDiv.textContent = `X: ${roundedX}, Y: ${currentSelectedFloor -16}, Z: ${roundedY}`;
 });
 
 map.on('mouseout', function() {
@@ -1320,14 +1320,14 @@ function showInfoPanel(key) {
   panel.innerHTML = `
     <h2>${info.title}</h2>
     <div class="marker-content">
+      <div class="marker-right">
+        ${previewHtml}
+      </div>
       <div class="marker-left">
         ${statsHtml}
         <div style="white-space:pre-line;">${descHtml}</div>
         ${coordinatesHtml}
         ${info.fullDesc ? `<div style="margin-top: 8px;">${info.fullDesc}</div>` : ""}
-      </div>
-      <div class="marker-right">
-        ${previewHtml}
       </div>
     </div>
   `;

@@ -127,8 +127,8 @@ div .veryrare{
 }
 td.monsterName{
   padding: 2px;
-  width: 200px;
-  font-size: 1.5em;
+  width: 10%;
+  font-size: 1.3em;
 }
 .monsterImg {
   border-radius: 5px;
@@ -230,7 +230,25 @@ div.raritytextwide{
 .niceButton:hover{
   background: #dcdf3d;
 }
-</style>
+
+/* Monster info panel stats table */
+.monster-stats-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.monster-stats-table td.stat-label {
+  text-align: right;
+  padding: 0px 0px 0px 0;
+  width: 50%;
+}
+
+.monster-stats-table td.stat-value {
+  text-align: left;
+  padding: 0px 0px 0px 0;
+  width: 50%;
+}
+    </style>
     </head>
     <body>
         <div class="xp-calculator">
@@ -396,7 +414,7 @@ function renderMonstersTable(monsters, level = 1, faith = 100) {
     if (Array.isArray(m[6])) {
       // Sort loot array
       const sortedLoot = m[6].slice().sort(lootSort);
-      html += '<div style="display:flex;gap:6px;">';
+      html += '<div style="display:flex;flex-wrap:wrap;gap:6px;">';
       for (const loot of sortedLoot) {
         let [item, qty, rarity] = loot;
         html += `<div style='display:flex;flex-direction:column;align-items:center;width:32px;margin-bottom:2px;'>`;
@@ -465,9 +483,41 @@ function showMonsterInfo(monsterId) {
   const monster = window.monsters.find(m => m[0] === monsterId);
   if (!monster) return;
   
-  const [id, name, , , hp, xp, loot, description] = monster;
+  const [id, name, , , hp, xp, loot, moveSpeed, def, dmg, aspd, dontaa, arm, boss, jump, runlow, spawn] = monster;
   const panel = document.querySelector('.monster-info-panel');
-  
+  let description = "";
+  if(runlow)  {
+    description += `Runs away when its health is low. `;
+  }
+  if(jump){
+    description += `Can jump pretty far. `;
+  }
+  if(dontaa) {
+    description += `Does not use autoattacks. `;
+  }
+  if(boss) {
+    description += `It's a boss creature. `;
+  }
+  let spawnTime = 0;
+  if (spawn) {
+    if (typeof spawn === 'number') {
+      if(spawn > 59) {
+        spawnTime = `${Math.floor(spawn / 60)}min`;
+        if (spawn % 60 > 0) {
+          spawnTime += ` ${spawn % 60}s`;
+        }
+      }
+      else {
+        spawnTime = `${spawn} seconds`;
+      }
+    }
+  }
+
+  if(description.length > 3) description += `<br>`;
+  if(!boss){
+    description += `<span style='color:rgb(255,115,0)'>Respawns in ${spawnTime}.</span>`;
+  }
+
   // Generate video filename
   let videoFileName = name.replace('.png', '').replace(/ /g, '').split('(')[0];
   
@@ -524,16 +574,47 @@ function showMonsterInfo(monsterId) {
   lootHtml += '</div>';
   
   panel.innerHTML = `
-    <div style="text-align: center; margin-bottom: 15px;">
-      <video src='Monsters/${videoFileName}.mp4' style='height:128px; border-radius: 8px; border: 1px solid #444;' autoplay loop muted></video>
+    <h2 style="margin-top: 0; color: #cfcfcf; text-align: center; border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 15px;">${name}</h2>
+    
+    <!-- UPPER ROW: Stats and Video -->
+    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+      <!-- Left Column: Stats -->
+      <div style="flex: 0.8;">
+        <table class="monster-stats-table">
+          <tr>
+            <td class="stat-label"><strong style="color: #cfcfcf;">Health:</strong></td>
+            <td class="stat-value"><span style="color: rgb(160, 82, 82);">${hp} HP</span></td>
+          </tr>
+          <tr>
+            <td class="stat-label"><strong style="color: #cfcfcf;">Experience:</strong></td>
+            <td class="stat-value"><span style="color: rgba(3, 192, 167, 1);">${xp} XP</span></td>
+          </tr>
+          <tr>
+            <td class="stat-label"><strong style="color: #cfcfcf;">Armor:</strong></td>
+            <td class="stat-value"><span style="color: rgba(141, 164, 206, 1);">${arm}</span></td>
+          </tr>
+          <tr>
+            <td class="stat-label"><strong style="color: #cfcfcf;">Defense:</strong></td>
+            <td class="stat-value"><span style="color: rgba(191, 178, 114, 1);">${def}</span></td>
+          </tr>
+          <tr>
+            <td class="stat-label"><strong style="color: #cfcfcf;">Attack Speed:</strong></td>
+            <td class="stat-value"><span style="color: rgba(243, 236, 108, 1);">${aspd}</span></td>
+          </tr>
+          <tr>
+            <td class="stat-label"><strong style="color: #cfcfcf;">Move Speed:</strong></td>
+            <td class="stat-value"><span style="color: rgba(206, 235, 79, 1);">${moveSpeed}</span></td>
+          </tr>
+        </table>
+      </div>
+      
+      <!-- Right Column: Video -->
+      <div style="flex-shrink: 0;">
+        <video src='Monsters/${videoFileName}.mp4' style='height:128px; border-radius: 8px; border: 1px solid #444;' autoplay loop muted></video>
+      </div>
     </div>
-    <h2 style="margin-top: 0; color: #cfcfcf; text-align: center; border-bottom: 1px solid #444; padding-bottom: 10px;">${name}</h2>
-    <div style="margin-bottom: 10px;">
-      <strong style="color: #cfcfcf;">Health:</strong> <span style="color: rgb(160, 82, 82);">${hp} HP</span>
-    </div>
-    <div style="margin-bottom: 10px;">
-      <strong style="color: #cfcfcf;">Experience:</strong> <span style="color: rgba(3, 192, 167, 0.466);">${xp} XP</span>
-    </div>
+    
+    <!-- BOTTOM ROW: Description and Loot -->
     <div style="margin-bottom: 15px;">
       <strong style="color: #cfcfcf;">Description:</strong>
       <p style="color: #888; margin-top: 5px; font-style: italic;">${description || 'No description available.'}</p>
