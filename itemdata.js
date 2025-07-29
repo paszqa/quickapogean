@@ -101,7 +101,7 @@ const items = [
 ["Burlap Skirt","legs","lightlegs",140,,,,130,-4,-4,4,,,,,,,,"","BurlapSkirt.png","rare"],
 ["Burlap Skirt","legs","lightlegs",160,,,,120,-5,-5,3,,,,,,,,"","BurlapSkirt.png","uncommon"],
 ["Burlap Skirt","head","lightlegs",200,,,,100,-5,-5,3,,,,,,,,"","BurlapSkirt.png",""],
-["Burlap Wool","","lightlegs",20,,,,,,,,,,,,,,,"","BurlapWool.png",""],
+["Burlap Wool","","MonsterProducts",20,,,,,,,,,,,,,,,"","BurlapWool.png",""],
 ["Candle","","LightSources",20,,,,,,,,,,,,,,,"","Candle.png",""],
 ["Cattail Flower","","Flowers",8,,,,,,,,,,,,,,,"","CattailFlower.png",""],
 ["Chain Mail","chest","heavychest",405,,,,,,,11,,,,,,,,"","ChainMail.png","legendary"],
@@ -336,7 +336,7 @@ const items = [
 ["Quoki Headgear","head","lightmask",40,,,-20,,,,,,,1,,,,,"Customary headpiece.","QuokiHeadgear.png","uncommon"],
 ["Quoki Headgear","head","lighthelmet",50,,,-25,,,,,,,1,,,,,"Costumary headpiece.","QuokiHeadgear.png",""],
 ["Quoki Shoes","boots","lightboots",30,,,-16,,,,1,,3,,,,,,"Customary footwear.","QuokiShoes.png","epic"],
-["Quoki Shoes","head","lighthelmet",50,,,-25,,,,,,1,,,,,,"Costumary footwear.","QuokiShoes.png",""],
+["Quoki Shoes","boots","lightboots",50,,,-25,,,,,,1,,,,,,"Costumary footwear.","QuokiShoes.png",""],
 ["Ragged Cloth","","ClothProducts",10,,,,,,,,,,,,,,,"","RaggedCloth.png",""],
 ["Rat Charm","ring","ring",10,,,,,1,,,,,,,,,,"","RatCharm.png",""],
 ["Rat Tail","","MonsterProducts",15,,,,,,,,,,,,,,,"","RatTail.png",""],
@@ -517,6 +517,7 @@ const items = [
 ["Zircon Ring","ring","ring",8,,,,,,,,,,2,,,,,"","ZirconRing.png","rare"],
 ["Zircon Ring","ring","ring",10,,,,,,,,,,2,,,,,"","ZirconRing.png","uncommon"],
 ["Zircon Ring","ring","ring",12,,,,,,,,,,1,,,,,"","ZirconRing.png",""],
+
 
 ];
 
